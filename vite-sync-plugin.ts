@@ -22,7 +22,7 @@ export const crisisConnectSyncPlugin = (): Plugin => ({
   name: 'crisisconnect-dev-sync',
   configureServer(server) {
     server.middlewares.use('/__crisisconnect', (request, response, next) => {
-      const key = request.url?.replace(/^\//, '') as SyncKey | undefined;
+      const key = request.url?.replace(/^\//, '').split('?')[0] as SyncKey | undefined;
       if (key !== 'requests' && key !== 'messages') {
         next();
         return;

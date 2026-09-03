@@ -69,11 +69,11 @@ export const CrisisAIModal: React.FC = () => {
       <button
         onClick={() => setIsOpen(true)}
         aria-label="Open CrisisAI emergency assistant"
-        className="fixed bottom-20 md:bottom-6 right-6 z-40 flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-theme-dark rounded-full shadow-tech-glow transition-all transform hover:scale-105 active:scale-95 group"
+        className="fixed bottom-20 md:bottom-6 right-6 z-40 flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-emergency-600 to-emergency-500 hover:from-emergency-500 hover:to-emergency-400 text-white rounded-full shadow-emergency-glow transition-all transform hover:scale-105 active:scale-95 group"
       >
         <Bot className="w-5 h-5 group-hover:rotate-12 transition-transform" />
         <span className="font-bold text-xs tracking-wider uppercase hidden sm:inline">CrisisAI</span>
-        <span className="w-2 h-2 rounded-full bg-emerald-300 animate-ping hidden sm:inline" />
+        <span className="w-2 h-2 rounded-full bg-white animate-ping hidden sm:inline" />
       </button>
 
       {/* Floating Glassmorphic Chat Panel */}

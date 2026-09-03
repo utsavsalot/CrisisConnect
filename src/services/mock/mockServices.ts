@@ -70,7 +70,7 @@ function saveToStorage<T>(key: string, data: T): void {
 
 async function pullDevState<T>(key: string): Promise<T | null> {
   try {
-    const response = await fetch(`/__crisisconnect/${key}`);
+    const response = await fetch(`/__crisisconnect/${key}?t=${Date.now()}`);
     if (!response.ok) return null;
     return await response.json() as T;
   } catch {
@@ -260,6 +260,8 @@ export const mockRequestService = {
       status: 'active',
       createdAt: new Date().toISOString()
     };
+    const synced = await pullDevState<EmergencyRequest[]>('requests');
+    if (synced) requests = synced;
 
     requests = [newReq, ...requests];
     saveToStorage('requests', requests);
@@ -287,6 +289,9 @@ export const mockRequestService = {
   },
 
   async acceptRequest(requestId: string, acceptedByUid: string, responderName: string, responderType: 'responder' | 'ngo'): Promise<EmergencyRequest> {
+    const synced = await pullDevState<EmergencyRequest[]>('requests');
+    if (synced) requests = synced;
+
     const idx = requests.findIndex(r => r.id === requestId);
     if (idx === -1) throw new Error('Request not found');
 
@@ -321,6 +326,9 @@ export const mockRequestService = {
   },
 
   async updateStatus(requestId: string, status: EmergencyStatus): Promise<EmergencyRequest> {
+    const synced = await pullDevState<EmergencyRequest[]>('requests');
+    if (synced) requests = synced;
+
     const idx = requests.findIndex(r => r.id === requestId);
     if (idx === -1) throw new Error('Request not found');
 
@@ -364,8 +372,12 @@ export const mockRequestService = {
     const pollId = window.setInterval(() => {
       void pullDevState<EmergencyRequest[]>('requests').then((synced) => {
         if (synced) {
+          const oldStr = JSON.stringify(requests);
+          const newStr = JSON.stringify(synced);
           requests = synced;
-          callback(this.getAllRequests());
+          if (oldStr !== newStr) {
+            callback(this.getAllRequests());
+          }
         }
       });
     }, 1500);
@@ -482,6 +494,11 @@ export const mockChatService = {
       timestamp: new Date().toISOString()
     };
 
+    const synced = await pullDevState<Record<string, ChatMessage[]>>('messages');
+    if (synced) {
+      messages = { ...messages, ...synced };
+    }
+
     if (!messages[requestId]) {
       messages[requestId] = [];
     }
@@ -509,11 +526,15 @@ export const mockChatService = {
     const pollId = window.setInterval(() => {
       void pullDevState<Record<string, ChatMessage[]>>('messages').then((synced) => {
         if (synced) {
+          const oldStr = JSON.stringify(messages[requestId] || []);
+          const newStr = JSON.stringify(synced[requestId] || []);
           messages = synced;
-          callback(this.getMessages(requestId));
+          if (oldStr !== newStr) {
+            callback(this.getMessages(requestId));
+          }
         }
       });
-    }, 1500);
+    }, 300);
     return () => {
       unsubscribeBus();
       window.removeEventListener('storage', handleStorage);

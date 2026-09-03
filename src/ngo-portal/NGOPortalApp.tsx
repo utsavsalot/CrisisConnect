@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { AlertTriangle, Building2, CheckCircle2, Clock3, LogOut, MapPin, MessageSquare, Navigation, Phone, Send, ShieldCheck, UserRound } from 'lucide-react';
+import { AlertTriangle, Building2, CheckCircle2, Clock3, LogOut, MapPin, MessageSquare, Navigation, Phone, Send, ShieldCheck, UserRound, Package, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useEmergency } from '../context/EmergencyContext';
 import { useChat } from '../context/ChatContext';
 import { EmergencyRequest, EmergencyNeedCategory, ChatMessage } from '../types';
 import { SOSLocationMap } from '../components/emergency/SOSLocationMap';
 import { runSimulation } from '../services/simulationService';
+import { ResourceManagement } from '../pages/ngo/ResourceManagement';
 
 const needs: EmergencyNeedCategory[] = ['Medical Assistance', 'Food', 'Rescue', 'Blood', 'Medicine', 'Shelter', 'Transportation', 'Water', 'Other'];
 
@@ -36,6 +37,7 @@ export const NGOPortalApp: React.FC = () => {
   const { currentUser, role, login, signup, logout } = useAuth();
   const { requests, acceptRequest } = useEmergency();
   const { getMessages, sendMessage, subscribeToChat } = useChat();
+  const [currentView, setCurrentView] = useState<'dashboard' | 'resources'>('dashboard');
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [form, setForm] = useState<FormState>(initialForm);
   const [loginEmail, setLoginEmail] = useState('');
@@ -161,11 +163,27 @@ const [simulationError, setSimulationError] = useState('');
     <div className="min-h-screen bg-[#f6f7f9] text-slate-900">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-4 px-5 py-4 sm:px-8">
-          <div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-600 text-white"><AlertTriangle className="h-5 w-5" /></div><div><p className="font-display text-lg font-black tracking-wide">CRISIS<span className="text-red-600">CONNECT</span></p><p className="text-[10px] font-bold uppercase tracking-[.16em] text-slate-400">NGO operations portal</p></div></div>
-          <div className="flex items-center gap-4"><div className="hidden text-right sm:block"><p className="text-sm font-bold text-slate-900">{ngo.orgName}</p><p className="text-xs text-emerald-700"><span className="mr-1 inline-block h-2 w-2 rounded-full bg-emerald-500" /> Verified partner</p></div><button onClick={() => void logout()} className="flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 px-3 text-xs font-bold text-slate-600 hover:bg-slate-50"><LogOut className="h-4 w-4" /> Sign out</button></div>
+          <div className="flex items-center gap-3">
+            {currentView === 'resources' ? (
+              <button onClick={() => setCurrentView('dashboard')} className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"><ArrowLeft className="h-5 w-5" /></button>
+            ) : (
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-600 text-white"><AlertTriangle className="h-5 w-5" /></div>
+            )}
+            <div><p className="font-display text-lg font-black tracking-wide">CRISIS<span className="text-red-600">CONNECT</span></p><p className="text-[10px] font-bold uppercase tracking-[.16em] text-slate-400">NGO operations portal</p></div>
+          </div>
+          <div className="flex items-center gap-4">
+            {currentView === 'dashboard' && (
+              <button onClick={() => setCurrentView('resources')} className="flex items-center gap-2 rounded-xl bg-red-600 px-3 py-2 text-xs font-bold text-white hover:bg-red-700 transition-colors"><Package className="h-4 w-4" /> Manage Resources</button>
+            )}
+            <div className="hidden text-right sm:block"><p className="text-sm font-bold text-slate-900">{ngo.orgName}</p><p className="text-xs text-emerald-700"><span className="mr-1 inline-block h-2 w-2 rounded-full bg-emerald-500" /> Verified partner</p></div>
+            <button onClick={() => void logout()} className="flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 px-3 text-xs font-bold text-slate-600 hover:bg-slate-50"><LogOut className="h-4 w-4" /> Sign out</button>
+          </div>
         </div>
       </header>
 
+      {currentView === 'resources' ? (
+        <ResourceManagement onBack={() => setCurrentView('dashboard')} />
+      ) : (
       <main className="mx-auto max-w-[1500px] px-5 py-7 sm:px-8">
        <div className="mb-7 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
   <div>
@@ -367,6 +385,7 @@ const [simulationError, setSimulationError] = useState('');
           <section className="min-h-[620px] rounded-2xl border border-slate-200 bg-white shadow-sm">{selectedRequest ? <IncidentWorkspace request={selectedRequest} accepted={isAcceptedByThisNgo} messages={messages} messageText={messageText} setMessageText={setMessageText} onSend={handleSend} sending={sending} onAccept={() => void handleAccept(selectedRequest)} /> : <div className="flex h-full min-h-[620px] flex-col items-center justify-center p-8 text-center"><Navigation className="h-12 w-12 text-slate-300" /><h2 className="mt-4 font-display text-2xl font-black text-slate-900">Waiting for emergency requests</h2><p className="mt-2 max-w-sm text-sm leading-6 text-slate-500">New user SOS requests will appear here automatically when the shared Firebase feed is connected.</p></div>}</section>
         </div>
       </main>
+      )}
     </div>
   );
 };

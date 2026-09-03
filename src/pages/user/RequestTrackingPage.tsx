@@ -309,18 +309,18 @@ export const RequestTrackingPage: React.FC = () => {
                 </div>
               ) : (
                 messages.map((msg) => {
-                  const isMine = currentUser ? msg.senderId === currentUser.uid : false;
+                  const alignRight = msg.senderRole !== 'user';
                   return (
                     <div
                       key={msg.id}
-                      className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}
+                      className={`flex flex-col ${alignRight ? 'items-end' : 'items-start'}`}
                     >
                       <span className="text-[10px] text-theme-forest/80 mb-1 px-1">
                         {msg.senderName} • {msg.senderRole}
                       </span>
                       <div
                         className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-xs leading-relaxed ${
-                          isMine
+                          alignRight
                             ? 'bg-sky-600 text-theme-dark rounded-br-none shadow-md'
                             : 'bg-white/10 text-theme-dark rounded-bl-none border border-theme-mint/30'
                         }`}

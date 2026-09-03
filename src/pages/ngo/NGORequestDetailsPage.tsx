@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -28,6 +28,11 @@ export const NGORequestDetailsPage: React.FC = () => {
   const request = getRequestById(id || '');
   const [messages, setMessages] = useState<ChatMessage[]>(() => (id ? getMessages(id) : []));
   const [inputText, setInputText] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   useEffect(() => {
     if (!id) return;
@@ -194,20 +199,20 @@ export const NGORequestDetailsPage: React.FC = () => {
                 </div>
               ) : (
                 messages.map(m => {
-                  const isMine = currentUser ? m.senderId === currentUser.uid : false;
+                  const alignRight = m.senderRole !== 'user';
                   return (
                     <div
                       key={m.id}
-                      className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}
+                      className={`flex flex-col ${alignRight ? 'items-end' : 'items-start'}`}
                     >
                       <span className="text-[10px] text-theme-forest/80 mb-0.5 px-1">
                         {m.senderName} ({m.senderRole})
                       </span>
                       <div
                         className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-xs leading-relaxed ${
-                          isMine
+                          alignRight
                             ? 'bg-sky-600 text-theme-dark rounded-br-none'
-                            : 'bg-white/10 text-theme-dark rounded-bl-none border border-theme-mint/30'
+                            : 'bg-red-600 text-white rounded-bl-none border border-theme-mint/30'
                         }`}
                       >
                         {m.text}
@@ -219,6 +224,7 @@ export const NGORequestDetailsPage: React.FC = () => {
                   );
                 })
               )}
+              <div ref={messagesEndRef} />
             </div>
 
             <div className="p-3 border-t border-theme-mint/30 bg-white/80">

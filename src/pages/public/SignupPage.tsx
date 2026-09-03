@@ -102,15 +102,15 @@ if (password.length < 6) {
             onClick={() => setSelectedRole('user')}
             className={`p-4 rounded-2xl border text-left transition-all ${
               selectedRole === 'user'
-                ? 'border-emerald-500 bg-emerald-500/15 shadow-lg'
+                ? 'border-emergency-600 bg-emergency-600 shadow-lg'
                 : 'border-theme-mint/30 bg-white/60 hover:border-theme-mint/40'
             }`}
           >
             <div className="flex items-center gap-2 mb-2">
-              <User className={`w-5 h-5 ${selectedRole === 'user' ? 'text-emerald-400' : 'text-theme-forest/80'}`} />
-              <span className="font-bold text-sm text-theme-dark">USER</span>
+              <User className={`w-5 h-5 ${selectedRole === 'user' ? 'text-white' : 'text-theme-forest/80'}`} />
+              <span className={`font-bold text-sm ${selectedRole === 'user' ? 'text-white' : 'text-theme-dark'}`}>USER</span>
             </div>
-            <p className="text-[11px] text-theme-forest leading-snug">
+            <p className={`text-[11px] leading-snug ${selectedRole === 'user' ? 'text-white/90' : 'text-theme-forest'}`}>
               "I need help, or I may also respond to help neighbors."
             </p>
           </button>
@@ -120,15 +120,15 @@ if (password.length < 6) {
             onClick={() => setSelectedRole('ngo')}
             className={`p-4 rounded-2xl border text-left transition-all ${
               selectedRole === 'ngo'
-                ? 'border-sky-500 bg-sky-500/15 shadow-lg'
+                ? 'border-emergency-600 bg-emergency-600 shadow-lg'
                 : 'border-theme-mint/30 bg-white/60 hover:border-theme-mint/40'
             }`}
           >
             <div className="flex items-center gap-2 mb-2">
-              <Building2 className={`w-5 h-5 ${selectedRole === 'ngo' ? 'text-sky-400' : 'text-theme-forest/80'}`} />
-              <span className="font-bold text-sm text-theme-dark">NGO / ORG</span>
+              <Building2 className={`w-5 h-5 ${selectedRole === 'ngo' ? 'text-white' : 'text-theme-forest/80'}`} />
+              <span className={`font-bold text-sm ${selectedRole === 'ngo' ? 'text-white' : 'text-theme-dark'}`}>NGO / ORG</span>
             </div>
-            <p className="text-[11px] text-theme-forest leading-snug">
+            <p className={`text-[11px] leading-snug ${selectedRole === 'ngo' ? 'text-white/90' : 'text-theme-forest'}`}>
               "We provide disaster assistance and large-scale resources."
             </p>
           </button>
