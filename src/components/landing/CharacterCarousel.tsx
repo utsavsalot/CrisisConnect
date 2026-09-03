@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { 
   ChevronLeft, 
@@ -11,7 +12,8 @@ import {
   Building2, 
   Users, 
   ArrowRight,
-  Radio
+  Radio,
+  AlertTriangle
 } from 'lucide-react';
 import { CrisisCharacter } from '../../types';
 
@@ -235,8 +237,30 @@ export const CharacterCarousel: React.FC = () => {
         </span>
       </div>
 
+      {/* Hero Intent & Primary Emergency CTA */}
+      <div className="relative z-30 pt-6 sm:pt-8 px-4 text-center max-w-3xl mx-auto flex flex-col items-center">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#070B14]/95 border border-emergency-500/40 text-xs font-semibold text-emergency-400 mb-2.5 backdrop-blur-xl shadow-lg shadow-black/50">
+          <span className="w-2 h-2 rounded-full bg-emergency-500 animate-ping" />
+          <span>Need emergency help? Get connected to a nearby responder in seconds.</span>
+        </div>
+        
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <Link
+            to="/request-help"
+            className="px-4 py-2 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-emergency-600/25 transition-all active:scale-95 border border-emergency-400/30"
+          >
+            <AlertTriangle className="w-3.5 h-3.5 text-white" />
+            <span>Request Help</span>
+          </Link>
+          <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-slate-400">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <span>Nearby responders ready to help</span>
+          </div>
+        </div>
+      </div>
+
       {/* Main 3D Carousel Stage */}
-      <div className="flex-1 flex items-center justify-center relative z-20 py-8 perspective-1000">
+      <div className="flex-1 flex items-center justify-center relative z-20 py-4 sm:py-6 perspective-1000">
         <div
           ref={stageRef}
           className="relative w-72 sm:w-80 h-[380px] sm:h-[440px] flex items-center justify-center"
@@ -311,7 +335,7 @@ export const CharacterCarousel: React.FC = () => {
         </div>
 
         {/* Controls */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 md:mr-28">
           <button
             onClick={handlePrev}
             aria-label="Previous character"

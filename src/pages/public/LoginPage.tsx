@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AlertTriangle, Lock, Mail, ArrowRight, User, Shield, Building2, Activity } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export const LoginPage: React.FC = () => {
   const { login, switchDemoAccount } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -16,7 +18,11 @@ export const LoginPage: React.FC = () => {
     setLoading(true);
     try {
       await login(email, password);
-      navigate('/dashboard');
+      if (from) {
+        navigate(from, { replace: true });
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -26,6 +32,10 @@ export const LoginPage: React.FC = () => {
 
   const handleQuickDemo = (roleKey: 'demo-user' | 'demo-responder' | 'demo-ngo' | 'demo-admin') => {
     switchDemoAccount(roleKey);
+    if (from && (roleKey === 'demo-user' || roleKey === 'demo-responder')) {
+      navigate(from, { replace: true });
+      return;
+    }
     if (roleKey === 'demo-ngo') {
       navigate('/ngo/dashboard');
     } else if (roleKey === 'demo-admin') {

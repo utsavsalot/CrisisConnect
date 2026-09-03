@@ -17,6 +17,11 @@ import {
 import { CharacterCarousel } from '../../components/landing/CharacterCarousel';
 import { VideoScrubber } from '../../components/landing/VideoScrubber';
 import { NetworkVisual } from '../../components/landing/NetworkVisual';
+import { 
+  RequesterMotionWidget, 
+  ResponderMotionWidget, 
+  NGOMotionWidget 
+} from '../../components/landing/RoleMotionWidgets';
 
 export const LandingPage: React.FC = () => {
   const worksRef = useRef<HTMLDivElement>(null);
@@ -48,29 +53,27 @@ export const LandingPage: React.FC = () => {
       {/* 2. "When Help Can't Wait" Statement Section */}
       <section className="py-20 px-4 sm:px-8 border-t border-b border-white/10 bg-gradient-to-b from-[#070B14] to-[#0B1020]">
         <div className="max-w-4xl mx-auto text-center">
-          <span className="text-xs font-mono font-bold uppercase tracking-widest text-emergency-400">
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emergency-500/10 border border-emergency-500/30 text-xs font-mono font-bold uppercase tracking-widest text-emergency-400 mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-emergency-500 animate-pulse" />
             Emergency Response Re-engineered
           </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-white mt-4 tracking-tight leading-tight font-display">
-            When help can’t wait, bureaucracy shouldn’t stand in the way.
+          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight font-display">
+            When help can’t wait,<br className="hidden sm:inline" /> bureaucracy shouldn’t stand in the way.
           </h2>
-          <p className="text-base sm:text-lg text-slate-400 mt-6 leading-relaxed">
-            CrisisConnect replaces congested hotlines and fragmented messaging groups with a unified, 
-            zero-friction emergency coordination grid. Whether it is rare blood, emergency insulin, or flash-flood evacuation, 
-            the closest person or NGO with the capability gets alerted first.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-6 mt-8 pt-8 border-t border-white/10 text-xs text-slate-400 font-mono">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
-              <span>Zero-Barrier Triage</span>
+
+          {/* Motionsites.ai Inspired 3-Stat Glanceable Badges */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10">
+            <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col items-center text-center group hover:border-emergency-500/40 transition-colors">
+              <span className="text-2xl sm:text-3xl font-black text-white font-display">0 Forms</span>
+              <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider mt-1.5">● 1-Tap GPS Lock</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-sky-400" />
-              <span>Sub-Meter Geolocation</span>
+            <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col items-center text-center group hover:border-sky-500/40 transition-colors">
+              <span className="text-2xl sm:text-3xl font-black text-white font-display">&lt; 3 Sec</span>
+              <span className="text-[11px] font-mono text-sky-400 uppercase tracking-wider mt-1.5">● Proximity Ping</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emergency-500" />
-              <span>Encrypted Responder Coordination</span>
+            <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col items-center text-center group hover:border-emerald-500/40 transition-colors">
+              <span className="text-2xl sm:text-3xl font-black text-white font-display">100% Direct</span>
+              <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider mt-1.5">● Route & Private Chat</span>
             </div>
           </div>
         </div>
@@ -80,7 +83,7 @@ export const LandingPage: React.FC = () => {
       <VideoScrubber />
 
       {/* 4. Request → Match → Respond → Resolve */}
-      <section ref={worksRef} id="how-it-works" className="py-24 px-4 sm:px-8 bg-[#070B14] relative">
+      <section ref={worksRef} id="how-it-works" className="scroll-mt-20 py-24 px-4 sm:px-8 bg-[#070B14] relative">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-mono font-bold uppercase tracking-widest text-sky-400">
@@ -102,13 +105,13 @@ export const LandingPage: React.FC = () => {
                   <AlertTriangle className="w-6 h-6" />
                 </div>
                 <div className="text-xs font-mono font-bold text-slate-500 mb-1">01 / DISPATCH</div>
-                <h3 className="text-xl font-bold text-white mb-3 font-display">Request</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  A person in distress selects required supplies with automatic browser GPS lock. No lengthy forms.
-                </p>
+                <h3 className="text-xl font-bold text-white font-display">1-Tap Request</h3>
+                <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emergency-500/10 border border-emergency-500/20 text-[11px] font-mono text-emergency-400">
+                  <span>GPS Lock • Zero Forms</span>
+                </div>
               </div>
               <div className="pt-6 mt-6 border-t border-white/5 text-[11px] font-semibold text-emergency-400">
-                Instant Zero-Friction Broadcast →
+                Instant Transmission →
               </div>
             </div>
 
@@ -119,13 +122,13 @@ export const LandingPage: React.FC = () => {
                   <Radio className="w-6 h-6" />
                 </div>
                 <div className="text-xs font-mono font-bold text-slate-500 mb-1">02 / DISCOVERY</div>
-                <h3 className="text-xl font-bold text-white mb-3 font-display">Match</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Telemetry matches incident coordinates with nearby active responders and equipped NGO inventory in the radius.
-                </p>
+                <h3 className="text-xl font-bold text-white font-display">Proximity Match</h3>
+                <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-500/10 border border-sky-400/20 text-[11px] font-mono text-sky-400">
+                  <span>Local Mesh Radius Broadcast</span>
+                </div>
               </div>
               <div className="pt-6 mt-6 border-t border-white/5 text-[11px] font-semibold text-sky-400">
-                Localized Proximity Matching →
+                Instant Alert →
               </div>
             </div>
 
@@ -136,13 +139,13 @@ export const LandingPage: React.FC = () => {
                   <Shield className="w-6 h-6" />
                 </div>
                 <div className="text-xs font-mono font-bold text-slate-500 mb-1">03 / ACTION</div>
-                <h3 className="text-xl font-bold text-white mb-3 font-display">Respond</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  A responder or organization accepts the task. Secure real-time coordination chat and location route unlock.
-                </p>
+                <h3 className="text-xl font-bold text-white font-display">Direct Respond</h3>
+                <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-400/20 text-[11px] font-mono text-emerald-400">
+                  <span>Private Route & Chat</span>
+                </div>
               </div>
               <div className="pt-6 mt-6 border-t border-white/5 text-[11px] font-semibold text-emerald-400">
-                Encrypted Coordination →
+                Direct Coordination →
               </div>
             </div>
 
@@ -153,10 +156,10 @@ export const LandingPage: React.FC = () => {
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
                 <div className="text-xs font-mono font-bold text-slate-500 mb-1">04 / CLOSURE</div>
-                <h3 className="text-xl font-bold text-white mb-3 font-display">Resolve</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Assistance is delivered, medical or safety verification is logged, and the incident resolves with full accountability.
-                </p>
+                <h3 className="text-xl font-bold text-white font-display">Verified Safe</h3>
+                <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-400/20 text-[11px] font-mono text-amber-400">
+                  <span>Mission Logged & Closed</span>
+                </div>
               </div>
               <div className="pt-6 mt-6 border-t border-white/5 text-[11px] font-semibold text-amber-400">
                 Verified Resolution →
@@ -180,93 +183,84 @@ export const LandingPage: React.FC = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Requester */}
-            <div className="glass-panel rounded-3xl p-8 border border-white/10 flex flex-col justify-between">
+            <div className="glass-panel rounded-3xl p-7 sm:p-8 border border-emergency-500/30 bg-emergency-500/[0.03] flex flex-col justify-between h-full group hover:border-emergency-500/50 transition-colors">
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-emergency-500/20 text-emergency-500 flex items-center justify-center mb-6">
-                  <Heart className="w-6 h-6" />
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-emergency-500/20 text-emergency-500 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <Heart className="w-6 h-6" />
+                  </div>
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-emergency-400 font-bold px-2.5 py-1 rounded-full bg-emergency-500/10 border border-emergency-500/25">
+                    Distress Mode
+                  </span>
                 </div>
                 <h3 className="text-2xl font-bold text-white font-display">People Who Need Help</h3>
-                <p className="text-xs text-slate-300 mt-3 leading-relaxed">
-                  Zero friction. Tap Request Help, select what you need, and GPS handles the rest. 
-                  Watch live tracking as a responder is dispatched and communicate directly via private chat.
+                <p className="text-xs text-slate-300 mt-2 mb-4 leading-relaxed line-clamp-2">
+                  1-tap distress broadcast with automated high-precision GPS lock—signaling nearby community helpers and equipped NGOs.
                 </p>
-                <ul className="mt-6 space-y-2 text-xs text-slate-400">
-                  <li className="flex items-center gap-2">
-                    <span className="text-emergency-500">✓</span> Multi-select essential needs
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-emergency-500">✓</span> Automatic browser geolocation
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-emergency-500">✓</span> Live timeline & direct phone dialer
-                  </li>
-                </ul>
+
+                {/* Living Micro-UI Widget */}
+                <RequesterMotionWidget />
               </div>
+
               <Link
-                to="/login"
-                className="mt-8 py-3 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-white font-bold text-xs text-center uppercase tracking-wider transition-colors"
+                to="/request-help"
+                className="mt-6 py-3 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-white font-bold text-xs text-center uppercase tracking-wider transition-colors shadow-md shadow-emergency-600/20 active:scale-95"
               >
-                Sign In to Request Help
+                Request Assistance Now
               </Link>
             </div>
 
             {/* Responder */}
-            <div className="glass-panel rounded-3xl p-8 border border-emerald-500/30 bg-emerald-500/[0.03] flex flex-col justify-between">
+            <div className="glass-panel rounded-3xl p-7 sm:p-8 border border-emerald-500/30 bg-emerald-500/[0.03] flex flex-col justify-between h-full group hover:border-emerald-500/50 transition-colors">
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-6">
-                  <Shield className="w-6 h-6" />
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <Shield className="w-6 h-6" />
+                  </div>
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-bold px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25">
+                    Standby Mode
+                  </span>
                 </div>
                 <h3 className="text-2xl font-bold text-white font-display">People Who Can Respond</h3>
-                <p className="text-xs text-slate-300 mt-3 leading-relaxed">
-                  Any registered user can enable Responder Mode. Choose your specific capabilities (medical, vehicle, food, blood) 
-                  and get notified of nearby requests in your neighborhood.
+                <p className="text-xs text-slate-300 mt-2 mb-4 leading-relaxed line-clamp-2">
+                  Enable standby mode with your verified skills to receive instant proximity alerts and unlock secure navigation routes.
                 </p>
-                <ul className="mt-6 space-y-2 text-xs text-slate-400">
-                  <li className="flex items-center gap-2">
-                    <span className="text-emerald-400">✓</span> Proximity feed with distance & time
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-emerald-400">✓</span> Capability-specific notifications
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-emerald-400">✓</span> Retain Request Help capability anytime
-                  </li>
-                </ul>
+
+                {/* Living Micro-UI Widget */}
+                <ResponderMotionWidget />
               </div>
+
               <Link
                 to="/responder"
-                className="mt-8 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs text-center uppercase tracking-wider transition-colors"
+                className="mt-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs text-center uppercase tracking-wider transition-colors shadow-md shadow-emerald-600/20 active:scale-95"
               >
                 Enable Responder Mode
               </Link>
             </div>
 
             {/* NGO */}
-            <div className="glass-panel rounded-3xl p-8 border border-sky-500/30 bg-sky-500/[0.03] flex flex-col justify-between">
+            <div className="glass-panel rounded-3xl p-7 sm:p-8 border border-sky-500/30 bg-sky-500/[0.03] flex flex-col justify-between h-full group hover:border-sky-500/50 transition-colors">
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-sky-500/20 text-sky-400 flex items-center justify-center mb-6">
-                  <Building2 className="w-6 h-6" />
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-sky-500/20 text-sky-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <Building2 className="w-6 h-6" />
+                  </div>
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-sky-400 font-bold px-2.5 py-1 rounded-full bg-sky-500/10 border border-sky-500/25">
+                    Command HQ
+                  </span>
                 </div>
                 <h3 className="text-2xl font-bold text-white font-display">NGOs & Organizations</h3>
-                <p className="text-xs text-slate-300 mt-3 leading-relaxed">
-                  An incident command dashboard for relief agencies. Access the exclusive Live Emergency Map, 
-                  manage supplies (blood, kits, shelter beds), and coordinate large-scale relief operations.
+                <p className="text-xs text-slate-300 mt-2 mb-4 leading-relaxed line-clamp-2">
+                  Unified incident command dashboard to access live emergency triage maps, manage disaster inventory, and dispatch teams.
                 </p>
-                <ul className="mt-6 space-y-2 text-xs text-slate-400">
-                  <li className="flex items-center gap-2">
-                    <span className="text-sky-400">✓</span> Real-time Live Emergency Map
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-sky-400">✓</span> Disaster resource inventory tracking
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-sky-400">✓</span> Multi-incident triage & team dispatch
-                  </li>
-                </ul>
+
+                {/* Living Micro-UI Widget */}
+                <NGOMotionWidget />
               </div>
+
               <Link
                 to="/ngo/dashboard"
-                className="mt-8 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs text-center uppercase tracking-wider transition-colors"
+                className="mt-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs text-center uppercase tracking-wider transition-colors shadow-md shadow-sky-600/20 active:scale-95"
               >
                 Access NGO Command
               </Link>
@@ -279,7 +273,7 @@ export const LandingPage: React.FC = () => {
       <NetworkVisual />
 
       {/* 9. CrisisAI Spotlight Section */}
-      <section id="crisis-ai" className="py-24 px-4 sm:px-8 bg-[#0B1020] border-t border-b border-white/10">
+      <section id="crisis-ai" className="scroll-mt-20 py-24 px-4 sm:px-8 bg-[#0B1020] border-t border-b border-white/10">
         <div className="max-w-5xl mx-auto glass-panel rounded-3xl p-8 sm:p-12 border border-sky-500/30 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-400/30 text-xs font-bold uppercase tracking-wider text-sky-400 mb-4">
@@ -289,10 +283,26 @@ export const LandingPage: React.FC = () => {
             <h2 className="text-3xl sm:text-4xl font-black text-white font-display">
               CrisisAI: Instant Safety Guidance
             </h2>
-            <p className="text-sm text-slate-300 mt-3 leading-relaxed">
-              When panic strikes, clear step-by-step instructions save lives. CrisisAI provides instant 
-              first-aid protocols for unconsciousness, severe bleeding, burns, and choking while responders are on the way.
+            <p className="text-sm text-slate-300 mt-2 leading-relaxed">
+              Step-by-step first-aid protocols while responders are en route.
             </p>
+
+            {/* Motionsites.ai Protocol Chips */}
+            <div className="flex flex-wrap gap-2 mt-4">
+              <span className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-xs font-mono text-slate-300">
+                🫀 CPR Steps
+              </span>
+              <span className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-xs font-mono text-slate-300">
+                🩸 Severe Bleeding
+              </span>
+              <span className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-xs font-mono text-slate-300">
+                🔥 Burns Relief
+              </span>
+              <span className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-xs font-mono text-slate-300">
+                🗣️ Choking (Heimlich)
+              </span>
+            </div>
+
             <p className="text-[11px] text-amber-400 mt-4 font-mono">
               ⚠️ General safety guidance only. Does not replace 911 or emergency medical professionals.
             </p>
@@ -316,8 +326,60 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* 10. Final Emergency CTA */}
-      <section className="py-24 px-4 sm:px-8 bg-[#070B14] relative text-center">
+      {/* 10. About Us Section */}
+      <section id="about" className="scroll-mt-20 py-24 px-4 sm:px-8 bg-[#070B14] border-t border-white/10 relative">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-emergency-500">
+              Our Mission & Foundation
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-black text-white mt-3 font-display">
+              About CrisisConnect
+            </h2>
+            <p className="text-sm sm:text-base text-slate-300 mt-4 leading-relaxed">
+              CrisisConnect was founded with a singular purpose: to close the critical time gap between an emergency occurring and verified assistance arriving on the ground.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="glass-panel rounded-2xl p-6 border border-white/10 hover:border-emergency-500/40 transition-colors">
+              <div className="text-emergency-500 font-mono text-xs font-bold uppercase tracking-wider mb-2">01 / The Problem</div>
+              <h3 className="text-xl font-bold text-white mb-2 font-display">Hotlines Overload</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Central emergency hotlines freeze during widespread disasters.
+              </p>
+              <div className="mt-4 pt-3 border-t border-white/5 text-[11px] font-mono text-emergency-400">
+                ● Congested Dispatch Lines
+              </div>
+            </div>
+
+            <div className="glass-panel rounded-2xl p-6 border border-white/10 hover:border-sky-500/40 transition-colors">
+              <div className="text-sky-400 font-mono text-xs font-bold uppercase tracking-wider mb-2">02 / The Solution</div>
+              <h3 className="text-xl font-bold text-white mb-2 font-display">Hyperlocal Mesh</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Trained neighbors with CPR, trucks, or supplies respond in minutes.
+              </p>
+              <div className="mt-4 pt-3 border-t border-white/5 text-[11px] font-mono text-sky-400">
+                ● First-Line Safety Net
+              </div>
+            </div>
+
+            <div className="glass-panel rounded-2xl p-6 border border-white/10 hover:border-emerald-500/40 transition-colors">
+              <div className="text-emerald-400 font-mono text-xs font-bold uppercase tracking-wider mb-2">03 / The Standard</div>
+              <h3 className="text-xl font-bold text-white mb-2 font-display">Private & Verified</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Location data shared only with the accepted responder.
+              </p>
+              <div className="mt-4 pt-3 border-t border-white/5 text-[11px] font-mono text-emerald-400">
+                ● Zero Data Selling
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 11. Final Emergency CTA */}
+      <section className="py-24 px-4 sm:px-8 bg-[#0B1020] border-t border-white/10 relative text-center">
         <div className="max-w-4xl mx-auto">
           <span className="text-xs font-mono font-bold uppercase tracking-widest text-emergency-500">
             Every Second Counts
@@ -332,10 +394,10 @@ export const LandingPage: React.FC = () => {
 
           <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
             <Link
-              to="/login"
+              to="/request-help"
               className="px-6 py-4 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-white font-bold text-sm uppercase tracking-wider transition-colors shadow-lg shadow-emergency-600/20"
             >
-              Sign In to Request Help
+              Request Help Now
             </Link>
             <Link
               to="/signup?role=user"
@@ -369,6 +431,7 @@ export const LandingPage: React.FC = () => {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-6 text-[11px]">
+            <a href="#about" className="hover:text-white transition-colors">About Us</a>
             <a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a>
             <a href="#network" className="hover:text-white transition-colors">Mesh Network</a>
             <a href="#crisis-ai" className="hover:text-white transition-colors">CrisisAI</a>

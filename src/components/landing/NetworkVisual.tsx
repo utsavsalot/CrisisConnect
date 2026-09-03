@@ -47,7 +47,7 @@ export const NetworkVisual: React.FC = () => {
   }, []);
 
   return (
-    <section id="network" ref={containerRef} className="py-20 px-4 sm:px-8 bg-[#070B14] relative overflow-hidden">
+    <section id="network" ref={containerRef} className="scroll-mt-20 py-20 px-4 sm:px-8 bg-[#070B14] relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emergency-500/10 border border-emergency-500/30 text-xs font-bold uppercase tracking-wider text-emergency-400 mb-3">
