@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AlertTriangle, ArrowRight, MapPin } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { AuthSafetyPanel } from '../../components/navigation/AuthSafetyPanel';
+import { otpService } from '../../services/otpService';
 
 export const SignupPage: React.FC = () => {
   const [name, setName] = useState('');
@@ -22,46 +23,75 @@ export const SignupPage: React.FC = () => {
   const [fam2Phone, setFam2Phone] = useState('');
   
   const [loading, setLoading] = useState(false);
+  const [otp, setOtp] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [error, setError] = useState('');
+  const [otpNotice, setOtpNotice] = useState('');
+  
 
   const { signup } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-   if (!name.trim() || !email.trim() || !password.trim()) return;
+    setError('');
+    if (!name.trim() || !email.trim() || !password.trim()) return;
 
-if (password.length < 6) {
-  alert('Password must be at least 6 characters.');
-  return;
-}
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters.');
+      return;
+    }
 
     setLoading(true);
     try {
-      await signup({
-        name,
-        email,
-        phone: phone || '+91',
-        password,
-        role: 'user',
-        location: {
-          latitude: 19.0760,
-          longitude: 72.8777,
-          address: 'Mumbai, Maharashtra'
-        },
-        address,
-        gender,
-        age,
-        bloodGroup,
-        medicalHistory: medicalHistory ? [medicalHistory] : [],
-        emergencyContacts: [
-          ...(fam1Phone ? [{ relation: fam1Rel || 'Family', phone: fam1Phone }] : []),
-          ...(fam2Phone ? [{ relation: fam2Rel || 'Family', phone: fam2Phone }] : [])
-        ]
-      });
+      if (!otpSent) {
+        await otpService.send(email);
+        setOtpSent(true);
+        setOtp('');
+        setOtpNotice(`A new code was sent to ${email.trim().toLowerCase()}. Use the newest code.`);
+        return;
+      }
 
-      navigate('/dashboard');
+      if (!/^\d{6}$/.test(otp)) {
+        setError('Enter the 6-digit verification code from your email.');
+        return;
+      }
+
+      await otpService.verify(email, otp);
+
+      try {
+        await signup({
+          name,
+          email,
+          phone: phone || '+91',
+          password,
+          role: 'user',
+          location: {
+            latitude: 19.0760,
+            longitude: 72.8777,
+            address: 'Mumbai, Maharashtra'
+          },
+          address,
+          gender,
+          age,
+          bloodGroup,
+          medicalHistory: medicalHistory ? [medicalHistory] : [],
+          emergencyContacts: [
+            ...(fam1Phone ? [{ relation: fam1Rel || 'Family', phone: fam1Phone }] : []),
+            ...(fam2Phone ? [{ relation: fam2Rel || 'Family', phone: fam2Phone }] : [])
+          ]
+        });
+      } catch (signupError) {
+        if (signupError && typeof signupError === 'object' && 'code' in signupError && signupError.code === 'auth/email-already-in-use') {
+          throw new Error('This email is already registered. Please sign in instead.');
+        }
+        const message = signupError instanceof Error ? signupError.message : 'Account creation failed.';
+        throw new Error(`Email verified, but account creation failed: ${message}`);
+      }
+
+      navigate('/dashboard', { replace: true });
     } catch (err) {
-      console.error(err);
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -302,12 +332,56 @@ if (password.length < 6) {
               <span>Location permission enabled automatically for rapid crisis dispatch.</span>
             </div>
 
+            {error && (
+              <p className="text-xs font-semibold text-red-600" role="alert">
+                {error}{' '}
+                {error.includes('already registered') && (
+                  <Link to="/login" className="underline">Sign in instead.</Link>
+                )}
+              </p>
+            )}
+
+            {otpSent && (
+              <div className="rounded-xl border border-red-200 bg-red-50 p-4">
+                <label className="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">
+                  Email Verification Code
+                </label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  placeholder="Enter 6-digit code"
+                  required
+                  className="w-full bg-white border border-red-200 rounded-xl px-4 py-3 text-sm tracking-[0.35em] text-black placeholder:tracking-normal placeholder:text-slate-400 focus:outline-none focus:border-red-500"
+                />
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setError('');
+                    setOtp('');
+                    try {
+                      await otpService.send(email);
+                      setOtpNotice(`A new code was sent to ${email.trim().toLowerCase()}. Older codes no longer work.`);
+                    } catch (err) {
+                      setError(err instanceof Error ? err.message : 'Unable to resend the code.');
+                    }
+                  }}
+                  className="mt-2 text-xs font-bold text-red-600 hover:underline"
+                >
+                  Resend code
+                </button>
+                {otpNotice && <p className="mt-2 text-xs text-black/60">{otpNotice}</p>}
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={loading}
               className="w-full py-3.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-wider shadow-[0_10px_25px_rgba(239,68,68,0.28)] transition-all flex items-center justify-center gap-2 transform active:scale-98"
             >
-              <span>{loading ? 'Creating Profile...' : 'Complete Registration'}</span>
+              <span>{loading ? (otpSent ? 'Verifying...' : 'Sending Code...') : (otpSent ? 'Verify & Register' : 'Send Verification Code')}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
