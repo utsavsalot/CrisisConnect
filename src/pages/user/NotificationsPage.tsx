@@ -45,10 +45,12 @@ export const NotificationsPage: React.FC = () => {
         </div>
 
         {notifications.length === 0 ? (
-          <div className="glass-panel rounded-3xl p-12 text-center border border-theme-mint/30 max-w-sm mx-auto mt-8">
-            <Bell className="w-8 h-8 text-theme-forest/60 mx-auto mb-3" />
-            <h3 className="font-bold text-sm text-theme-dark">You're up to date.</h3>
-            <p className="text-xs text-theme-forest/80 mt-1">No pending notifications.</p>
+          <div className="mx-auto mt-8 max-w-sm rounded-3xl border border-slate-200 bg-[#fffefa] p-12 text-center shadow-[0_14px_40px_rgba(15,23,42,0.10)]">
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-red-200 bg-red-50">
+              <Bell className="h-8 w-8 text-red-600" />
+            </div>
+            <h3 className="text-sm font-bold text-black">You're up to date.</h3>
+            <p className="mt-1 text-xs text-red-700">No pending notifications.</p>
           </div>
         ) : (
           <div className="space-y-3">

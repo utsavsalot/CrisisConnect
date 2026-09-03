@@ -83,19 +83,19 @@ export const LocationDetector: React.FC<LocationDetectorProps> = ({ location, on
   };
 
   return (
-    <div className="p-4 rounded-2xl glass-panel border border-theme-mint/30 dark:border-theme-mint/30">
+    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-400/30 flex items-center justify-center text-sky-400 shrink-0">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-red-200 bg-red-50 text-red-600">
             <MapPin className="w-5 h-5 animate-pulse" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-theme-forest/80">
+              <span className="text-xs font-bold uppercase tracking-wider text-red-700">
                 Incident Location
               </span>
               {detecting ? (
-                <span className="flex items-center gap-1 text-[10px] text-sky-400 font-semibold animate-pulse">
+                <span className="flex items-center gap-1 text-[10px] font-semibold text-red-600 animate-pulse">
                   <RefreshCw className="w-3 h-3 animate-spin" /> Detecting your location...
                 </span>
               ) : error ? (
@@ -103,16 +103,16 @@ export const LocationDetector: React.FC<LocationDetectorProps> = ({ location, on
                   <AlertTriangle className="w-3 h-3" /> Location access unavailable
                 </span>
               ) : (
-                <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-semibold">
+                <span className="flex items-center gap-1 text-[10px] font-semibold text-red-600">
                   <CheckCircle2 className="w-3 h-3" /> Location detected
                 </span>
               )}
             </div>
 
-            <p className="text-sm font-semibold text-theme-dark mt-0.5">
+            <p className="mt-0.5 text-sm font-semibold text-black">
               {location.address || `${location.latitude}° N, ${location.longitude}° W`}
             </p>
-            <p className="text-[10px] text-theme-forest/80 font-mono">
+            <p className="font-mono text-[10px] text-slate-600">
               GPS: {location.latitude.toFixed(4)}, {location.longitude.toFixed(4)}
             </p>
           </div>
@@ -122,7 +122,7 @@ export const LocationDetector: React.FC<LocationDetectorProps> = ({ location, on
           <button
             type="button"
             onClick={() => setIsEditing(e => !e)}
-            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-theme-dark/90 border border-theme-mint/30 transition-colors"
+            className="flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs text-black transition-colors hover:bg-red-100"
           >
             <Edit3 className="w-3.5 h-3.5" />
             <span>{isEditing ? 'Cancel' : 'Change Location'}</span>
@@ -131,7 +131,7 @@ export const LocationDetector: React.FC<LocationDetectorProps> = ({ location, on
             type="button"
             onClick={detectLocation}
             title="Redetect location"
-            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-theme-forest transition-colors"
+            className="rounded-lg bg-slate-100 p-1.5 text-red-700 transition-colors hover:bg-red-100"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${detecting ? 'animate-spin' : ''}`} />
           </button>
@@ -145,7 +145,7 @@ export const LocationDetector: React.FC<LocationDetectorProps> = ({ location, on
             value={manualAddress}
             onChange={(e) => setManualAddress(e.target.value)}
             placeholder="Enter street, landmark, or apartment details..."
-            className="flex-1 bg-theme-sage/90 border border-theme-mint/30 rounded-xl px-3.5 py-2 text-xs text-theme-dark placeholder:text-theme-forest/60 focus:outline-none focus:border-sky-400"
+            className="flex-1 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs text-black placeholder:text-slate-500 focus:border-red-500 focus:outline-none"
           />
           <button
             type="button"

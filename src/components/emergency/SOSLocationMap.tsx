@@ -19,7 +19,7 @@ const Recenter: React.FC<{ center: [number, number] }> = ({ center }) => {
 export const SOSLocationMap: React.FC<{ location: LocationCoordinates }> = ({ location }) => {
   const center: [number, number] = [location.latitude, location.longitude];
   return (
-    <div className="h-48 overflow-hidden rounded-2xl border border-theme-mint/30 bg-theme-sage/40">
+    <div className="h-48 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
       <MapContainer center={center} zoom={15} scrollWheelZoom={false} zoomControl={false} className="h-full w-full">
         <Recenter center={center} />
         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />

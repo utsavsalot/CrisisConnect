@@ -47,6 +47,37 @@ If this is an immediate life-threatening emergency, please dial 911 (or your loc
 
 export const aiService = {
   async getGuidance(query: string): Promise<string> {
+    if (import.meta.env.VITE_OLLAMA_ENABLED === 'true') {
+      let timeout: number | undefined;
+      try {
+        const controller = new AbortController();
+        timeout = window.setTimeout(() => controller.abort(), 20000);
+        const response = await fetch(`${import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434'}/api/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
+          body: JSON.stringify({
+            model: import.meta.env.VITE_OLLAMA_MODEL || 'llama3.2',
+            stream: false,
+            messages: [
+              {
+                role: 'system',
+                content: 'You are CrisisAI, a concise emergency safety assistant. Give calm, practical first-aid guidance. Always say to call local emergency services immediately for life-threatening situations. Do not diagnose, prescribe medication, or replace professional medical care.'
+              },
+              { role: 'user', content: query }
+            ]
+          })
+        });
+        if (!response.ok) throw new Error(`Ollama returned ${response.status}`);
+        const data = await response.json() as { message?: { content?: string } };
+        if (data.message?.content?.trim()) return data.message.content.trim();
+      } catch (error) {
+        console.warn('Ollama unavailable, using built-in emergency guidance:', error);
+      } finally {
+        if (timeout) window.clearTimeout(timeout);
+      }
+    }
+
     // Artificial slight delay to feel like intelligent retrieval
     await new Promise(res => setTimeout(res, 600));
 

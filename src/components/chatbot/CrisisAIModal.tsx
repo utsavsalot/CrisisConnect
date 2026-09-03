@@ -79,42 +79,42 @@ export const CrisisAIModal: React.FC = () => {
       {/* Floating Glassmorphic Chat Panel */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-end sm:justify-end sm:pr-8 sm:pb-8 p-0 pointer-events-none">
-          <div className="w-full sm:w-[420px] max-h-[85vh] h-[600px] pointer-events-auto rounded-t-3xl sm:rounded-2xl glass-panel shadow-2xl flex flex-col overflow-hidden border border-theme-mint/40 dark:border-theme-mint/30 animate-in fade-in slide-in-from-bottom-8 duration-200">
+          <div className="pointer-events-auto flex h-[600px] max-h-[85vh] w-full flex-col overflow-hidden rounded-t-3xl border border-slate-200 bg-[#fffefa] text-black shadow-[0_20px_60px_rgba(15,23,42,0.20)] animate-in fade-in slide-in-from-bottom-8 duration-200 sm:w-[420px] sm:rounded-2xl">
             
             {/* Header */}
-            <div className="px-5 py-4 border-b border-theme-mint/30 bg-white/80 flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-red-100 bg-white px-5 py-4">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-sky-500/20 border border-sky-400/30 flex items-center justify-center text-sky-400">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600">
                   <Bot className="w-4 h-4" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-sm text-theme-dark">CrisisAI Safety Guide</h3>
-                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 font-semibold border border-sky-400/30">
+                    <h3 className="text-sm font-bold text-black">CrisisAI Safety Guide</h3>
+                    <span className="rounded border border-red-200 bg-red-50 px-1.5 py-0.5 text-[9px] font-semibold text-red-700">
                       SAFETY AI
                     </span>
                   </div>
-                  <p className="text-[10px] text-theme-forest/80">Emergency Protocol Guidance</p>
+                  <p className="text-[10px] text-slate-600">Emergency Protocol Guidance</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1 rounded-lg hover:bg-white/10 text-theme-forest/80 hover:text-theme-dark transition-colors"
+                className="rounded-lg p-1 text-slate-500 transition-colors hover:bg-red-50 hover:text-red-700"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Mandatory Emergency Medical Disclaimer Alert */}
-            <div className="px-4 py-2.5 bg-amber-500/10 border-b border-amber-500/20 flex items-start gap-2 text-[11px] text-amber-300">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-amber-400" />
+            <div className="flex items-start gap-2 border-b border-red-100 bg-red-50 px-4 py-2.5 text-[11px] text-red-700">
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
               <span>
                 <strong>Notice:</strong> This information is general guidance and does not replace emergency services or professional medical care.
               </span>
             </div>
 
             {/* Chat Body */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-3 no-scrollbar">
+            <div className="flex-1 space-y-3 overflow-y-auto bg-[#fffefa] p-4 no-scrollbar">
               {messages.map((m) => (
                 <div
                   key={m.id}
@@ -123,18 +123,18 @@ export const CrisisAIModal: React.FC = () => {
                   <div
                     className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-xs leading-relaxed whitespace-pre-line ${
                       m.sender === 'user'
-                        ? 'bg-sky-600 text-theme-dark rounded-br-none shadow-md'
-                        : 'bg-white/10 dark:bg-theme-sage/80 text-theme-dark rounded-bl-none border border-theme-mint/30'
+                        ? 'rounded-br-none bg-red-600 text-white shadow-md'
+                        : 'rounded-bl-none border border-red-100 bg-white text-black shadow-sm'
                     }`}
                   >
                     {m.text}
                   </div>
-                  <span className="text-[9px] text-theme-forest/60 mt-1 px-1">{m.timestamp}</span>
+                  <span className="mt-1 px-1 text-[9px] text-slate-500">{m.timestamp}</span>
                 </div>
               ))}
 
               {isTyping && (
-                <div className="flex items-center gap-1.5 text-xs text-sky-400 px-3 py-2 bg-white/5 rounded-xl w-fit">
+                  <div className="flex w-fit items-center gap-1.5 rounded-xl bg-red-50 px-3 py-2 text-xs text-red-700">
                   <Sparkles className="w-3.5 h-3.5 animate-spin" />
                   <span>Reviewing emergency protocols...</span>
                 </div>
@@ -143,12 +143,12 @@ export const CrisisAIModal: React.FC = () => {
             </div>
 
             {/* Quick Prompts */}
-            <div className="px-4 py-2 border-t border-theme-mint/20 bg-white/50 flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-1.5 border-t border-red-100 bg-white px-4 py-2">
               {sampleQuestions.map((q, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleSend(q)}
-                  className="text-[10px] px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/15 text-theme-forest hover:text-theme-dark border border-theme-mint/30 transition-colors text-left"
+                  className="rounded-full border border-red-200 bg-white px-2.5 py-1 text-left text-[10px] text-red-700 transition-colors hover:bg-red-50"
                 >
                   {q}
                 </button>
@@ -156,7 +156,7 @@ export const CrisisAIModal: React.FC = () => {
             </div>
 
             {/* Input Box */}
-            <div className="p-3 border-t border-theme-mint/30 bg-white/80">
+            <div className="border-t border-red-100 bg-white p-3">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -169,12 +169,12 @@ export const CrisisAIModal: React.FC = () => {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Ask for first-aid or safety guidance..."
-                  className="flex-1 bg-theme-sage/80 border border-theme-mint/30 rounded-xl px-3.5 py-2.5 text-xs text-theme-dark placeholder:text-theme-forest/60 focus:outline-none focus:border-sky-400 transition-colors"
+                  className="flex-1 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-black placeholder:text-slate-500 transition-colors focus:border-red-500 focus:outline-none"
                 />
                 <button
                   type="submit"
                   disabled={!inputValue.trim() || isTyping}
-                  className="p-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-40 text-theme-dark transition-all"
+                  className="rounded-xl bg-red-600 p-2.5 text-white transition-all hover:bg-red-700 disabled:opacity-40"
                 >
                   <Send className="w-4 h-4" />
                 </button>

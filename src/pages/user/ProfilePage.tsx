@@ -24,43 +24,43 @@ export const ProfilePage: React.FC = () => {
         </div>
 
         {/* Identity Glass Card */}
-        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-theme-mint/30 space-y-6">
+        <div className="space-y-6 rounded-3xl border border-slate-200 bg-[#fffefa] p-6 shadow-[0_14px_40px_rgba(15,23,42,0.10)] sm:p-8">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-theme-sage border border-theme-mint/40 flex items-center justify-center text-theme-dark/90 text-xl font-bold">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-red-200 bg-red-50 text-xl font-bold text-red-700">
               {name.charAt(0)}
             </div>
             <div>
-              <h2 className="text-xl font-black text-theme-dark font-display">{name}</h2>
+              <h2 className="font-display text-xl font-black text-black">{name}</h2>
               <div className="flex items-center gap-2 mt-1">
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                <span className="rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-700">
                   {role === 'ngo' ? 'Verified NGO Partner' : 'Verified Citizen'}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-theme-mint/30 text-xs">
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
-              <Mail className="w-4 h-4 text-sky-400" />
+          <div className="grid grid-cols-1 gap-4 border-t border-red-100 pt-4 text-xs sm:grid-cols-2">
+            <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-3">
+              <Mail className="h-4 w-4 text-red-600" />
               <div>
-                <span className="text-theme-forest/80 block text-[10px]">Email Address</span>
-                <span className="text-theme-dark font-semibold">{currentUser.email}</span>
+                <span className="block text-[10px] text-red-700">Email Address</span>
+                <span className="font-semibold text-black">{currentUser.email}</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
-              <Phone className="w-4 h-4 text-emerald-400" />
+            <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-3">
+              <Phone className="h-4 w-4 text-red-600" />
               <div>
-                <span className="text-theme-forest/80 block text-[10px]">Emergency Phone</span>
-                <span className="text-theme-dark font-semibold">{currentUser.phone}</span>
+                <span className="block text-[10px] text-red-700">Emergency Phone</span>
+                <span className="font-semibold text-black">{currentUser.phone}</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 sm:col-span-2">
-              <MapPin className="w-4 h-4 text-emergency-500" />
+            <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-3 sm:col-span-2">
+              <MapPin className="h-4 w-4 text-red-600" />
               <div>
-                <span className="text-theme-forest/80 block text-[10px]">Default Coordinates / Dispatch Zone</span>
-                <span className="text-theme-dark font-semibold">{currentUser.location.address || 'New York Metro'}</span>
+                <span className="block text-[10px] text-red-700">Default Coordinates / Dispatch Zone</span>
+                <span className="font-semibold text-black">{currentUser.location.address || 'New York Metro'}</span>
               </div>
             </div>
           </div>

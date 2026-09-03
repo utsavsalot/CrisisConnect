@@ -45,7 +45,7 @@ export const EmergencyCategoryCard: React.FC<EmergencyCategoryCardProps> = ({
       className={`relative p-3.5 sm:p-4 rounded-2xl border text-left transition-all duration-200 flex flex-col justify-between group ${
         selected
           ? 'border-emergency-500 bg-emergency-500/15 shadow-emergency-glow/30 scale-[1.02]'
-          : 'border-theme-mint/30 dark:border-theme-mint/30 bg-white/40 hover:bg-theme-sage/60 hover:border-theme-mint/40'
+          : 'border-slate-200 bg-white hover:border-red-300 hover:bg-red-50'
       }`}
     >
       <div className="flex items-center justify-between w-full mb-2">
@@ -53,19 +53,19 @@ export const EmergencyCategoryCard: React.FC<EmergencyCategoryCardProps> = ({
           <span className="text-xl" role="img" aria-label={config.label}>
             {config.emoji}
           </span>
-          <Icon className={`w-4 h-4 ${selected ? 'text-emergency-400' : 'text-theme-forest/80'}`} />
+          <Icon className={`w-4 h-4 ${selected ? 'text-red-600' : 'text-slate-600'}`} />
         </div>
         <div
           className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${
             selected
               ? 'border-emergency-500 bg-emergency-500 text-theme-dark'
-              : 'border-slate-600 bg-transparent'
+              : 'border-slate-300 bg-white'
           }`}
         >
-          {selected && <span className="text-xs font-bold">✓</span>}
+          {selected && <span className="text-xs font-bold text-white">✓</span>}
         </div>
       </div>
-      <span className={`text-xs font-bold tracking-wide ${selected ? 'text-theme-dark' : 'text-theme-forest'}`}>
+      <span className={`text-xs font-bold tracking-wide ${selected ? 'text-black' : 'text-slate-700'}`}>
         {config.label}
       </span>
     </button>

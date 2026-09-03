@@ -62,14 +62,14 @@ export const MyRequestsPage: React.FC = () => {
 
         {/* Requests Feed */}
         {filteredRequests.length === 0 ? (
-          <div className="glass-panel rounded-3xl p-12 text-center border border-theme-mint/30 max-w-lg mx-auto mt-8">
-            <div className="w-12 h-12 rounded-2xl bg-white/5 border border-theme-mint/30 flex items-center justify-center text-theme-forest/80 mx-auto mb-4">
+          <div className="mx-auto mt-8 max-w-lg rounded-3xl border border-slate-200 bg-[#fffefa] p-12 text-center shadow-[0_14px_40px_rgba(15,23,42,0.10)]">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-red-200 bg-red-50 text-red-600">
               <Clock className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-theme-dark font-display">
+            <h3 className="font-display text-lg font-bold text-black">
               No emergency requests found
             </h3>
-            <p className="text-xs text-theme-forest/80 mt-1 max-w-xs mx-auto">
+            <p className="mx-auto mt-1 max-w-xs text-xs text-slate-600">
               You do not have any emergency requests matching this filter.
             </p>
             <Link

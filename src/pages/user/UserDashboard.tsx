@@ -55,7 +55,13 @@ export const UserDashboard: React.FC = () => {
             </p>
           </div>
 
-          {/* Header button removed as requested */}
+          <Link
+            to="/request-help"
+            className="inline-flex min-h-14 min-w-[220px] items-center justify-center gap-3 rounded-full border-2 border-red-600 bg-red-600 px-8 py-4 font-display text-lg font-black uppercase tracking-[.3em] text-white shadow-[0_14px_30px_rgba(231,70,54,.28)] transition hover:border-black hover:bg-black active:scale-95 sm:min-w-[280px] sm:text-xl"
+          >
+            <AlertTriangle className="h-4 w-4" />
+            <span>S O S</span>
+          </Link>
         </div>
 
         <section className="grid min-h-[calc(100vh-12rem)] items-center gap-10 lg:grid-cols-[1.05fr_.95fr]">
@@ -74,6 +80,9 @@ export const UserDashboard: React.FC = () => {
                 <p className="mt-5 max-w-md text-sm leading-relaxed text-black/75 sm:text-base">
                   Broadcast an emergency request in under 15 seconds. Nearby verified community responders and NGOs will receive your GPS coordinates.
                 </p>
+                <p className="mt-5 max-w-md text-sm leading-relaxed text-black/70 sm:text-base">
+                  Share what is happening, where you are, and what kind of support is needed. Your request stays open until help accepts it and coordination is complete.
+                </p>
               </div>
 
               <div className="mt-6">
@@ -83,29 +92,15 @@ export const UserDashboard: React.FC = () => {
               </div>
             </div>
 
-            <Link
-              to="/request-help"
-              className="relative z-10 flex min-h-[230px] w-full flex-col items-center justify-center gap-5 overflow-hidden rounded-[2rem] border-2 border-black bg-white p-6 text-center text-black transition-all hover:-translate-y-1 active:scale-95 sm:w-[34%] sm:shrink-0"
-            >
-              {/* High-tech Glowing Edges */}
-              <div className="absolute left-1/2 top-0 h-1 w-2/3 -translate-x-1/2 bg-red-600" />
-              <div className="absolute bottom-0 left-1/2 h-1 w-2/3 -translate-x-1/2 bg-red-600" />
-
-              {/* Dot Pattern Overlay */}
-              <div className="absolute inset-0 opacity-[0.1] bg-[radial-gradient(circle_at_center,_#e74636_1px,_transparent_1px)] bg-[length:10px_10px]" />
-
-              <AlertTriangle className="relative z-10 h-12 w-12 text-red-600 sm:h-14 sm:w-14" />
-
-              <span className="relative z-10 font-display text-2xl font-black uppercase leading-[1.1] tracking-widest">
-                REQUEST<br />HELP<br />NOW
-              </span>
-            </Link>
           </motion.div>
 
           <div className="relative overflow-hidden rounded-[2rem] border-2 border-black bg-white p-6 sm:p-10">
             <img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=1000&q=85" alt="Medical responder preparing care" loading="lazy" className="h-56 w-full rounded-[1.5rem] object-cover grayscale-[.15] sm:h-72" />
             <motion.p ref={storyRef} style={{ y: storyY, opacity: storyOpacity }} className="mt-6 max-w-md font-instrument text-2xl leading-tight text-black sm:text-4xl">“Your coordinates, your need, and a direct line to people who can act.”</motion.p>
-            <p className="mt-5 text-xs font-bold uppercase tracking-[.2em] text-red-600">Verified community response</p>
+            <div className="mt-6 flex items-center justify-between gap-4">
+              <p className="text-xs font-bold uppercase tracking-[.2em] text-red-600">Verified community response</p>
+              <Link to="/request-help" className="inline-flex min-h-14 w-full items-center justify-center rounded-full border-2 border-red-600 bg-red-600 px-6 py-4 font-display text-lg font-black uppercase tracking-[.25em] text-white transition hover:border-black hover:bg-black active:scale-95">S O S</Link>
+            </div>
           </div>
         </section>
 
@@ -195,21 +190,21 @@ export const UserDashboard: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* My Recent Requests (2 cols) */}
-          <div className="lg:col-span-2 glass-panel rounded-3xl p-6 border border-theme-mint/30 space-y-4">
-            <div className="flex items-center justify-between border-b border-theme-mint/30 pb-4">
+          <div className="lg:col-span-2 space-y-4 rounded-[2rem] border border-black/10 bg-white/95 p-6 shadow-[0_20px_55px_rgba(15,23,42,0.14)]">
+            <div className="flex items-center justify-between border-b border-black/10 pb-4">
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-sky-400" />
-                <h3 className="font-bold text-sm uppercase tracking-wider text-theme-dark">
+                <Clock className="w-4 h-4 text-red-600" />
+                <h3 className="font-bold text-sm uppercase tracking-wider text-black">
                   My Emergency Requests
                 </h3>
               </div>
-              <Link to="/requests" className="text-xs text-sky-400 hover:underline">
+              <Link to="/requests" className="text-xs font-semibold text-red-600 hover:underline">
                 View All
               </Link>
             </div>
 
             {myRequests.length === 0 ? (
-              <div className="text-center py-12 text-xs text-theme-forest/60">
+              <div className="py-12 text-center text-xs text-black/55">
                 No emergency requests yet. You're all clear.
               </div>
             ) : (
@@ -218,20 +213,20 @@ export const UserDashboard: React.FC = () => {
                   <Link
                     key={req.id}
                     to={`/requests/${req.id}`}
-                    className="p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-theme-mint/20 hover:border-theme-mint/40 transition-all flex items-center justify-between gap-4 block"
+                    className="block flex items-center justify-between gap-4 rounded-xl border border-black/10 bg-[#f4f5f8] p-4 transition-all hover:border-red-300 hover:bg-red-50"
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-bold text-xs text-theme-dark">
+                        <span className="font-bold text-xs text-black">
                           {req.needs.join(', ')}
                         </span>
                         <StatusBadge status={req.status} size="sm" />
                       </div>
-                      <p className="text-xs text-theme-forest/80 truncate max-w-md">
+                      <p className="max-w-md truncate text-xs text-black/60">
                         {req.description}
                       </p>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-theme-forest/60 shrink-0" />
+                    <ChevronRight className="h-4 w-4 shrink-0 text-red-600" />
                   </Link>
                 ))}
               </div>
@@ -239,9 +234,9 @@ export const UserDashboard: React.FC = () => {
           </div>
 
           {/* Quick Actions & Capabilities Sidebar */}
-          <div className="glass-panel rounded-3xl p-6 border border-theme-mint/30 space-y-4">
-            <div className="border-b border-theme-mint/30 pb-3">
-              <h3 className="font-bold text-xs uppercase tracking-wider text-theme-forest/80">
+          <div className="space-y-4 rounded-[2rem] border border-black/10 bg-white/95 p-6 shadow-[0_20px_55px_rgba(15,23,42,0.14)]">
+            <div className="border-b border-black/10 pb-3">
+              <h3 className="font-bold text-xs uppercase tracking-wider text-black">
                 Quick Actions
               </h3>
             </div>
@@ -249,24 +244,35 @@ export const UserDashboard: React.FC = () => {
             <div className="space-y-2.5">
               <Link
                 to="/request-help"
-                className="w-full p-3 rounded-xl bg-emergency-600/20 hover:bg-emergency-600/30 border border-emergency-500/30 text-theme-forest font-bold text-xs flex items-center justify-between transition-colors"
+                className="flex w-full items-center justify-between rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-bold text-black transition-colors hover:bg-red-100"
               >
                 <div className="flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-emergency-500" />
+                  <AlertTriangle className="h-4 w-4 text-red-600" />
                   <span>Request Emergency Aid</span>
                 </div>
-                <ArrowRight className="w-3.5 h-3.5 text-emergency-400" />
+                <ArrowRight className="h-3.5 w-3.5 text-red-600" />
               </Link>
 
               <Link
                 to="/notifications"
-                className="w-full p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-theme-mint/30 text-theme-dark font-medium text-xs flex items-center justify-between transition-colors"
+                className="flex w-full items-center justify-between rounded-xl border border-black/10 bg-[#f4f5f8] p-3 text-xs font-medium text-black transition-colors hover:border-red-200 hover:bg-red-50"
               >
                 <div className="flex items-center gap-2">
-                  <Bell className="w-4 h-4 text-sky-400" />
+                  <Bell className="h-4 w-4 text-red-600" />
                   <span>Notification Center</span>
                 </div>
-                <ArrowRight className="w-3.5 h-3.5 text-theme-forest/80" />
+                <ArrowRight className="h-3.5 w-3.5 text-red-600" />
+              </Link>
+
+              <Link
+                to="/request-help"
+                className="flex w-full items-center justify-between rounded-xl border-2 border-red-600 bg-red-600 p-3 text-xs font-black uppercase tracking-[.2em] text-white transition-colors hover:border-black hover:bg-black"
+              >
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4" />
+                  <span>S O S</span>
+                </div>
+                <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
 
