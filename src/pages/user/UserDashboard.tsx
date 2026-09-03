@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   AlertTriangle,
@@ -13,6 +13,7 @@ import {
   ChevronRight,
   Heart
 } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { useEmergency } from '../../context/EmergencyContext';
 import { StatusBadge } from '../../components/ui/StatusBadge';
@@ -27,77 +28,86 @@ export const UserDashboard: React.FC = () => {
 
   // Find active request if any
   const activeRequest = myRequests.find(r => r.status === 'active' || r.status === 'accepted' || r.status === 'in_progress');
+  const dashboardRef = useRef<HTMLDivElement>(null);
+  const storyRef = useRef<HTMLParagraphElement>(null);
+  const { scrollYProgress } = useScroll({ target: storyRef, offset: ['start 0.8', 'end 0.2'] });
+  const storyY = useTransform(scrollYProgress, [0, 1], [28, 0]);
+  const storyOpacity = useTransform(scrollYProgress, [0, 0.25, 1], [0.35, 1, 1]);
 
   return (
-    <div className="min-h-screen bg-theme-light py-8 px-4 sm:px-6 lg:px-8 text-theme-dark">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div ref={dashboardRef} className="min-h-screen bg-[#f4f5f8] px-4 py-8 text-black sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl space-y-12">
 
         {/* Greeting Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-theme-mint/30 pb-6">
+        <div className="flex flex-col items-start justify-between gap-4 border-b border-black/15 pb-6 sm:flex-row sm:items-center">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-theme-forest/80">
+              <span className="text-xs font-mono font-bold uppercase tracking-[.2em] text-red-600">
                 Citizen Incident Center
               </span>
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-theme-dark font-display mt-1">
+            <h1 className="mt-1 font-display text-4xl font-black uppercase leading-none text-black sm:text-6xl">
               Good day, {userName}
             </h1>
-            <p className="text-xs text-theme-forest/80 mt-1">
-              Community status: <span className="text-emerald-400 font-semibold">{activeCount} active emergencies</span> in your region.
+            <p className="mt-3 text-sm text-black/60">
+              Community status: <span className="font-semibold text-red-600">{activeCount} active emergencies</span> in your region.
             </p>
           </div>
 
           {/* Header button removed as requested */}
         </div>
 
-        {/* Top 2 Primary Cards: Need Help Banner & Responder Mode Toggle */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <section className="grid min-h-[calc(100vh-12rem)] items-center gap-10 lg:grid-cols-[1.05fr_.95fr]">
 
           {/* Main Emergency CTA Card */}
-          <div className="relative rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-emergency-900/40 via-slate-900/80 to-slate-950 border border-emergency-500/30 shadow-emergency-glow/20 flex flex-col sm:flex-row gap-6 overflow-hidden group">
+          <motion.div initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7 }} className="relative overflow-hidden rounded-[2rem] border-2 border-black bg-[#e74636] p-7 shadow-[0_22px_55px_rgba(231,70,54,.22)] sm:p-10">
             <div className="flex-1 flex flex-col justify-between relative z-10">
               <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emergency-500/20 text-emergency-400 text-[10px] font-bold tracking-wider uppercase border border-emergency-500/30 mb-4">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emergency-500 animate-ping" />
+                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-black/20 bg-white/20 px-3 py-1 text-[10px] font-bold uppercase tracking-[.2em] text-black">
+                  <span className="h-1.5 w-1.5 rounded-full bg-black animate-ping" />
                   <span>Zero-Friction Emergency</span>
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-black text-theme-dark font-display">
+                <h2 className="font-display text-4xl font-black uppercase leading-none text-black sm:text-6xl">
                   Need Immediate Help?
                 </h2>
-                <p className="text-xs sm:text-sm text-theme-forest mt-2 max-w-md leading-relaxed">
+                <p className="mt-5 max-w-md text-sm leading-relaxed text-black/75 sm:text-base">
                   Broadcast an emergency request in under 15 seconds. Nearby verified community responders and NGOs will receive your GPS coordinates.
                 </p>
               </div>
 
               <div className="mt-6">
-                <span className="text-[11px] text-theme-forest/80 font-mono">
-                  No lengthy forms • Automatic GPS
+                <span className="font-mono text-[11px] uppercase tracking-wider text-black/70">
+                  No lengthy forms / Automatic GPS
                 </span>
               </div>
             </div>
 
             <Link
               to="/request-help"
-              className="w-full sm:w-[30%] sm:shrink-0 min-h-[220px] rounded-[2.5rem] bg-gradient-to-b from-emergency-900/20 to-emergency-950/60 text-theme-dark flex flex-col items-center justify-center gap-5 transition-all active:scale-95 relative z-10 p-6 text-center border border-emergency-500/40 shadow-[0_0_40px_rgba(239,68,68,0.2)_inset] hover:shadow-[0_0_50px_rgba(239,68,68,0.3)_inset,0_0_20px_rgba(239,68,68,0.3)] group overflow-hidden backdrop-blur-md"
+              className="relative z-10 flex min-h-[230px] w-full flex-col items-center justify-center gap-5 overflow-hidden rounded-[2rem] border-2 border-black bg-white p-6 text-center text-black transition-all hover:-translate-y-1 active:scale-95 sm:w-[34%] sm:shrink-0"
             >
               {/* High-tech Glowing Edges */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-[4px] bg-emergency-400 shadow-[0_0_20px_5px_rgba(239,68,68,0.7)]" />
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2/3 h-[4px] bg-emergency-400 shadow-[0_0_20px_5px_rgba(239,68,68,0.7)]" />
+              <div className="absolute left-1/2 top-0 h-1 w-2/3 -translate-x-1/2 bg-red-600" />
+              <div className="absolute bottom-0 left-1/2 h-1 w-2/3 -translate-x-1/2 bg-red-600" />
 
               {/* Dot Pattern Overlay */}
-              <div className="absolute inset-0 opacity-[0.15] bg-[radial-gradient(circle_at_center,_#FF4D4D_1px,_transparent_1px)] bg-[length:10px_10px]" />
+              <div className="absolute inset-0 opacity-[0.1] bg-[radial-gradient(circle_at_center,_#e74636_1px,_transparent_1px)] bg-[length:10px_10px]" />
 
-              <AlertTriangle className="w-12 h-12 sm:w-14 sm:h-14 text-theme-dark drop-shadow-[0_0_12px_rgba(255,255,255,0.7)] relative z-10 transition-transform group-hover:scale-110" />
+              <AlertTriangle className="relative z-10 h-12 w-12 text-red-600 sm:h-14 sm:w-14" />
 
-              <span className="font-black text-2xl sm:text-[28px] uppercase tracking-widest leading-[1.1] relative z-10 drop-shadow-md">
+              <span className="relative z-10 font-display text-2xl font-black uppercase leading-[1.1] tracking-widest">
                 REQUEST<br />HELP<br />NOW
               </span>
             </Link>
-          </div>
+          </motion.div>
 
-        </div>
+          <div className="relative overflow-hidden rounded-[2rem] border-2 border-black bg-white p-6 sm:p-10">
+            <img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=1000&q=85" alt="Medical responder preparing care" loading="lazy" className="h-56 w-full rounded-[1.5rem] object-cover grayscale-[.15] sm:h-72" />
+            <motion.p ref={storyRef} style={{ y: storyY, opacity: storyOpacity }} className="mt-6 max-w-md font-instrument text-2xl leading-tight text-black sm:text-4xl">“Your coordinates, your need, and a direct line to people who can act.”</motion.p>
+            <p className="mt-5 text-xs font-bold uppercase tracking-[.2em] text-red-600">Verified community response</p>
+          </div>
+        </section>
 
         {/* Active Emergency Tracker if current user has an ongoing request */}
         {activeRequest && (

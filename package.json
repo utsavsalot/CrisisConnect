@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "animejs": "^3.2.2",
-    "firebase": "^11.3.0",
+    "firebase": "^11.10.0",
+    "framer-motion": "^13.2.0",
     "gsap": "^3.12.7",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.475.0",

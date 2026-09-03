@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { AlertTriangle, Lock, Mail, ArrowRight, User, Shield, Building2, Activity } from 'lucide-react';
+import { AlertTriangle, Lock, Mail, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { AuthSafetyPanel } from '../../components/navigation/AuthSafetyPanel';
 
 export const LoginPage: React.FC = () => {
-  const { login, switchDemoAccount } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
@@ -30,80 +31,65 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  const handleQuickDemo = (roleKey: 'demo-user' | 'demo-responder' | 'demo-ngo' | 'demo-admin') => {
-    switchDemoAccount(roleKey);
-    if (from && (roleKey === 'demo-user' || roleKey === 'demo-responder')) {
-      navigate(from, { replace: true });
-      return;
-    }
-    if (roleKey === 'demo-ngo') {
-      navigate('/ngo/dashboard');
-    } else if (roleKey === 'demo-admin') {
-      navigate('/admin');
-    } else if (roleKey === 'demo-responder') {
-      navigate('/dashboard');
-    } else {
-      navigate('/dashboard');
-    }
-  };
-
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-theme-light flex items-center justify-center p-4 sm:p-8 relative overflow-hidden ">
+    <div className="h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain scroll-smooth bg-[#f4f5f8] p-4 sm:p-8 relative">
       {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emergency-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/80 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="w-full max-w-md relative z-10">
+      <div className="relative z-10 flex min-h-full w-full max-w-[80rem] items-center justify-center gap-8 py-8 sm:gap-10 sm:py-12 xl:gap-14">
+        <AuthSafetyPanel storyCount={2} showIntro={false} />
+        <div className="w-full max-w-md">
 
         {/* Card Header */}
         <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-2xl bg-emergency-600/20 border border-emergency-500/40 flex items-center justify-center text-emergency-500 mx-auto mb-4 shadow-emergency-glow">
+          <div className="w-12 h-12 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center text-red-600 mx-auto mb-4 shadow-sm">
             <AlertTriangle className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-theme-dark font-display">
+          <h1 className="text-2xl sm:text-3xl font-black text-black font-display">
             Welcome to CrisisConnect
           </h1>
-          <p className="text-xs text-theme-forest/80 mt-2">
+          <p className="text-xs text-black/60 mt-2">
             Sign in to access your dashboard, responder feed, or NGO command
           </p>
         </div>
 
         {/* Login Glass Panel */}
-        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-theme-mint/30 shadow-2xl">
+        <div className="rounded-3xl p-6 sm:p-8 bg-white/95 border border-white shadow-[0_20px_55px_rgba(15,23,42,0.14)]">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-theme-forest mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-theme-forest/60 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-black/35 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="alex@crisisconnect.org"
                   required
-                  className="w-full bg-white/80 border border-theme-mint/30 rounded-xl pl-10 pr-4 py-3 text-xs text-theme-dark placeholder:text-theme-forest/50 bg-white border-theme-mint/30 focus:outline-none focus:border-emergency-500 transition-colors"
+                  className="w-full bg-[#f4f5f8] border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-xs text-black placeholder:text-slate-400 focus:outline-none focus:border-red-500 transition-colors"
                 />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-theme-forest">
+                <label className="text-xs font-bold uppercase tracking-wider text-black">
                   Password
                 </label>
-                <a href="#" className="text-[11px] text-sky-400 hover:underline">
+                <a href="#" className="text-[11px] text-red-600 hover:underline">
                   Forgot Password?
                 </a>
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-theme-forest/60 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-black/35 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-white/80 border border-theme-mint/30 rounded-xl pl-10 pr-4 py-3 text-xs text-theme-dark placeholder:text-theme-forest/50 bg-white border-theme-mint/30 focus:outline-none focus:border-emergency-500 transition-colors"
+                  className="w-full bg-[#f4f5f8] border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-xs text-black placeholder:text-slate-400 focus:outline-none focus:border-red-500 transition-colors"
                 />
               </div>
             </div>
@@ -111,78 +97,23 @@ export const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-theme-dark font-bold text-xs uppercase tracking-wider shadow-emergency-glow transition-all flex items-center justify-center gap-2 transform active:scale-98"
+              className="w-full py-3.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-wider shadow-[0_10px_25px_rgba(239,68,68,0.28)] transition-all flex items-center justify-center gap-2 transform active:scale-98"
             >
               <span>{loading ? 'Authenticating...' : 'Sign In'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
 
-          {/* Hackathon 1-Click Evaluation Presets */}
-          <div className="mt-8 pt-6 border-t border-theme-mint/30">
-            <span className="block text-[10px] font-mono font-bold uppercase tracking-wider text-theme-forest/80 mb-3 text-center">
-              ⚡ Instant 1-Click Hackathon Evaluation
-            </span>
-
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => handleQuickDemo('demo-user')}
-                className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-theme-mint/30 text-left transition-colors flex items-center gap-2 group"
-              >
-                <User className="w-4 h-4 text-emerald-400 shrink-0" />
-                <div className="min-w-0">
-                  <div className="text-[11px] font-bold text-theme-dark truncate">Demo User</div>
-                  <div className="text-[9px] text-theme-forest/80">Needs help</div>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleQuickDemo('demo-responder')}
-                className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-emerald-500/30 text-left transition-colors flex items-center gap-2 group"
-              >
-                <Shield className="w-4 h-4 text-emerald-400 shrink-0" />
-                <div className="min-w-0">
-                  <div className="text-[11px] font-bold text-emerald-300 truncate">Responder ON</div>
-                  <div className="text-[9px] text-theme-forest/80">Dr. Sarah (User)</div>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleQuickDemo('demo-ngo')}
-                className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-sky-500/30 text-left transition-colors flex items-center gap-2 group"
-              >
-                <Building2 className="w-4 h-4 text-sky-400 shrink-0" />
-                <div className="min-w-0">
-                  <div className="text-[11px] font-bold text-sky-300 truncate">Demo NGO</div>
-                  <div className="text-[9px] text-theme-forest/80">Map & resources</div>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleQuickDemo('demo-admin')}
-                className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-amber-500/30 text-left transition-colors flex items-center gap-2 group"
-              >
-                <Activity className="w-4 h-4 text-amber-400 shrink-0" />
-                <div className="min-w-0">
-                  <div className="text-[11px] font-bold text-amber-300 truncate">Demo Admin</div>
-                  <div className="text-[9px] text-theme-forest/80">Fallback dispatch</div>
-                </div>
-              </button>
-            </div>
-          </div>
-
-          <div className="mt-6 text-center text-xs text-theme-forest/80">
+          <div className="mt-6 text-center text-xs text-black/60">
             Don't have an account?{' '}
-            <Link to="/signup" className="text-theme-dark font-bold hover:underline">
+            <Link to="/signup" className="text-black font-bold hover:underline">
               Sign Up Now
             </Link>
           </div>
         </div>
 
+        </div>
+        <AuthSafetyPanel storyCount={2} storyStart={2} showIntro={false} />
       </div>
     </div>
   );

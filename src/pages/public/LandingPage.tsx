@@ -21,6 +21,7 @@ const caseStudies = [
 export const LandingPage: React.FC = () => {
   const pageRef = useRef<HTMLDivElement>(null);
   const signalPanelRef = useRef<HTMLDivElement>(null);
+  const aboutParagraphRef = useRef<HTMLParagraphElement>(null);
   const [signalPoint, setSignalPoint] = useState({ x: 0, y: 0 });
   const [signalStatus, setSignalStatus] = useState('Signal live');
 
@@ -78,7 +79,7 @@ export const LandingPage: React.FC = () => {
       <section id="about" className="flex min-h-[80vh] flex-col items-center justify-center overflow-hidden bg-white px-5 pb-16 pt-32 text-center sm:px-10 sm:pb-20 sm:pt-40">
         <p className="text-xs font-semibold uppercase tracking-[.24em] text-[#f45b52]">About CrisisConnect</p>
         <h2 className="cc-display-heading mt-5 max-w-5xl">No one waits<br />alone.</h2>
-        <p className="mt-10 max-w-2xl text-base font-medium leading-relaxed text-black sm:text-xl">CrisisConnect closes the gap between an emergency happening and verified assistance arriving. Your coordinates, your need, and a direct line to the people who accept your request.</p>
+        <p ref={aboutParagraphRef} className="mt-10 max-w-2xl text-base font-medium leading-relaxed text-black sm:text-xl">CrisisConnect closes the gap between an emergency happening and verified assistance arriving. Your coordinates, your need, and a direct line to the people who accept your request.</p>
       </section>
 
       <section id="how-it-works" className="rounded-t-[42px] bg-[#f5f5f0] px-5 py-20 text-[#0c0c0c] sm:rounded-t-[60px] sm:px-10 sm:py-28">

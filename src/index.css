@@ -12,6 +12,10 @@
   font-family: 'Kanit', sans-serif;
 }
 
+.font-instrument {
+  font-family: 'Instrument Serif', serif;
+}
+
 .cc-editorial .bg-theme-light {
   background-color: #ffffff !important;
 }

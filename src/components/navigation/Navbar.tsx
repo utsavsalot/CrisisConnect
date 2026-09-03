@@ -64,7 +64,7 @@ export const Navbar: React.FC = () => {
       : userNavLinks;
 
   return (
-    <header className={`sticky top-0 z-40 w-full border-b backdrop-blur-2xl transition-colors duration-200 ${isLanding ? 'border-black/10 bg-white/90' : 'border-[var(--border-color)] bg-[var(--bg-primary)]/85'}`}>
+    <header className="sticky top-0 z-40 w-full border-b border-black/10 bg-white/95 backdrop-blur-2xl transition-colors duration-200">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         
         {/* Brand Logo */}
@@ -138,7 +138,7 @@ export const Navbar: React.FC = () => {
           {!currentUser ? (
             <Link
               to="/login"
-              className="px-4 py-2 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-theme-dark font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-emergency-600/20 transition-all active:scale-95"
+              className="px-4 py-2 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-emergency-600/20 transition-all active:scale-95"
             >
               <LogIn className="w-3.5 h-3.5" />
               <span>Login</span>
