@@ -1,226 +1,96 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AlertTriangle, Send, ShieldAlert, ArrowLeft } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, CheckCircle2, ChevronDown, MapPin, ShieldAlert, TimerReset } from 'lucide-react';
 import { useEmergency } from '../../context/EmergencyContext';
 import { EmergencyNeedCategory, LocationCoordinates } from '../../types';
 import { EmergencyCategoryCard } from '../../components/emergency/EmergencyCategoryCard';
 import { LocationDetector } from '../../components/emergency/LocationDetector';
+import { SOSLocationMap } from '../../components/emergency/SOSLocationMap';
 import { RequestSubmissionAnimation } from '../../components/animations/RequestSubmissionAnimation';
+
+const HOLD_DURATION = 1500;
 
 export const RequestHelpPage: React.FC = () => {
   const { createEmergencyRequest } = useEmergency();
   const navigate = useNavigate();
-
+  const holdTimer = useRef<number | null>(null);
+  const [holdProgress, setHoldProgress] = useState(0);
+  const [showDetails, setShowDetails] = useState(false);
   const [selectedNeeds, setSelectedNeeds] = useState<EmergencyNeedCategory[]>(['Medical Assistance']);
-  const [otherNeedText, setOtherNeedText] = useState('');
   const [description, setDescription] = useState('');
-  const [location, setLocation] = useState<LocationCoordinates>({
-    latitude: 40.7128,
-    longitude: -74.0060,
-    address: 'Greenwich Village, New York, NY'
-  });
-  
+  const [location, setLocation] = useState<LocationCoordinates>({ latitude: 40.7128, longitude: -74.006 });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createdRequestId, setCreatedRequestId] = useState<string | null>(null);
 
-  const categories: EmergencyNeedCategory[] = [
-    'Blood',
-    'Medicine',
-    'Medical Assistance',
-    'Food',
-    'Shelter',
-    'Transportation',
-    'Rescue',
-    'Water',
-    'Other'
-  ];
-
-  const handleToggleCategory = (cat: EmergencyNeedCategory) => {
-    setSelectedNeeds(prev => {
-      if (prev.includes(cat)) {
-        return prev.filter(c => c !== cat);
-      } else {
-        return [...prev, cat];
-      }
-    });
+  const stopHold = () => {
+    if (holdTimer.current) window.clearInterval(holdTimer.current);
+    holdTimer.current = null;
+    setHoldProgress(0);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (selectedNeeds.length === 0) {
-      alert('Please select at least one emergency need.');
-      return;
-    }
-    if (!description.trim()) {
-      alert('Please describe your emergency situation.');
-      return;
-    }
-
+  const sendSOS = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
       const created = await createEmergencyRequest({
-        needs: selectedNeeds,
-        otherNeed: selectedNeeds.includes('Other') ? otherNeedText.trim() : undefined,
-        description: description.trim(),
-        location
+        needs: selectedNeeds.length ? selectedNeeds : ['Medical Assistance'],
+        description: description.trim() || 'Urgent SOS sent. Assistance required at the reported location.',
+        location,
       });
-
       setCreatedRequestId(created.id);
-      setIsSubmitting(true);
-    } catch (err) {
-      console.error('Request creation error:', err);
-      alert('Failed to submit emergency request. Please try again.');
+    } catch (error) {
+      console.error('SOS request creation error:', error);
+      setIsSubmitting(false);
+      alert('Unable to send the SOS. Please check your connection and try again.');
     }
   };
 
+  const startHold = () => {
+    if (isSubmitting || holdTimer.current) return;
+    const startedAt = Date.now();
+    holdTimer.current = window.setInterval(() => {
+      const progress = Math.min(((Date.now() - startedAt) / HOLD_DURATION) * 100, 100);
+      setHoldProgress(progress);
+      if (progress >= 100) {
+        stopHold();
+        void sendSOS();
+      }
+    }, 20);
+  };
+
+  const toggleNeed = (category: EmergencyNeedCategory) => setSelectedNeeds((current) =>
+    current.includes(category) ? current.filter((item) => item !== category) : [...current, category]
+  );
+
   return (
-    <div className="min-h-screen bg-[#070B14] py-8 px-4 sm:px-6 lg:px-8 text-slate-100">
-      
-      {/* Sequence Animation Overlay on Submission */}
-      {isSubmitting && (
-        <RequestSubmissionAnimation
-          onComplete={() => {
-            navigate(`/requests/${createdRequestId || 'req-101'}`);
-          }}
-        />
-      )}
-
-      <div className="max-w-3xl mx-auto space-y-8">
-        
-        {/* Back Link & Header */}
-        <div>
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors mb-4"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Dashboard</span>
-          </button>
-
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-emergency-600/30 border-2 border-emergency-500 flex items-center justify-center text-emergency-500 shadow-emergency-glow">
-              <AlertTriangle className="w-7 h-7 animate-bounce" />
-            </div>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-black text-white font-display">
-                REQUEST EMERGENCY ASSISTANCE
-              </h1>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Fast broadcast to nearby community responders and NGO emergency hubs
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Life-threatening Warning Disclaimer */}
-        <div className="p-4 rounded-2xl bg-emergency-500/10 border border-emergency-500/30 flex items-start gap-3">
-          <ShieldAlert className="w-5 h-5 text-emergency-500 shrink-0 mt-0.5" />
-          <p className="text-xs text-emergency-300 leading-relaxed">
-            <strong>For life-threatening emergencies, contact your local emergency services immediately (911/112).</strong> CrisisConnect connects you with available community assistance and does not replace emergency services.
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-8">
-          
-          {/* Section A: What Do You Need? */}
-          <div className="glass-panel rounded-3xl p-6 sm:p-7 border border-white/10 space-y-4">
-            <div>
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-emergency-400">
-                Step 01
-              </span>
-              <h2 className="text-lg font-black text-white font-display">
-                What do you need?
-              </h2>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Select all categories that apply to your emergency
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {categories.map((cat) => (
-                <EmergencyCategoryCard
-                  key={cat}
-                  category={cat}
-                  selected={selectedNeeds.includes(cat)}
-                  onToggle={handleToggleCategory}
-                />
-              ))}
-            </div>
-
-            {selectedNeeds.includes('Other') && (
-              <div className="pt-2 animate-in fade-in duration-150">
-                <label className="block text-xs font-bold text-slate-300 mb-1">
-                  Please specify what you need:
-                </label>
-                <input
-                  type="text"
-                  value={otherNeedText}
-                  onChange={(e) => setOtherNeedText(e.target.value)}
-                  placeholder="e.g. Baby formula, power generator for medical equipment..."
-                  className="w-full bg-slate-900/80 border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-emergency-500"
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Section B: Describe the situation */}
-          <div className="glass-panel rounded-3xl p-6 sm:p-7 border border-white/10 space-y-3">
-            <div>
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-sky-400">
-                Step 02
-              </span>
-              <h2 className="text-lg font-black text-white font-display">
-                Describe the situation
-              </h2>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Briefly describe what is happening and what kind of assistance you need
-              </p>
-            </div>
-
-            <textarea
-              rows={4}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Briefly describe what is happening and what kind of assistance you need..."
-              required
-              className="w-full bg-slate-900/80 border border-white/15 rounded-2xl p-4 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-emergency-500 leading-relaxed transition-colors"
-            />
-          </div>
-
-          {/* Section C: Location */}
-          <div className="glass-panel rounded-3xl p-6 sm:p-7 border border-white/10 space-y-3">
-            <div>
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400">
-                Step 03
-              </span>
-              <h2 className="text-lg font-black text-white font-display">
-                Emergency Location
-              </h2>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Automatically detects coordinates for rapid responder dispatch
-              </p>
-            </div>
-
-            <LocationDetector location={location} onChange={setLocation} />
-          </div>
-
-          {/* Submit CTA */}
-          <div className="pt-2">
-            <button
-              type="submit"
-              data-emergency="true"
-              className="emergency-cta w-full py-4 rounded-2xl bg-emergency-600 hover:bg-emergency-500 text-white font-black text-sm uppercase tracking-wider shadow-emergency-glow beacon-pulse flex items-center justify-center gap-3 transition-transform active:scale-98"
-            >
-              <AlertTriangle className="w-5 h-5 animate-pulse" />
-              <span>SUBMIT EMERGENCY REQUEST</span>
-            </button>
-            <p className="text-center text-[11px] text-slate-500 mt-3 font-mono">
-              Coordinates will be encrypted & broadcast to verified radius mesh nodes.
-            </p>
-          </div>
-
-        </form>
-
-      </div>
+    <div className="min-h-screen bg-[#070B14] px-4 py-7 text-slate-100 sm:px-6 lg:px-8">
+      {isSubmitting && <RequestSubmissionAnimation onComplete={() => navigate(`/requests/${createdRequestId || 'req-101'}`)} />}
+      <main className="mx-auto max-w-2xl space-y-6">
+        <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 transition-colors hover:text-white"><ArrowLeft className="h-4 w-4" /> Back to Dashboard</button>
+        <header className="text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl border-2 border-emergency-500 bg-emergency-600/20 text-emergency-400 shadow-emergency-glow"><AlertTriangle className="h-9 w-9 animate-pulse" /></div>
+          <p className="font-mono text-xs font-bold uppercase tracking-[.2em] text-emergency-400">Emergency quick response</p>
+          <h1 className="mt-2 font-display text-3xl font-black text-white sm:text-4xl">SEND AN SOS</h1>
+          <p className="mx-auto mt-2 max-w-md text-sm text-slate-400">Your location and selected emergency type are broadcast immediately to verified responders and NGO hubs.</p>
+        </header>
+        <div className="flex items-start gap-3 rounded-2xl border border-emergency-500/30 bg-emergency-500/10 p-4 text-xs leading-relaxed text-emergency-200"><ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-emergency-400" /><p><strong>For a life-threatening emergency, call local emergency services (112/911) first.</strong> CrisisConnect is an additional community response network.</p></div>
+        <section className="glass-panel rounded-3xl p-4 sm:p-6">
+          <div className="mb-4 flex items-center gap-2"><MapPin className="h-4 w-4 text-sky-400" /><h2 className="font-display text-lg font-black text-white">Live incident location</h2><span className="ml-auto flex items-center gap-1 text-[10px] font-bold text-emerald-400"><CheckCircle2 className="h-3.5 w-3.5" /> LIVE</span></div>
+          <SOSLocationMap location={location} />
+          <div className="mt-3"><LocationDetector location={location} onChange={setLocation} /></div>
+        </section>
+        <section className="glass-panel rounded-3xl p-4 sm:p-6">
+          <button type="button" onClick={() => setShowDetails((value) => !value)} className="flex w-full items-center justify-between text-left"><span><span className="font-display text-base font-black text-white">Add details</span><span className="ml-2 text-xs text-slate-400">Optional — SOS works without these</span></span><ChevronDown className={`h-5 w-5 text-slate-400 transition-transform ${showDetails ? 'rotate-180' : ''}`} /></button>
+          {showDetails && <div className="mt-5 space-y-4">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">{(['Medical Assistance', 'Rescue', 'Blood', 'Medicine', 'Food', 'Shelter', 'Transportation', 'Water', 'Other'] as EmergencyNeedCategory[]).map((category) => <EmergencyCategoryCard key={category} category={category} selected={selectedNeeds.includes(category)} onToggle={toggleNeed} />)}</div>
+            <textarea value={description} onChange={(event) => setDescription(event.target.value)} rows={3} placeholder="What happened? This is optional, but helpful for responders." className="w-full rounded-2xl border border-white/15 bg-slate-900/80 p-4 text-sm text-white placeholder:text-slate-500 focus:border-emergency-500 focus:outline-none" />
+          </div>}
+        </section>
+        <section className="pb-4 text-center">
+          <button type="button" data-emergency="true" onPointerDown={startHold} onPointerUp={stopHold} onPointerLeave={stopHold} onPointerCancel={stopHold} className="emergency-cta relative w-full select-none overflow-hidden rounded-3xl border border-red-300/50 bg-emergency-600 px-5 py-7 font-display text-xl font-black uppercase tracking-wide shadow-emergency-glow transition-transform active:scale-[.98]"><span className="absolute inset-y-0 left-0 bg-white/25 transition-[width] duration-75" style={{ width: `${holdProgress}%` }} /><span className="relative flex items-center justify-center gap-3"><AlertTriangle className="h-7 w-7" /> {holdProgress ? 'Keep holding…' : 'Press & hold to send SOS'}</span></button>
+          <p className="mt-3 flex items-center justify-center gap-1.5 font-mono text-[11px] text-slate-500"><TimerReset className="h-3.5 w-3.5" /> Hold for 1.5 seconds to prevent accidental requests.</p>
+        </section>
+      </main>
     </div>
   );
 };
