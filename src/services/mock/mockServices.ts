@@ -17,6 +17,7 @@ import {
   INITIAL_NOTIFICATIONS, 
   INITIAL_MESSAGES 
 } from './data';
+import { ESCALATION_STEPS } from '../escalation';
 
 type Listener = () => void;
 
@@ -94,6 +95,94 @@ let resources: NGOResource[] = loadFromStorage('resources', INITIAL_RESOURCES);
 let notifications: NotificationItem[] = loadFromStorage('notifications', INITIAL_NOTIFICATIONS);
 let messages: Record<string, ChatMessage[]> = loadFromStorage('messages', INITIAL_MESSAGES);
 let currentUserId: string | null = loadFromStorage<string | null>('currentUserId', null);
+
+const LOCAL_BROADCAST_RADIUS_KM = 5;
+
+const distanceBetween = (first: LocationCoordinates, second: LocationCoordinates): number => {
+  const latitude = ((second.latitude - first.latitude) * Math.PI) / 180;
+  const longitude = ((second.longitude - first.longitude) * Math.PI) / 180;
+  const latitudeOne = (first.latitude * Math.PI) / 180;
+  const latitudeTwo = (second.latitude * Math.PI) / 180;
+  const haversine = Math.sin(latitude / 2) ** 2
+    + Math.sin(longitude / 2) ** 2 * Math.cos(latitudeOne) * Math.cos(latitudeTwo);
+
+  return 6371 * 2 * Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine));
+};
+
+const validLocation = (location: LocationCoordinates): boolean =>
+  Number.isFinite(location.latitude) && Number.isFinite(location.longitude)
+  && location.latitude >= -90 && location.latitude <= 90
+  && location.longitude >= -180 && location.longitude <= 180;
+
+const escalationDelayMinutes = (minutes: number): number => {
+  if (import.meta.env.VITE_ESCALATION_TEST_MODE === 'true') {
+    return minutes === 2 ? 10 / 60 : minutes === 5 ? 20 / 60 : 30 / 60;
+  }
+  return minutes;
+};
+
+const getEligibleResponderIds = (request: EmergencyRequest, radiusKm: number): string[] => {
+  const responderIds = Object.values(users)
+    .filter((user) => user.responderMode && user.isAvailable && distanceBetween(request.location, user.location) <= radiusKm)
+    .filter((user) => user.capabilities.length === 0 || user.capabilities.some((capability) => request.needs.includes(capability) || capability === 'Other'))
+    .map((user) => user.uid);
+  const ngoIds = Object.values(ngos)
+    .filter((ngo) => ngo.verified && distanceBetween(request.location, ngo.location) <= radiusKm)
+    .filter((ngo) => !ngo.emergencyServices?.length || ngo.emergencyServices.some((service) => request.needs.includes(service) || service === 'Other'))
+    .map((ngo) => ngo.uid);
+  return [...responderIds, ...ngoIds];
+};
+
+const reconcileEscalations = (): void => {
+  const now = Date.now();
+  let changed = false;
+
+  requests = requests.map((request) => {
+    if (request.status !== 'active') return request;
+    const elapsedMinutes = (now - new Date(request.createdAt).getTime()) / 60_000;
+    const currentIndex = ESCALATION_STEPS.findIndex((step) => step.level === (request.escalationLevel || 'local'));
+    const nextIndex = ESCALATION_STEPS.findIndex((step) => elapsedMinutes >= escalationDelayMinutes(step.afterMinutes));
+    const targetIndex = Math.min(Math.max(nextIndex, 0), ESCALATION_STEPS.length - 1);
+    if (targetIndex <= currentIndex) return request;
+
+    const target = ESCALATION_STEPS[targetIndex];
+    const history = [...(request.escalationHistory || [])];
+    const previousRadius = request.escalationRadiusKm || 5;
+    const notified = new Set(request.notifiedResponderIds || []);
+    const newlyEligible = getEligibleResponderIds(request, target.radiusKm).filter((id) => !notified.has(id));
+    newlyEligible.forEach((id) => {
+      const responder = users[id] || ngos[id];
+      void mockNotificationService.sendNotification({
+        userId: id,
+        type: 'request_created',
+        title: `🚨 Search expanded to ${target.radiusKm} km`,
+        message: `${request.needs.join(', ')} emergency is ${responder ? distanceBetween(request.location, responder.location).toFixed(1) : target.radiusKm} km away.`,
+        requestId: request.id
+      });
+      notified.add(id);
+    });
+
+    changed = true;
+    history.push({ level: target.level, radiusKm: target.radiusKm, timestamp: new Date().toISOString(), event: `No acceptance; search expanded to ${target.radiusKm} km.` });
+    if (target.level === 'admin_alerted') {
+      void mockNotificationService.sendNotification({
+        userId: 'demo-admin',
+        type: 'system_alert',
+        title: '⚠️ Emergency escalated to admin',
+        message: `${request.needs.join(', ')} request has had no accepted responder after the final search stage.`,
+        requestId: request.id
+      });
+      return { ...request, status: 'admin_escalated', escalationLevel: target.level, escalationRadiusKm: previousRadius, escalatedAt: new Date().toISOString(), adminEscalatedAt: new Date().toISOString(), notifiedResponderIds: [...notified], escalationHistory: history };
+    }
+    return { ...request, escalationLevel: target.level, escalationRadiusKm: target.radiusKm, escalatedAt: new Date().toISOString(), notifiedResponderIds: [...notified], escalationHistory: history };
+  });
+
+  if (changed) {
+    saveToStorage('requests', requests);
+    pushDevState('requests', requests);
+    eventBus.emit('requests_changed');
+  }
+};
 
 export const mockAuthService = {
   getCurrentUser(): UserProfile | NGOProfile | null {
@@ -207,6 +296,7 @@ export const mockAuthService = {
 
 export const mockRequestService = {
   getAllRequests(): EmergencyRequest[] {
+    reconcileEscalations();
     return [...requests].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   },
 
@@ -246,6 +336,7 @@ export const mockRequestService = {
     description: string;
     location: LocationCoordinates;
   }): Promise<EmergencyRequest> {
+    if (!validLocation(data.location)) throw new Error('A valid emergency location is required');
     const newReq: EmergencyRequest = {
       id: 'req-' + Math.floor(1000 + Math.random() * 9000),
       requesterId: data.requesterId,
@@ -258,31 +349,44 @@ export const mockRequestService = {
       location: data.location,
       distanceKm: 0.8,
       status: 'active',
+        escalationLevel: 'local',
+        escalationRadiusKm: 5,
+        notifiedResponderIds: [],
+        escalationHistory: [{ level: 'local', radiusKm: 5, timestamp: new Date().toISOString(), event: 'Request created; local dispatch started.' }],
       createdAt: new Date().toISOString()
     };
     const synced = await pullDevState<EmergencyRequest[]>('requests');
     if (synced) requests = synced;
 
+    newReq.notifiedResponderIds = getEligibleResponderIds(newReq, LOCAL_BROADCAST_RADIUS_KM);
     requests = [newReq, ...requests];
     saveToStorage('requests', requests);
     pushDevState('requests', requests);
 
-    // Also trigger notification for responders & NGOs
-    mockNotificationService.sendNotification({
-      userId: 'demo-responder',
-      type: 'request_created',
-      title: `🚨 Emergency: ${data.needs.join(', ')}`,
-      message: `${data.requesterName} needs immediate assistance near ${data.location.address || 'your area'}.`,
-      requestId: newReq.id
-    });
+    Object.values(users)
+      .filter((user) => user.responderMode && user.isAvailable && distanceBetween(data.location, user.location) <= LOCAL_BROADCAST_RADIUS_KM)
+      .filter((user) => user.capabilities.length === 0 || user.capabilities.some((capability) => data.needs.includes(capability) || capability === 'Other'))
+      .forEach((user) => {
+        mockNotificationService.sendNotification({
+          userId: user.uid,
+          type: 'request_created',
+          title: `🚨 Emergency: ${data.needs.join(', ')}`,
+          message: `${data.requesterName} needs assistance ${distanceBetween(data.location, user.location).toFixed(1)} km away.`,
+          requestId: newReq.id
+        });
+      });
 
-    mockNotificationService.sendNotification({
-      userId: 'demo-ngo',
-      type: 'request_created',
-      title: `🚨 Triage Alert: ${data.needs.join(', ')}`,
-      message: `New incident reported: ${data.description.substring(0, 50)}...`,
-      requestId: newReq.id
-    });
+    Object.values(ngos)
+      .filter((ngo) => ngo.verified && distanceBetween(data.location, ngo.location) <= LOCAL_BROADCAST_RADIUS_KM)
+      .forEach((ngo) => {
+        mockNotificationService.sendNotification({
+          userId: ngo.uid,
+          type: 'request_created',
+          title: `🚨 Triage Alert: ${data.needs.join(', ')}`,
+          message: `New incident reported within ${LOCAL_BROADCAST_RADIUS_KM} km: ${data.description.substring(0, 50)}...`,
+          requestId: newReq.id
+        });
+      });
 
     eventBus.emit('requests_changed');
     return newReq;
@@ -381,10 +485,14 @@ export const mockRequestService = {
         }
       });
     }, 1500);
+    const escalationPollId = window.setInterval(() => {
+      callback(this.getAllRequests());
+    }, 1000);
     return () => {
       unsubscribeBus();
       window.removeEventListener('storage', handleStorage);
       window.clearInterval(pollId);
+      window.clearInterval(escalationPollId);
     };
   }
 };

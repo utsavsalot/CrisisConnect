@@ -37,6 +37,13 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'md' })
           dotClass: 'bg-emerald-400',
           staticDot: 'bg-emerald-400'
         };
+      case 'admin_escalated':
+        return {
+          label: 'ADMIN ESCALATED',
+          badgeClass: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+          dotClass: 'bg-amber-400 animate-pulse',
+          staticDot: 'bg-amber-400'
+        };
       default:
         return {
           label: status,

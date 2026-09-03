@@ -20,6 +20,7 @@ import { useAuth } from '../../context/AuthContext';
 import { RequestTimeline } from '../../components/emergency/RequestTimeline';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { ChatMessage } from '../../types';
+import { getEscalationStep, getRequiredEscalation, getSecondsUntilNextEscalation } from '../../services/escalation';
 
 export const RequestTrackingPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -32,7 +33,14 @@ export const RequestTrackingPage: React.FC = () => {
 
   const [messages, setMessages] = useState<ChatMessage[]>(() => (id ? getMessages(id) : []));
   const [inputText, setInputText] = useState('');
+  const [now, setNow] = useState(() => Date.now());
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (request?.status !== 'active') return;
+    const timer = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, [request?.status]);
 
   useEffect(() => {
     if (!id) return;
@@ -90,6 +98,15 @@ export const RequestTrackingPage: React.FC = () => {
   };
 
   const isAccepted = request.status === 'accepted' || request.status === 'in_progress' || request.status === 'resolved';
+  const displayedEscalation = getRequiredEscalation(request, now);
+  const displayedRadius = Math.max(request.escalationRadiusKm || 5, displayedEscalation.radiusKm);
+  const displayedRequest = displayedEscalation.level === request.escalationLevel
+    ? request
+    : { ...request, escalationLevel: displayedEscalation.level, escalationRadiusKm: displayedRadius };
+  const secondsUntilEscalation = getSecondsUntilNextEscalation(displayedRequest, now);
+  const countdown = secondsUntilEscalation === null
+    ? null
+    : `${Math.floor(secondsUntilEscalation / 60).toString().padStart(2, '0')}:${(secondsUntilEscalation % 60).toString().padStart(2, '0')}`;
 
   return (
     <div className="min-h-screen bg-theme-light py-8 px-4 sm:px-6 lg:px-8 text-theme-dark">
@@ -141,8 +158,22 @@ export const RequestTrackingPage: React.FC = () => {
                 NO RESPONDER HAS ACCEPTED YET
               </h4>
               <p className="text-xs text-sky-300 mt-1 leading-relaxed">
-                Your emergency request is active across the local mesh. We are continuing to broadcast your GPS coordinates to available medical responders, rescue volunteers, and nearby relief organizations.
+                Searching for available responders within <strong>{displayedRadius} km</strong>. The search expands automatically if nobody accepts.
               </p>
+              <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-mono font-bold uppercase tracking-wide">
+                <span className="rounded-lg border border-sky-400/30 bg-sky-400/10 px-2.5 py-1 text-sky-300">Radius: {displayedRadius} km</span>
+                {countdown && <span className="rounded-lg border border-amber-400/30 bg-amber-400/10 px-2.5 py-1 text-amber-300">Next expansion: {countdown}</span>}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {request.status === 'admin_escalated' && (
+          <div className="p-5 rounded-2xl bg-amber-500/15 border border-amber-500/40 flex items-start gap-4">
+            <AlertTriangle className="w-6 h-6 text-amber-400 shrink-0 mt-0.5" />
+            <div>
+              <h4 className="text-sm font-bold text-theme-dark uppercase tracking-wider font-display">ESCALATED TO CRISIS TEAM</h4>
+              <p className="text-xs text-amber-300 mt-1 leading-relaxed">We could not find an available responder nearby. Your request has been escalated to the CrisisConnect emergency team.</p>
             </div>
           </div>
         )}

@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useEmergency } from '../../context/EmergencyContext';
 import { StatusBadge } from '../../components/ui/StatusBadge';
+import { EscalationBadge } from '../../components/emergency/EscalationBadge';
 
 export const AdminDashboard: React.FC = () => {
   const { requests, acceptRequest } = useEmergency();
@@ -20,6 +21,7 @@ export const AdminDashboard: React.FC = () => {
   const activeRequests = requests.filter(r => r.status === 'active');
   const acceptedRequests = requests.filter(r => r.status === 'accepted' || r.status === 'in_progress');
   const resolvedRequests = requests.filter(r => r.status === 'resolved');
+  const adminEscalatedRequests = requests.filter(r => r.status === 'admin_escalated');
 
   // Any request active for > 15 minutes is flagged as needing emergency attention
   const needsAttention = activeRequests.filter(r => {
@@ -56,8 +58,8 @@ export const AdminDashboard: React.FC = () => {
 
           <div className="glass-panel rounded-2xl p-5 border border-amber-500/30">
             <span className="text-xs font-mono font-bold uppercase text-theme-forest/80">Needs Admin Attention</span>
-            <div className="text-3xl font-black text-amber-400 font-display mt-2">{needsAttention.length}</div>
-            <span className="text-[11px] text-theme-forest/80">Exceeded 10-minute threshold</span>
+            <div className="text-3xl font-black text-amber-400 font-display mt-2">{adminEscalatedRequests.length}</div>
+            <span className="text-[11px] text-theme-forest/80">Automatically escalated emergencies</span>
           </div>
 
           <div className="glass-panel rounded-2xl p-5 border border-emerald-500/30">
@@ -76,13 +78,13 @@ export const AdminDashboard: React.FC = () => {
             </h2>
           </div>
 
-          {needsAttention.length === 0 ? (
+          {adminEscalatedRequests.length === 0 && needsAttention.length === 0 ? (
             <p className="text-xs text-theme-forest/80 py-4 text-center">
               All active requests have been dispatched within standard response intervals.
             </p>
           ) : (
             <div className="space-y-3">
-              {needsAttention.map((req) => (
+              {[...adminEscalatedRequests, ...needsAttention.filter((request) => !adminEscalatedRequests.some((item) => item.id === request.id))].map((req) => (
                 <div
                   key={req.id}
                   className="p-4 rounded-2xl bg-white/5 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
@@ -93,10 +95,11 @@ export const AdminDashboard: React.FC = () => {
                         {req.needs.join(', ')}
                       </span>
                       <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold">
-                        UNACCEPTED &gt; 10 MIN
+                        {req.status === 'admin_escalated' ? 'ADMIN ESCALATED' : 'UNACCEPTED &gt; 10 MIN'}
                       </span>
                     </div>
                     <p className="text-xs text-theme-dark/90">{req.description}</p>
+                    <div className="mt-2"><EscalationBadge request={req} /></div>
                     <span className="text-[11px] text-theme-forest/80 font-mono mt-1 block">
                       Location: {req.location.address || 'Detected Location'}
                     </span>

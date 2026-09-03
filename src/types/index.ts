@@ -1,6 +1,8 @@
 export type UserRole = 'user' | 'ngo' | 'admin';
 
-export type EmergencyStatus = 'active' | 'accepted' | 'in_progress' | 'resolved';
+export type EmergencyStatus = 'active' | 'accepted' | 'in_progress' | 'resolved' | 'admin_escalated';
+
+export type EscalationLevel = 'local' | 'expanded' | 'priority' | 'admin_alerted';
 
 export type EmergencyNeedCategory = 
   | 'Blood'
@@ -72,6 +74,17 @@ export interface EmergencyRequest {
   location: LocationCoordinates;
   distanceKm?: number;
   status: EmergencyStatus;
+  escalationLevel?: EscalationLevel;
+  escalationRadiusKm?: number;
+  escalatedAt?: string;
+  adminEscalatedAt?: string;
+  notifiedResponderIds?: string[];
+  escalationHistory?: Array<{
+    level: EscalationLevel;
+    radiusKm: number;
+    timestamp: string;
+    event: string;
+  }>;
   acceptedBy?: string;
   acceptedByName?: string;
   acceptedByType?: 'responder' | 'ngo';

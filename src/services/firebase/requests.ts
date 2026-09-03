@@ -6,12 +6,28 @@ import {
   updateDoc, 
   onSnapshot, 
   query, 
-  orderBy 
+  orderBy,
+  runTransaction
 } from 'firebase/firestore';
 import { db } from './config';
 import { EmergencyRequest, EmergencyNeedCategory, EmergencyStatus, LocationCoordinates } from '../../types';
 
 let cachedRequests: EmergencyRequest[] = [];
+
+const distanceBetween = (first: LocationCoordinates, second: LocationCoordinates): number => {
+  const latitude = ((second.latitude - first.latitude) * Math.PI) / 180;
+  const longitude = ((second.longitude - first.longitude) * Math.PI) / 180;
+  const firstLatitude = (first.latitude * Math.PI) / 180;
+  const secondLatitude = (second.latitude * Math.PI) / 180;
+  const haversine = Math.sin(latitude / 2) ** 2
+    + Math.sin(longitude / 2) ** 2 * Math.cos(firstLatitude) * Math.cos(secondLatitude);
+  return 6371 * 2 * Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine));
+};
+
+const validLocation = (location: LocationCoordinates): boolean =>
+  Number.isFinite(location.latitude) && Number.isFinite(location.longitude)
+  && location.latitude >= -90 && location.latitude <= 90
+  && location.longitude >= -180 && location.longitude <= 180;
 
 export const firebaseRequestService = {
   getAllRequests(): EmergencyRequest[] {
@@ -24,6 +40,9 @@ export const firebaseRequestService = {
 
   getNearbyRequests(userLocation?: LocationCoordinates, capabilities?: EmergencyNeedCategory[]): EmergencyRequest[] {
     let list = cachedRequests.filter(r => r.status === 'active');
+    if (userLocation) {
+      list = list.filter((request) => distanceBetween(request.location, userLocation) <= (request.escalationRadiusKm || 5));
+    }
     if (capabilities && capabilities.length > 0) {
       list = list.filter(r => r.needs.some(n => capabilities.includes(n)) || r.needs.includes('Other'));
     }
@@ -45,6 +64,7 @@ export const firebaseRequestService = {
     location: LocationCoordinates;
   }): Promise<EmergencyRequest> {
     if (!db) throw new Error('Firestore not initialized');
+    if (!validLocation(data.location)) throw new Error('A valid emergency location is required');
 
     const newReqData: Omit<EmergencyRequest, 'id'> = {
       requesterId: data.requesterId,
@@ -55,8 +75,11 @@ export const firebaseRequestService = {
       otherNeed: data.otherNeed,
       description: data.description,
       location: data.location,
-      distanceKm: 1.2,
       status: 'active',
+      escalationLevel: 'local',
+      escalationRadiusKm: 5,
+      notifiedResponderIds: [],
+      escalationHistory: [{ level: 'local', radiusKm: 5, timestamp: new Date().toISOString(), event: 'Request created; local dispatch started.' }],
       createdAt: new Date().toISOString()
     };
 
@@ -73,16 +96,23 @@ export const firebaseRequestService = {
   ): Promise<EmergencyRequest> {
     if (!db) throw new Error('Firestore not initialized');
     const ref = doc(db, 'emergencyRequests', requestId);
+    const acceptedAt = new Date().toISOString();
     const updates = {
       status: 'accepted' as EmergencyStatus,
       acceptedBy: acceptedByUid,
       acceptedByName: responderName,
       acceptedByType: responderType,
-      acceptedAt: new Date().toISOString()
+      acceptedAt
     };
-    await updateDoc(ref, updates);
+    let target: EmergencyRequest | undefined;
+    await runTransaction(db, async (transaction) => {
+      const snapshot = await transaction.get(ref);
+      if (!snapshot.exists()) throw new Error('Request not found');
+      target = { ...snapshot.data(), id: snapshot.id } as EmergencyRequest;
+      if (target.status !== 'active' || target.acceptedBy) throw new Error('Request has already been assigned');
+      transaction.update(ref, updates);
+    });
 
-    const target = cachedRequests.find(r => r.id === requestId);
     return target ? { ...target, ...updates } : ({} as EmergencyRequest);
   },
 

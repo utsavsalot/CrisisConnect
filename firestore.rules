@@ -42,7 +42,9 @@ service cloud.firestore {
       allow update: if isAuthenticated() && (
         resource.data.requesterId == request.auth.uid ||
         resource.data.acceptedBy == request.auth.uid ||
-        (resource.data.status == "active" && request.resource.data.status == "accepted")
+        (resource.data.status == "active" && request.resource.data.status == "accepted" &&
+          request.resource.data.acceptedBy == request.auth.uid &&
+          !resource.data.keys().hasAny(['acceptedBy']))
       );
       
       allow delete: if isAuthenticated() && resource.data.requesterId == request.auth.uid;

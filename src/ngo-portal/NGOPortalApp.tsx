@@ -58,6 +58,7 @@ const [simulationError, setSimulationError] = useState('');
     return requests
       .filter((request) => request.status === 'active' || request.acceptedBy === ngo?.uid)
       .map((request) => ({ ...request, distanceKm: Number(distanceFrom(request, latitude, longitude).toFixed(1)) }))
+      .filter((request) => request.acceptedBy === ngo?.uid || request.distanceKm <= (request.escalationRadiusKm || 5))
       .sort((a, b) => a.distanceKm - b.distanceKm);
   }, [requests, ngo]);
 
