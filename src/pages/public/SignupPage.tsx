@@ -20,22 +20,28 @@ export const SignupPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim()) return;
+   if (!name.trim() || !email.trim() || !password.trim()) return;
+
+if (password.length < 6) {
+  alert('Password must be at least 6 characters.');
+  return;
+}
 
     setLoading(true);
     try {
       await signup({
-        name,
-        email,
-        phone: phone || '+1 (555) 019-2831',
-        role: selectedRole,
-        orgType: selectedRole === 'ngo' ? orgType : undefined,
-        location: {
-          latitude: 40.7128,
-          longitude: -74.0060,
-          address: 'New York, NY'
-        }
-      });
+  name,
+  email,
+  phone: phone || '+91',
+  password,
+  role: selectedRole,
+  orgType: selectedRole === 'ngo' ? orgType : undefined,
+  location: {
+    latitude: 19.0760,
+    longitude: 72.8777,
+    address: 'Mumbai, Maharashtra'
+  }
+});
 
       if (selectedRole === 'ngo') {
         navigate('/ngo/dashboard');
