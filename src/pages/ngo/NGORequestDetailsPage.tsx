@@ -16,6 +16,7 @@ import { useChat } from '../../context/ChatContext';
 import { useAuth } from '../../context/AuthContext';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { ChatMessage } from '../../types';
+import { SOSLocationMap } from '../../components/emergency/SOSLocationMap';
 
 export const NGORequestDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -50,7 +51,8 @@ export const NGORequestDetailsPage: React.FC = () => {
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputText.trim() || !id) return;
-    await sendMessage(id, inputText.trim());
+    const sent = await sendMessage(id, inputText.trim());
+    setMessages((current) => current.some((message) => message.id === sent.id) ? current : [...current, sent]);
     setInputText('');
   };
 
@@ -156,6 +158,21 @@ export const NGORequestDetailsPage: React.FC = () => {
                 </a>
               </div>
             </div>
+
+            {request.status !== 'active' && (
+              <div className="glass-panel rounded-3xl border border-emerald-500/30 bg-emerald-500/[0.03] p-5">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-red-500" />
+                    <h3 className="font-display text-sm font-black uppercase tracking-wider text-white">Requester location</h3>
+                  </div>
+                  <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-400"><CheckCircle2 className="h-3 w-3" /> Shared</span>
+                </div>
+                <SOSLocationMap location={request.location} />
+                <p className="mt-3 text-xs leading-relaxed text-slate-300">{request.location.address || 'Detected location'}</p>
+                <p className="mt-1 font-mono text-[10px] text-slate-500">GPS: {request.location.latitude.toFixed(4)}, {request.location.longitude.toFixed(4)}</p>
+              </div>
+            )}
           </div>
 
           {/* Right Coordination Chat (7 cols) */}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, ListOrdered, Shield, Bell, User, MapPin, Package } from 'lucide-react';
+import { Home, ListOrdered, Bell, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useEmergency } from '../../context/EmergencyContext';
 import { RequestHelpButton } from '../ui/RequestHelpButton';
@@ -17,7 +17,6 @@ export const MobileNav: React.FC = () => {
   const userItems = [
     { label: 'Home', icon: Home, path: '/dashboard' },
     { label: 'Requests', icon: ListOrdered, path: '/requests' },
-    { label: 'Responder', icon: Shield, path: '/responder' },
     { label: 'Alerts', icon: Bell, path: '/notifications', count: unreadNotificationCount },
     { label: 'Profile', icon: User, path: '/profile' },
   ];
@@ -25,8 +24,6 @@ export const MobileNav: React.FC = () => {
   const ngoItems = [
     { label: 'HQ', icon: Home, path: '/ngo/dashboard' },
     { label: 'Triage', icon: ListOrdered, path: '/ngo/requests' },
-    { label: 'Map', icon: MapPin, path: '/ngo/map' },
-    { label: 'Resources', icon: Package, path: '/ngo/resources' },
     { label: 'Alerts', icon: Bell, path: '/notifications', count: unreadNotificationCount },
   ];
 

@@ -23,6 +23,9 @@ interface AuthContextType {
   bloodGroup?: string;
   medicalHistory?: string[];
   emergencyContacts?: FamilyMemberContact[];
+  registrationId?: string;
+  operatingArea?: string;
+  emergencyServices?: EmergencyNeedCategory[];
 }) => Promise<void>;
   logout: () => Promise<void>;
   toggleResponderMode: (enabled: boolean) => Promise<void>;
@@ -77,6 +80,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   bloodGroup?: string;
   medicalHistory?: string[];
   emergencyContacts?: FamilyMemberContact[];
+  registrationId?: string;
+  operatingArea?: string;
+  emergencyServices?: EmergencyNeedCategory[];
 }) => {
     const user = await authService.signup(data);
     setCurrentUser(user);

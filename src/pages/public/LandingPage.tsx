@@ -210,34 +210,6 @@ export const LandingPage: React.FC = () => {
               </Link>
             </div>
 
-            {/* Responder */}
-            <div className="glass-panel rounded-3xl p-7 sm:p-8 border border-emerald-500/30 bg-emerald-500/[0.03] flex flex-col justify-between h-full group hover:border-emerald-500/50 transition-colors">
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <Shield className="w-6 h-6" />
-                  </div>
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-bold px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25">
-                    Standby Mode
-                  </span>
-                </div>
-                <h3 className="text-2xl font-bold text-theme-dark font-display">People Who Can Respond</h3>
-                <p className="text-xs text-theme-forest mt-2 mb-4 leading-relaxed line-clamp-2">
-                  Enable standby mode with your verified skills to receive instant proximity alerts and unlock secure navigation routes.
-                </p>
-
-                {/* Living Micro-UI Widget */}
-                <ResponderMotionWidget />
-              </div>
-
-              <Link
-                to="/responder"
-                className="mt-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs text-center uppercase tracking-wider transition-colors shadow-md shadow-emerald-600/20 active:scale-95"
-              >
-                Enable Responder Mode
-              </Link>
-            </div>
-
             {/* NGO */}
             <div className="glass-panel rounded-3xl p-7 sm:p-8 border border-sky-500/30 bg-sky-500/[0.03] flex flex-col justify-between h-full group hover:border-sky-500/50 transition-colors">
               <div>

@@ -128,9 +128,6 @@ export const AdminDashboard: React.FC = () => {
             <h3 className="text-sm font-bold text-theme-dark uppercase tracking-wider">
               All Real-Time Incidents ({requests.length})
             </h3>
-            <Link to="/ngo/map" className="text-xs text-sky-400 hover:underline">
-              View on Live Leaflet Map
-            </Link>
           </div>
 
           <div className="space-y-2.5">

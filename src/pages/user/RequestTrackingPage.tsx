@@ -72,7 +72,8 @@ export const RequestTrackingPage: React.FC = () => {
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputText.trim() || !id) return;
-    await sendMessage(id, inputText.trim());
+    const sent = await sendMessage(id, inputText.trim());
+    setMessages((current) => current.some((message) => message.id === sent.id) ? current : [...current, sent]);
     setInputText('');
   };
 

@@ -68,6 +68,24 @@ function saveToStorage<T>(key: string, data: T): void {
   }
 }
 
+async function pullDevState<T>(key: string): Promise<T | null> {
+  try {
+    const response = await fetch(`/__crisisconnect/${key}`);
+    if (!response.ok) return null;
+    return await response.json() as T;
+  } catch {
+    return null;
+  }
+}
+
+function pushDevState<T>(key: string, data: T): void {
+  void fetch(`/__crisisconnect/${key}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).catch(() => undefined);
+}
+
 // In-Memory state initialized with storage or data
 let users: Record<string, UserProfile> = loadFromStorage('users', INITIAL_USERS);
 let ngos: Record<string, NGOProfile> = loadFromStorage('ngos', INITIAL_NGOS);
@@ -113,6 +131,10 @@ export const mockAuthService = {
     role: 'user' | 'ngo';
     orgType?: string;
     location?: LocationCoordinates;
+    registrationId?: string;
+    operatingArea?: string;
+    emergencyServices?: EmergencyNeedCategory[];
+    address?: string;
   }): Promise<UserProfile | NGOProfile> {
     const uid = 'user-' + Date.now();
     const loc = data.location || { latitude: 40.7128, longitude: -74.0060, address: 'New York, NY' };
@@ -125,6 +147,10 @@ export const mockAuthService = {
         phone: data.phone,
         role: 'ngo',
         orgType: data.orgType || 'Emergency Relief NGO',
+        registrationId: data.registrationId,
+        operatingArea: data.operatingArea,
+        emergencyServices: data.emergencyServices,
+        address: data.address,
         location: loc,
         verified: true,
         activeMissions: 0,
@@ -237,6 +263,7 @@ export const mockRequestService = {
 
     requests = [newReq, ...requests];
     saveToStorage('requests', requests);
+    pushDevState('requests', requests);
 
     // Also trigger notification for responders & NGOs
     mockNotificationService.sendNotification({
@@ -273,6 +300,7 @@ export const mockRequestService = {
     };
 
     saveToStorage('requests', requests);
+    pushDevState('requests', requests);
 
     // Initial coordination greeting in chat
     mockChatService.sendMessage(requestId, acceptedByUid, responderName, responderType, 
@@ -303,6 +331,7 @@ export const mockRequestService = {
     };
 
     saveToStorage('requests', requests);
+    pushDevState('requests', requests);
 
     mockNotificationService.sendNotification({
       userId: requests[idx].requesterId,
@@ -320,9 +349,31 @@ export const mockRequestService = {
 
   onRequestsChanged(callback: (all: EmergencyRequest[]) => void) {
     callback(this.getAllRequests());
-    return eventBus.subscribe('requests_changed', () => {
+    const unsubscribeBus = eventBus.subscribe('requests_changed', () => {
       callback(this.getAllRequests());
     });
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== STORAGE_PREFIX + 'requests' || !event.newValue) return;
+      try {
+        requests = JSON.parse(event.newValue) as EmergencyRequest[];
+        callback(this.getAllRequests());
+      } catch {
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    const pollId = window.setInterval(() => {
+      void pullDevState<EmergencyRequest[]>('requests').then((synced) => {
+        if (synced) {
+          requests = synced;
+          callback(this.getAllRequests());
+        }
+      });
+    }, 1500);
+    return () => {
+      unsubscribeBus();
+      window.removeEventListener('storage', handleStorage);
+      window.clearInterval(pollId);
+    };
   }
 };
 
@@ -436,15 +487,38 @@ export const mockChatService = {
     }
     messages[requestId] = [...messages[requestId], newMsg];
     saveToStorage('messages', messages);
+    pushDevState('messages', messages);
     eventBus.emit('chat_' + requestId);
     return newMsg;
   },
 
   onMessagesChanged(requestId: string, callback: (msgs: ChatMessage[]) => void) {
     callback(this.getMessages(requestId));
-    return eventBus.subscribe('chat_' + requestId, () => {
+    const unsubscribeBus = eventBus.subscribe('chat_' + requestId, () => {
       callback(this.getMessages(requestId));
     });
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== STORAGE_PREFIX + 'messages' || !event.newValue) return;
+      try {
+        messages = JSON.parse(event.newValue) as Record<string, ChatMessage[]>;
+        callback(this.getMessages(requestId));
+      } catch {
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    const pollId = window.setInterval(() => {
+      void pullDevState<Record<string, ChatMessage[]>>('messages').then((synced) => {
+        if (synced) {
+          messages = synced;
+          callback(this.getMessages(requestId));
+        }
+      });
+    }, 1500);
+    return () => {
+      unsubscribeBus();
+      window.removeEventListener('storage', handleStorage);
+      window.clearInterval(pollId);
+    };
   }
 };
 

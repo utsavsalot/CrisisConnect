@@ -13,15 +13,20 @@ export const RequestSubmissionAnimation: React.FC<RequestSubmissionAnimationProp
   const pinRef = useRef<HTMLDivElement>(null);
   const checkRef = useRef<HTMLDivElement>(null);
   const nodesRef = useRef<HTMLDivElement>(null);
+  const onCompleteRef = useRef(onComplete);
   
   const [stepText, setStepText] = useState('Broadcasting emergency beacon...');
+
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         onComplete: () => {
           setTimeout(() => {
-            onComplete();
+            onCompleteRef.current();
           }, 800);
         }
       });
@@ -85,7 +90,7 @@ export const RequestSubmissionAnimation: React.FC<RequestSubmissionAnimationProp
     }, containerRef);
 
     return () => ctx.revert();
-  }, [onComplete]);
+  }, []);
 
   return (
     <div

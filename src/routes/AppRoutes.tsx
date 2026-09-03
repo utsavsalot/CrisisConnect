@@ -13,7 +13,6 @@ import { UserDashboard } from '../pages/user/UserDashboard';
 import { RequestHelpPage } from '../pages/user/RequestHelpPage';
 import { MyRequestsPage } from '../pages/user/MyRequestsPage';
 import { RequestTrackingPage } from '../pages/user/RequestTrackingPage';
-import { ResponderModePage } from '../pages/user/ResponderModePage';
 import { NotificationsPage } from '../pages/user/NotificationsPage';
 import { ProfilePage } from '../pages/user/ProfilePage';
 import { SettingsPage } from '../pages/user/SettingsPage';
@@ -22,9 +21,7 @@ import { SettingsPage } from '../pages/user/SettingsPage';
 import { NGODashboard } from '../pages/ngo/NGODashboard';
 import { NGORequestsPage } from '../pages/ngo/NGORequestsPage';
 import { NGORequestDetailsPage } from '../pages/ngo/NGORequestDetailsPage';
-import { LiveEmergencyMapPage } from '../pages/ngo/LiveEmergencyMapPage';
 import { NGOActiveAssistancePage } from '../pages/ngo/NGOActiveAssistancePage';
-import { NGOResourcesPage } from '../pages/ngo/NGOResourcesPage';
 
 // Admin Experience Page
 import { AdminDashboard } from '../pages/admin/AdminDashboard';
@@ -68,14 +65,6 @@ export const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute>
               <RequestTrackingPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/responder"
-          element={
-            <ProtectedRoute allowedRoles={['user']}>
-              <ResponderModePage />
             </ProtectedRoute>
           }
         />
@@ -130,26 +119,10 @@ export const AppRoutes: React.FC = () => {
           }
         />
         <Route
-          path="/ngo/map"
-          element={
-            <ProtectedRoute allowedRoles={['ngo', 'admin']}>
-              <LiveEmergencyMapPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/ngo/active"
           element={
             <ProtectedRoute allowedRoles={['ngo', 'admin']}>
               <NGOActiveAssistancePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/ngo/resources"
-          element={
-            <ProtectedRoute allowedRoles={['ngo', 'admin']}>
-              <NGOResourcesPage />
             </ProtectedRoute>
           }
         />

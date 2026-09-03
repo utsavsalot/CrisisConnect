@@ -1,16 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Building2, 
   MapPin, 
   Activity, 
   Radio, 
-  Package, 
-  ShieldCheck, 
+  ShieldCheck,
   AlertTriangle, 
   ArrowRight,
-  TrendingUp,
-  Clock,
   CheckCircle2
 } from 'lucide-react';
 import { useEmergency } from '../../context/EmergencyContext';
@@ -18,8 +15,9 @@ import { useAuth } from '../../context/AuthContext';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 
 export const NGODashboard: React.FC = () => {
-  const { requests, resources, acceptRequest } = useEmergency();
+  const { requests, acceptRequest } = useEmergency();
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   const orgName = currentUser && 'orgName' in currentUser ? currentUser.orgName : 'Metro Relief & Red Cross';
 
@@ -48,15 +46,6 @@ export const NGODashboard: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <Link
-              to="/ngo/map"
-              className="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-theme-dark font-bold text-xs uppercase tracking-wider shadow-tech-glow flex items-center gap-2 transition-transform active:scale-95"
-            >
-              <MapPin className="w-4 h-4 animate-pulse" />
-              <span>Launch Live Map</span>
-            </Link>
-          </div>
         </div>
 
         {/* 4 Operations KPI Cards */}
@@ -94,16 +83,6 @@ export const NGODashboard: React.FC = () => {
             <p className="text-[11px] text-theme-forest/80 mt-1">Successful resolutions</p>
           </div>
 
-          <div className="glass-panel rounded-2xl p-5 border border-amber-500/30 bg-amber-500/[0.04]">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono font-bold uppercase text-amber-400">Resource Stock</span>
-              <Package className="w-5 h-5 text-amber-400" />
-            </div>
-            <div className="text-3xl font-black text-theme-dark font-display mt-3">
-              {resources.length} Cats
-            </div>
-            <p className="text-[11px] text-theme-forest/80 mt-1">Blood, water, medical, beds</p>
-          </div>
         </div>
 
         {/* Operational Map & Incoming Incident Queue Grid */}
@@ -156,7 +135,10 @@ export const NGODashboard: React.FC = () => {
                       Dossier
                     </Link>
                     <button
-                      onClick={() => acceptRequest(req.id)}
+                      onClick={async () => {
+                        await acceptRequest(req.id);
+                        navigate(`/ngo/requests/${req.id}`);
+                      }}
                       className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-theme-dark font-bold text-xs uppercase tracking-wider shadow-sm"
                     >
                       Accept & Handle
@@ -165,53 +147,6 @@ export const NGODashboard: React.FC = () => {
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Quick Resource Availability Card (1 col) */}
-          <div className="glass-panel rounded-3xl p-6 border border-theme-mint/30 space-y-4">
-            <div className="flex items-center justify-between border-b border-theme-mint/30 pb-4">
-              <div className="flex items-center gap-2">
-                <Package className="w-4 h-4 text-sky-400" />
-                <h3 className="font-bold text-sm uppercase tracking-wider text-theme-dark">
-                  Resource Readiness
-                </h3>
-              </div>
-              <Link to="/ngo/resources" className="text-xs text-sky-400 hover:underline">
-                Manage
-              </Link>
-            </div>
-
-            <div className="space-y-3">
-              {resources.slice(0, 4).map((res) => {
-                const percent = Math.round((res.available / res.total) * 100);
-                return (
-                  <div key={res.id} className="p-3 rounded-xl bg-white/5 border border-theme-mint/20">
-                    <div className="flex items-center justify-between text-xs mb-1.5">
-                      <span className="font-bold text-theme-dark">{res.type}</span>
-                      <span className="font-mono text-emerald-400">{res.available} avail</span>
-                    </div>
-                    <div className="w-full h-1.5 bg-theme-sage rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-emerald-500 to-sky-400"
-                        style={{ width: `${percent}%` }}
-                      />
-                    </div>
-                    <div className="flex items-center justify-between text-[10px] text-theme-forest/60 mt-1 font-mono">
-                      <span>Allocated: {res.allocated}</span>
-                      <span>Total: {res.total}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <Link
-              to="/ngo/map"
-              className="w-full py-3 rounded-xl bg-sky-600/20 hover:bg-sky-600/30 border border-sky-500/30 text-sky-300 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-colors block text-center"
-            >
-              <MapPin className="w-4 h-4 text-sky-400" />
-              <span>Launch Live Geographic Triage</span>
-            </Link>
           </div>
 
         </div>

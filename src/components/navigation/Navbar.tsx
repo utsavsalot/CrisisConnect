@@ -39,7 +39,6 @@ export const Navbar: React.FC = () => {
   const userNavLinks: NavLinkItem[] = [
     { label: 'Dashboard', path: '/dashboard' },
     { label: 'My Requests', path: '/requests' },
-    { label: 'Responder Mode', path: '/responder', badge: isResponder ? (isAvailable ? 'ACTIVE' : 'STANDBY') : undefined },
     { label: 'Notifications', path: '/notifications', badgeCount: unreadNotificationCount },
     { label: 'Profile', path: '/profile' },
   ];
@@ -47,16 +46,13 @@ export const Navbar: React.FC = () => {
   const ngoNavLinks: NavLinkItem[] = [
     { label: 'Dashboard', path: '/ngo/dashboard' },
     { label: 'Requests', path: '/ngo/requests' },
-    { label: 'Live Map', path: '/ngo/map', isHighlight: true },
     { label: 'Active Missions', path: '/ngo/active' },
-    { label: 'Resources', path: '/ngo/resources' },
     { label: 'Notifications', path: '/notifications', badgeCount: unreadNotificationCount },
   ];
 
   const adminNavLinks: NavLinkItem[] = [
     { label: 'Admin Dispatch', path: '/admin' },
     { label: 'Requests', path: '/ngo/requests' },
-    { label: 'Live Map', path: '/ngo/map' },
     { label: 'Notifications', path: '/notifications', badgeCount: unreadNotificationCount },
   ];
 

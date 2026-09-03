@@ -1,10 +1,9 @@
 import React from 'react';
 import { User, Shield, Phone, Mail, MapPin, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { Link } from 'react-router-dom';
 
 export const ProfilePage: React.FC = () => {
-  const { currentUser, role, isResponder, capabilities } = useAuth();
+  const { currentUser, role } = useAuth();
 
   if (!currentUser) return null;
 
@@ -34,7 +33,7 @@ export const ProfilePage: React.FC = () => {
               <h2 className="text-xl font-black text-theme-dark font-display">{name}</h2>
               <div className="flex items-center gap-2 mt-1">
                 <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                  {role === 'ngo' ? 'Verified NGO Partner' : (isResponder ? 'Active Citizen Responder' : 'Verified Citizen')}
+                  {role === 'ngo' ? 'Verified NGO Partner' : 'Verified Citizen'}
                 </span>
               </div>
             </div>
@@ -65,38 +64,6 @@ export const ProfilePage: React.FC = () => {
               </div>
             </div>
           </div>
-
-          {/* Responder capabilities if User */}
-          {!isNGO && (
-            <div className="pt-4 border-t border-theme-mint/30">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-theme-forest">
-                  Registered Responder Capabilities ({capabilities.length})
-                </span>
-                <Link to="/responder" className="text-xs text-emerald-400 hover:underline">
-                  Configure
-                </Link>
-              </div>
-
-              {capabilities.length === 0 ? (
-                <p className="text-xs text-theme-forest/60">
-                  No active capabilities configured yet. Enable Responder Mode to help nearby people.
-                </p>
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {capabilities.map(c => (
-                    <span
-                      key={c}
-                      className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5"
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>{c}</span>
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
 
         </div>
 

@@ -50,6 +50,10 @@ export interface NGOProfile {
   phone: string;
   role: 'ngo';
   orgType: string;
+  registrationId?: string;
+  operatingArea?: string;
+  emergencyServices?: EmergencyNeedCategory[];
+  address?: string;
   location: LocationCoordinates;
   verified: boolean;
   activeMissions: number;

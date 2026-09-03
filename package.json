@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:ngo": "vite --config vite.ngo.config.ts",
     "build": "tsc && vite build",
     "lint": "eslint .",
     "preview": "vite preview"

@@ -51,13 +51,6 @@ export const NGORequestsPage: React.FC = () => {
               Live district triage, active emergency filtering, and team dispatch
             </p>
           </div>
-          <Link
-            to="/ngo/map"
-            className="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-theme-dark text-xs font-bold uppercase tracking-wider flex items-center gap-2"
-          >
-            <MapPin className="w-4 h-4" />
-            <span>Map View</span>
-          </Link>
         </div>
 
         {/* Filters Toolbar */}

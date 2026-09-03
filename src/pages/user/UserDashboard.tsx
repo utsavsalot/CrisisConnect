@@ -19,8 +19,8 @@ import { StatusBadge } from '../../components/ui/StatusBadge';
 import { GlassCard } from '../../components/ui/GlassCard';
 
 export const UserDashboard: React.FC = () => {
-  const { currentUser, isResponder, isAvailable, toggleResponderMode, setAvailability } = useAuth();
-  const { myRequests, nearbyRequests, activeCount } = useEmergency();
+  const { currentUser } = useAuth();
+  const { myRequests, activeCount } = useEmergency();
   const navigate = useNavigate();
 
   const userName = currentUser && 'name' in currentUser ? currentUser.name : 'Citizen';
@@ -95,64 +95,6 @@ export const UserDashboard: React.FC = () => {
                 REQUEST<br />HELP<br />NOW
               </span>
             </Link>
-          </div>
-
-          {/* Responder Mode Card */}
-          <div className={`rounded-3xl p-6 sm:p-8 border transition-all flex flex-col justify-between ${isResponder && isAvailable
-              ? 'bg-emerald-950/20 border-emerald-500/40 shadow-lg'
-              : 'bg-white/60 border-theme-mint/30'
-            }`}>
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <Shield className={`w-5 h-5 ${isResponder && isAvailable ? 'text-emerald-400' : 'text-theme-forest/80'}`} />
-                  <span className="font-bold text-xs uppercase tracking-wider text-theme-forest">
-                    RESPONDER MODE
-                  </span>
-                </div>
-
-                {/* On/Off Switch */}
-                <div className="flex items-center gap-2">
-                  <span className={`text-xs font-bold ${isResponder && isAvailable ? 'text-emerald-400' : 'text-theme-forest/60'}`}>
-                    {isResponder && isAvailable ? 'AVAILABLE' : 'OFF'}
-                  </span>
-                  <button
-                    onClick={() => {
-                      if (!isResponder) {
-                        toggleResponderMode(true);
-                      } else {
-                        setAvailability(!isAvailable);
-                      }
-                    }}
-                    className={`w-12 h-6 rounded-full transition-colors p-0.5 flex items-center ${isResponder && isAvailable ? 'bg-emerald-500 justify-end' : 'bg-slate-700 justify-start'
-                      }`}
-                  >
-                    <div className="w-5 h-5 rounded-full bg-white shadow-md" />
-                  </button>
-                </div>
-              </div>
-
-              <h2 className="text-xl sm:text-2xl font-black text-theme-dark font-display">
-                {isResponder && isAvailable
-                  ? "You're Available to Help"
-                  : 'Turn on Responder Mode'}
-              </h2>
-              <p className="text-xs text-theme-forest mt-2 leading-relaxed">
-                {isResponder && isAvailable
-                  ? 'Your status is active. Nearby emergency requests matching your capabilities will be delivered to your feed.'
-                  : 'Receive nearby assistance requests when someone in your radius needs medical aid, shelter, food, or rare blood.'}
-              </p>
-            </div>
-
-            <div className="mt-6 pt-6 border-t border-theme-mint/30 flex items-center justify-between">
-              <Link
-                to="/responder"
-                className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 transition-colors"
-              >
-                <span>Manage Capabilities & Nearby Feed ({nearbyRequests.length})</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
           </div>
 
         </div>
@@ -307,17 +249,6 @@ export const UserDashboard: React.FC = () => {
               </Link>
 
               <Link
-                to="/responder"
-                className="w-full p-3 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-theme-dark font-bold text-xs flex items-center justify-between transition-colors"
-              >
-                <div className="flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-emerald-400" />
-                  <span>Responder Feed</span>
-                </div>
-                <ArrowRight className="w-3.5 h-3.5 text-emerald-400" />
-              </Link>
-
-              <Link
                 to="/notifications"
                 className="w-full p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-theme-mint/30 text-theme-dark font-medium text-xs flex items-center justify-between transition-colors"
               >
@@ -329,9 +260,6 @@ export const UserDashboard: React.FC = () => {
               </Link>
             </div>
 
-            <div className="pt-4 border-t border-theme-mint/30 text-[11px] text-theme-forest/80 leading-relaxed">
-              💡 <strong>Remember:</strong> Even if Responder Mode is active, you retain full access to request help anytime if you encounter danger.
-            </div>
           </div>
 
         </div>

@@ -41,7 +41,7 @@ export const LoginPage: React.FC = () => {
     } else if (roleKey === 'demo-admin') {
       navigate('/admin');
     } else if (roleKey === 'demo-responder') {
-      navigate('/responder');
+      navigate('/dashboard');
     } else {
       navigate('/dashboard');
     }

@@ -18,7 +18,8 @@ import {
   UserProfile,
   NGOProfile,
   LocationCoordinates,
-  FamilyMemberContact
+  FamilyMemberContact,
+  EmergencyNeedCategory
 } from '../../types';
 
 export const firebaseAuthService = {
@@ -82,6 +83,9 @@ export const firebaseAuthService = {
     bloodGroup?: string;
     medicalHistory?: string[];
     emergencyContacts?: FamilyMemberContact[];
+    registrationId?: string;
+    operatingArea?: string;
+    emergencyServices?: EmergencyNeedCategory[];
   }): Promise<UserProfile | NGOProfile> {
 
     if (!auth || !db) {
@@ -111,6 +115,9 @@ export const firebaseAuthService = {
         phone: data.phone,
         role: 'ngo',
         orgType: data.orgType || 'Humanitarian Relief',
+        registrationId: data.registrationId,
+        operatingArea: data.operatingArea,
+        emergencyServices: data.emergencyServices,
         location: loc,
         verified: true,
         activeMissions: 0,
