@@ -17,7 +17,6 @@ import {
 import { CharacterCarousel } from '../../components/landing/CharacterCarousel';
 import { VideoScrubber } from '../../components/landing/VideoScrubber';
 import { NetworkVisual } from '../../components/landing/NetworkVisual';
-import { RequestHelpButton } from '../../components/ui/RequestHelpButton';
 
 export const LandingPage: React.FC = () => {
   const worksRef = useRef<HTMLDivElement>(null);
@@ -204,10 +203,10 @@ export const LandingPage: React.FC = () => {
                 </ul>
               </div>
               <Link
-                to="/request-help"
+                to="/login"
                 className="mt-8 py-3 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-white font-bold text-xs text-center uppercase tracking-wider transition-colors"
               >
-                Request Assistance Now
+                Sign In to Request Help
               </Link>
             </div>
 
@@ -332,7 +331,12 @@ export const LandingPage: React.FC = () => {
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
-            <RequestHelpButton variant="hero" />
+            <Link
+              to="/login"
+              className="px-6 py-4 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-white font-bold text-sm uppercase tracking-wider transition-colors shadow-lg shadow-emergency-600/20"
+            >
+              Sign In to Request Help
+            </Link>
             <Link
               to="/signup?role=user"
               className="px-6 py-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm uppercase tracking-wider transition-colors shadow-lg"
