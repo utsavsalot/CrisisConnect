@@ -223,15 +223,7 @@ export const CharacterCarousel: React.FC = () => {
         {/* Radar beam line */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-emergency-500/10 radar-sweep" />
 
-        {/* Telemetry Coordinate marks */}
-        <div className="absolute top-24 left-10 text-[10px] font-mono text-slate-500 hidden md:block">
-          LAT 40.7128° N // LON 74.0060° W<br />
-          GRID SECTOR: 09-EAST // REALTIME ACTIVE
-        </div>
-        <div className="absolute bottom-20 right-10 text-[10px] font-mono text-slate-500 hidden md:block text-right">
-          STATUS: MESH CONNECTED<br />
-          DISPATCH PROTOCOL: CC-P3-V1
-        </div>
+
       </div>
 
       {/* Huge Ghost Typography Behind Stage */}
