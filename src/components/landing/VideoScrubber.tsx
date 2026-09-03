@@ -150,7 +150,7 @@ export const VideoScrubber: React.FC = () => {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onTouchMove={handleTouchMove}
-      className="relative min-h-[85vh] bg-[#0B1020] border-t border-b border-white/10 flex flex-col justify-between py-16 px-4 sm:px-8 cursor-crosshair overflow-hidden select-none"
+      className="relative min-h-[85vh] bg-[#0B1020] border-t border-b border-theme-mint/30 flex flex-col justify-between py-16 px-4 sm:px-8 cursor-crosshair overflow-hidden select-none"
     >
       {/* Background Ambience based on active frame color */}
       <div
@@ -162,25 +162,25 @@ export const VideoScrubber: React.FC = () => {
 
       {/* Header */}
       <div className="max-w-5xl mx-auto text-center relative z-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-slate-400 mb-4">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-theme-mint/30 text-xs font-mono text-theme-forest/80 mb-4">
           <MousePointer className="w-3.5 h-3.5 text-tech-blue animate-bounce" />
           <span>MOVE YOUR CURSOR HORIZONTALLY TO SCRUB THE RESPONSE STORY</span>
         </div>
-        <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight font-display">
+        <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-theme-dark tracking-tight font-display">
           HELP SHOULD NEVER FEEL FAR AWAY.
         </h2>
-        <p className="text-sm sm:text-base text-slate-400 mt-3 max-w-2xl mx-auto">
+        <p className="text-sm sm:text-base text-theme-forest/80 mt-3 max-w-2xl mx-auto">
           See how one urgent request mobilizes an entire community response in real time.
         </p>
       </div>
 
       {/* Dynamic Storyboard Frame Display */}
       <div className="max-w-4xl mx-auto w-full my-8 relative z-10">
-        <div className="glass-panel rounded-3xl p-6 sm:p-10 border border-white/15 backdrop-blur-2xl shadow-2xl relative overflow-hidden transition-all duration-300">
+        <div className="glass-panel rounded-3xl p-6 sm:p-10 border border-theme-mint/40 backdrop-blur-2xl shadow-2xl relative overflow-hidden transition-all duration-300">
           
           {/* Top Tag & Frame Counter */}
-          <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
-            <span className="text-xs font-mono font-bold tracking-widest text-slate-400">
+          <div className="flex items-center justify-between border-b border-theme-mint/30 pb-4 mb-6">
+            <span className="text-xs font-mono font-bold tracking-widest text-theme-forest/80">
               {currentFrame.label}
             </span>
             <span
@@ -209,17 +209,17 @@ export const VideoScrubber: React.FC = () => {
             </div>
 
             <div className="text-center sm:text-left">
-              <h3 className="text-2xl sm:text-3xl font-black text-white font-display">
+              <h3 className="text-2xl sm:text-3xl font-black text-theme-dark font-display">
                 {currentFrame.title}
               </h3>
-              <p className="text-sm sm:text-base text-slate-300 mt-3 leading-relaxed">
+              <p className="text-sm sm:text-base text-theme-forest mt-3 leading-relaxed">
                 {currentFrame.desc}
               </p>
             </div>
           </div>
 
           {/* Storyboard 7-Step Dots Track */}
-          <div className="grid grid-cols-7 gap-2 mt-8 pt-6 border-t border-white/10">
+          <div className="grid grid-cols-7 gap-2 mt-8 pt-6 border-t border-theme-mint/30">
             {STORY_FRAMES.map((f, i) => (
               <div
                 key={f.id}
@@ -242,9 +242,9 @@ export const VideoScrubber: React.FC = () => {
 
       {/* Scrubbing Bar & Hint Footer */}
       <div className="max-w-4xl mx-auto w-full relative z-10">
-        <div className="flex items-center justify-between text-xs text-slate-400 mb-2 font-mono">
+        <div className="flex items-center justify-between text-xs text-theme-forest/80 mb-2 font-mono">
           <span>01. EMERGENCY</span>
-          <span className="flex items-center gap-1 text-white font-bold tracking-wider">
+          <span className="flex items-center gap-1 text-theme-dark font-bold tracking-wider">
             <span>MOVE TO CONNECT</span>
             <ArrowRight className="w-3.5 h-3.5 animate-pulse" />
           </span>
@@ -252,7 +252,7 @@ export const VideoScrubber: React.FC = () => {
         </div>
 
         {/* Interactive Scrub Track */}
-        <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden relative cursor-pointer border border-white/10">
+        <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden relative cursor-pointer border border-theme-mint/30">
           <div
             ref={progressBarRef}
             className="h-full bg-gradient-to-r from-emergency-500 via-sky-400 to-emerald-400 transition-all duration-75"

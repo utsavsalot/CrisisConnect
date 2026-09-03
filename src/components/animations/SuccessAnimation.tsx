@@ -16,8 +16,8 @@ export const SuccessAnimation: React.FC<SuccessAnimationProps> = ({
         <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
       </div>
       <div>
-        <h4 className="text-base font-bold text-white font-display">{title}</h4>
-        <p className="text-xs text-slate-400 mt-1 max-w-xs">{subtitle}</p>
+        <h4 className="text-base font-bold text-theme-dark font-display">{title}</h4>
+        <p className="text-xs text-theme-forest/80 mt-1 max-w-xs">{subtitle}</p>
       </div>
     </div>
   );

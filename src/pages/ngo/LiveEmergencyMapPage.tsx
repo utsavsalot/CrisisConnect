@@ -7,7 +7,7 @@ export const LiveEmergencyMapPage: React.FC = () => {
   const { requests, acceptRequest } = useEmergency();
 
   return (
-    <div className="min-h-screen bg-[#070B14] py-4 px-4 sm:px-6 lg:px-8 text-slate-100 flex flex-col">
+    <div className="min-h-screen bg-theme-light py-4 px-4 sm:px-6 lg:px-8 text-theme-dark flex flex-col">
       <div className="max-w-7xl mx-auto w-full space-y-4 flex-1 flex flex-col">
         
         {/* Title Bar */}
@@ -17,10 +17,10 @@ export const LiveEmergencyMapPage: React.FC = () => {
               <MapPin className="w-4 h-4 animate-pulse" />
             </div>
             <div>
-              <h1 className="text-xl sm:text-2xl font-black text-white font-display">
+              <h1 className="text-xl sm:text-2xl font-black text-theme-dark font-display">
                 LIVE EMERGENCY MAP
               </h1>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-theme-forest/80">
                 Exclusive NGO Operations Geographic Incident Triage
               </p>
             </div>

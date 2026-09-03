@@ -90,7 +90,7 @@ export const RequestSubmissionAnimation: React.FC<RequestSubmissionAnimationProp
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#070B14]/90 backdrop-blur-2xl p-6 animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-theme-light/90 backdrop-blur-2xl p-6 animate-in fade-in duration-200"
     >
       <div className="w-full max-w-md glass-panel p-8 rounded-3xl text-center flex flex-col items-center relative overflow-hidden border border-emergency-500/30 shadow-2xl">
         
@@ -153,17 +153,17 @@ export const RequestSubmissionAnimation: React.FC<RequestSubmissionAnimationProp
             ref={checkRef}
             className="absolute inset-0 flex items-center justify-center z-20 opacity-0"
           >
-            <div className="w-20 h-20 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-lg shadow-emerald-500/40">
+            <div className="w-20 h-20 rounded-full bg-emerald-500 text-theme-dark flex items-center justify-center shadow-lg shadow-emerald-500/40">
               <CheckCircle className="w-12 h-12 stroke-[2.5]" />
             </div>
           </div>
         </div>
 
         {/* Text sequence */}
-        <h3 className="text-lg font-bold text-white mb-2 transition-all">
+        <h3 className="text-lg font-bold text-theme-dark mb-2 transition-all">
           {stepText}
         </h3>
-        <p className="text-xs text-slate-400 max-w-xs">
+        <p className="text-xs text-theme-forest/80 max-w-xs">
           Broadcasting priority emergency telemetry across the CrisisConnect community mesh.
         </p>
       </div>

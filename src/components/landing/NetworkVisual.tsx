@@ -47,23 +47,23 @@ export const NetworkVisual: React.FC = () => {
   }, []);
 
   return (
-    <section id="network" ref={containerRef} className="scroll-mt-20 py-20 px-4 sm:px-8 bg-[#070B14] relative overflow-hidden">
+    <section id="network" ref={containerRef} className="scroll-mt-20 py-20 px-4 sm:px-8 bg-theme-light relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emergency-500/10 border border-emergency-500/30 text-xs font-bold uppercase tracking-wider text-emergency-400 mb-3">
             <Radio className="w-3.5 h-3.5 animate-pulse" />
             <span>Telemetry Propagation Mesh</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-white font-display">
+          <h2 className="text-3xl sm:text-5xl font-black text-theme-dark font-display">
             Real-Time Emergency Network
           </h2>
-          <p className="text-sm sm:text-base text-slate-400 mt-3">
+          <p className="text-sm sm:text-base text-theme-forest/80 mt-3">
             How a zero-friction distress signal instantly triangulates and connects to verified nearby resources.
           </p>
         </div>
 
         {/* Network Nodes Visualization Canvas */}
-        <div className="relative w-full max-w-4xl mx-auto h-[460px] sm:h-[500px] glass-panel rounded-3xl p-6 border border-white/10 overflow-hidden flex items-center justify-center">
+        <div className="relative w-full max-w-4xl mx-auto h-[460px] sm:h-[500px] glass-panel rounded-3xl p-6 border border-theme-mint/30 overflow-hidden flex items-center justify-center">
           
           {/* SVG Connection Paths */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 800 500">
@@ -124,7 +124,7 @@ export const NetworkVisual: React.FC = () => {
             <div className="signal-requester w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emergency-600/30 border-2 border-emergency-500 flex items-center justify-center text-emergency-500 shadow-emergency-glow">
               <User className="w-8 h-8 sm:w-10 sm:h-10" />
             </div>
-            <span className="text-xs font-bold text-white mt-3 uppercase tracking-wider">Citizen In Need</span>
+            <span className="text-xs font-bold text-theme-dark mt-3 uppercase tracking-wider">Citizen In Need</span>
             <span className="text-[10px] text-emergency-400 font-mono">0.0s Distress Signal</span>
           </div>
 
@@ -133,7 +133,7 @@ export const NetworkVisual: React.FC = () => {
             <div className="signal-location w-14 h-14 sm:w-18 sm:h-18 rounded-full bg-sky-600/30 border-2 border-sky-400 flex items-center justify-center text-sky-400 shadow-tech-glow">
               <MapPin className="w-7 h-7 sm:w-9 sm:h-9 animate-bounce" />
             </div>
-            <span className="text-xs font-bold text-white mt-3 uppercase tracking-wider">GPS Triangulation</span>
+            <span className="text-xs font-bold text-theme-dark mt-3 uppercase tracking-wider">GPS Triangulation</span>
             <span className="text-[10px] text-sky-400 font-mono">Sub-Meter Radius</span>
           </div>
 
@@ -146,7 +146,7 @@ export const NetworkVisual: React.FC = () => {
                 <Shield className="w-6 h-6" />
               </div>
               <div>
-                <div className="text-xs font-bold text-white">Dr. Sarah (Medical)</div>
+                <div className="text-xs font-bold text-theme-dark">Dr. Sarah (Medical)</div>
                 <div className="text-[10px] text-emerald-400 font-mono">0.9 km • 2m ETA</div>
               </div>
             </div>
@@ -157,7 +157,7 @@ export const NetworkVisual: React.FC = () => {
                 <CheckCircle2 className="w-6 h-6" />
               </div>
               <div>
-                <div className="text-xs font-bold text-white">Marcus (Rescue/Van)</div>
+                <div className="text-xs font-bold text-theme-dark">Marcus (Rescue/Van)</div>
                 <div className="text-[10px] text-emerald-400 font-mono">1.8 km • 5m ETA</div>
               </div>
             </div>
@@ -168,7 +168,7 @@ export const NetworkVisual: React.FC = () => {
                 <Building2 className="w-6 h-6" />
               </div>
               <div>
-                <div className="text-xs font-bold text-white">Metro Relief NGO HQ</div>
+                <div className="text-xs font-bold text-theme-dark">Metro Relief NGO HQ</div>
                 <div className="text-[10px] text-sky-400 font-mono">Ambulance & Blood Bank</div>
               </div>
             </div>

@@ -213,7 +213,7 @@ export const CharacterCarousel: React.FC = () => {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-[92vh] flex flex-col justify-between overflow-hidden bg-[#070B14] grain-overlay select-none"
+      className="relative min-h-[92vh] flex flex-col justify-between overflow-hidden bg-theme-dark select-none"
     >
       {/* Background Tech Network Elements */}
       <div className="absolute inset-0 pointer-events-none">
@@ -232,14 +232,14 @@ export const CharacterCarousel: React.FC = () => {
         ref={ghostRef}
         className="absolute inset-0 flex items-center justify-center pointer-events-none -z-0"
       >
-        <span className="text-[18vw] font-black tracking-tighter text-white uppercase font-display select-none">
+        <span className="text-[18vw] font-black tracking-tighter text-theme-light/5 uppercase font-display select-none">
           {activeChar.ghostWord}
         </span>
       </div>
 
       {/* Hero Intent & Primary Emergency CTA */}
       <div className="relative z-30 pt-6 sm:pt-8 px-4 text-center max-w-3xl mx-auto flex flex-col items-center">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#070B14]/95 border border-emergency-500/40 text-xs font-semibold text-emergency-400 mb-2.5 backdrop-blur-xl shadow-lg shadow-black/50">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-theme-dark/95 border border-emergency-500/40 text-xs font-semibold text-emergency-400 mb-2.5 backdrop-blur-xl shadow-lg shadow-black/50">
           <span className="w-2 h-2 rounded-full bg-emergency-500 animate-ping" />
           <span>Need emergency help? Get connected to a nearby responder in seconds.</span>
         </div>
@@ -252,7 +252,7 @@ export const CharacterCarousel: React.FC = () => {
             <AlertTriangle className="w-3.5 h-3.5 text-white" />
             <span>Request Help</span>
           </Link>
-          <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-slate-400">
+          <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-theme-forest/80">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
             <span>Nearby responders ready to help</span>
           </div>
@@ -271,12 +271,12 @@ export const CharacterCarousel: React.FC = () => {
             return (
               <div
                 key={char.id}
-                className="carousel-card absolute inset-0 rounded-3xl glass-panel p-6 sm:p-7 flex flex-col justify-between border border-white/15 backdrop-blur-2xl shadow-2xl cursor-pointer transition-colors"
+                className="carousel-card absolute inset-0 rounded-3xl glass-panel p-6 sm:p-7 flex flex-col justify-between border border-theme-mint/40 backdrop-blur-2xl shadow-2xl cursor-pointer transition-colors"
                 onClick={() => setCurrentIndex(index)}
                 style={{
                   background: isCenter
-                    ? `radial-gradient(circle at 50% 0%, ${char.color}18, rgba(11, 16, 32, 0.95) 75%)`
-                    : 'rgba(11, 16, 32, 0.85)',
+                    ? `radial-gradient(circle at 50% 0%, ${char.color}18, rgba(30, 43, 34, 0.95) 75%)`
+                    : 'rgba(30, 43, 34, 0.85)',
                   boxShadow: isCenter ? `0 20px 50px -10px ${char.color}35` : 'none'
                 }}
               >
@@ -284,11 +284,11 @@ export const CharacterCarousel: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: char.color }} />
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-theme-forest/80">
                       {char.roleTitle}
                     </span>
                   </div>
-                  <Radio className="w-4 h-4 text-slate-500 animate-pulse" />
+                  <Radio className="w-4 h-4 text-theme-forest/60 animate-pulse" />
                 </div>
 
                 {/* Central Figurine Concept Visual */}
@@ -300,7 +300,7 @@ export const CharacterCarousel: React.FC = () => {
                       backgroundColor: `${char.color}15`
                     }}
                   >
-                    <div className="absolute inset-2 rounded-full border border-dashed border-white/20 animate-spin" style={{ animationDuration: '24s' }} />
+                    <div className="absolute inset-2 rounded-full border border-dashed border-theme-mint/40 animate-spin" style={{ animationDuration: '24s' }} />
                     <Shield className="w-14 h-14 sm:w-16 sm:h-16 transition-transform group-hover:scale-110" style={{ color: char.color }} />
                   </div>
                   <h3 className="text-xl sm:text-2xl font-black text-white mt-4 font-display text-center">
@@ -316,20 +316,20 @@ export const CharacterCarousel: React.FC = () => {
       </div>
 
       {/* Hero Bottom Bar: Dynamic Narrative + Controls + CTAs */}
-      <div className="relative z-30 max-w-7xl mx-auto w-full px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-6 border-t border-white/10 bg-[#070B14]/70 backdrop-blur-xl">
+      <div className="relative z-30 max-w-7xl mx-auto w-full px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-6 border-t border-theme-mint/30 bg-theme-dark/70 backdrop-blur-xl">
         
         {/* Dynamic Character Description */}
         <div className="max-w-xl text-center md:text-left">
           <div className="flex items-center justify-center md:justify-start gap-2 mb-1.5">
             <span className="w-2 h-2 rounded-full bg-emergency-500 animate-ping" />
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
+            <span className="text-xs font-bold uppercase tracking-widest text-theme-forest/80">
               {activeChar.roleTitle} Network
             </span>
           </div>
           <p className="text-base sm:text-lg font-semibold text-white leading-snug">
             "{activeChar.tagline}"
           </p>
-          <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+          <p className="text-xs text-theme-forest/80 mt-1 leading-relaxed">
             {activeChar.description}
           </p>
         </div>
@@ -339,14 +339,14 @@ export const CharacterCarousel: React.FC = () => {
           <button
             onClick={handlePrev}
             aria-label="Previous character"
-            className="p-3 rounded-xl border border-white/15 bg-white/5 hover:bg-white/15 text-white transition-all transform active:scale-95 shadow-sm"
+            className="p-3 rounded-xl border border-theme-mint/40 bg-white/5 hover:bg-white/15 text-white transition-all transform active:scale-95 shadow-sm"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={handleNext}
             aria-label="Next character"
-            className="p-3 rounded-xl border border-white/15 bg-white/5 hover:bg-white/15 text-white transition-all transform active:scale-95 shadow-sm"
+            className="p-3 rounded-xl border border-theme-mint/40 bg-white/5 hover:bg-white/15 text-white transition-all transform active:scale-95 shadow-sm"
           >
             <ChevronRight className="w-5 h-5" />
           </button>

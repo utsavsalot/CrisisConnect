@@ -15,7 +15,7 @@ export const LoadingLocation: React.FC<LoadingLocationProps> = ({
         <span className="absolute inset-0 rounded-lg border border-sky-400 animate-ping opacity-50" />
       </div>
       <div className="min-w-0 flex-1">
-        <div className="font-semibold text-white flex items-center gap-1.5">
+        <div className="font-semibold text-theme-dark flex items-center gap-1.5">
           <RefreshCw className="w-3 h-3 animate-spin text-sky-400" />
           <span>{message}</span>
         </div>

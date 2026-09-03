@@ -69,7 +69,7 @@ export const CrisisAIModal: React.FC = () => {
       <button
         onClick={() => setIsOpen(true)}
         aria-label="Open CrisisAI emergency assistant"
-        className="fixed bottom-20 md:bottom-6 right-6 z-40 flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-white rounded-full shadow-tech-glow transition-all transform hover:scale-105 active:scale-95 group"
+        className="fixed bottom-20 md:bottom-6 right-6 z-40 flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-theme-dark rounded-full shadow-tech-glow transition-all transform hover:scale-105 active:scale-95 group"
       >
         <Bot className="w-5 h-5 group-hover:rotate-12 transition-transform" />
         <span className="font-bold text-xs tracking-wider uppercase hidden sm:inline">CrisisAI</span>
@@ -79,27 +79,27 @@ export const CrisisAIModal: React.FC = () => {
       {/* Floating Glassmorphic Chat Panel */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-end sm:justify-end sm:pr-8 sm:pb-8 p-0 pointer-events-none">
-          <div className="w-full sm:w-[420px] max-h-[85vh] h-[600px] pointer-events-auto rounded-t-3xl sm:rounded-2xl glass-panel shadow-2xl flex flex-col overflow-hidden border border-white/20 dark:border-white/10 animate-in fade-in slide-in-from-bottom-8 duration-200">
+          <div className="w-full sm:w-[420px] max-h-[85vh] h-[600px] pointer-events-auto rounded-t-3xl sm:rounded-2xl glass-panel shadow-2xl flex flex-col overflow-hidden border border-theme-mint/40 dark:border-theme-mint/30 animate-in fade-in slide-in-from-bottom-8 duration-200">
             
             {/* Header */}
-            <div className="px-5 py-4 border-b border-white/10 bg-slate-900/80 flex items-center justify-between">
+            <div className="px-5 py-4 border-b border-theme-mint/30 bg-white/80 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-sky-500/20 border border-sky-400/30 flex items-center justify-center text-sky-400">
                   <Bot className="w-4 h-4" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-sm text-white">CrisisAI Safety Guide</h3>
+                    <h3 className="font-bold text-sm text-theme-dark">CrisisAI Safety Guide</h3>
                     <span className="text-[9px] px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 font-semibold border border-sky-400/30">
                       SAFETY AI
                     </span>
                   </div>
-                  <p className="text-[10px] text-slate-400">Emergency Protocol Guidance</p>
+                  <p className="text-[10px] text-theme-forest/80">Emergency Protocol Guidance</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+                className="p-1 rounded-lg hover:bg-white/10 text-theme-forest/80 hover:text-theme-dark transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -123,13 +123,13 @@ export const CrisisAIModal: React.FC = () => {
                   <div
                     className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-xs leading-relaxed whitespace-pre-line ${
                       m.sender === 'user'
-                        ? 'bg-sky-600 text-white rounded-br-none shadow-md'
-                        : 'bg-white/10 dark:bg-slate-800/80 text-slate-100 rounded-bl-none border border-white/10'
+                        ? 'bg-sky-600 text-theme-dark rounded-br-none shadow-md'
+                        : 'bg-white/10 dark:bg-theme-sage/80 text-theme-dark rounded-bl-none border border-theme-mint/30'
                     }`}
                   >
                     {m.text}
                   </div>
-                  <span className="text-[9px] text-slate-500 mt-1 px-1">{m.timestamp}</span>
+                  <span className="text-[9px] text-theme-forest/60 mt-1 px-1">{m.timestamp}</span>
                 </div>
               ))}
 
@@ -143,12 +143,12 @@ export const CrisisAIModal: React.FC = () => {
             </div>
 
             {/* Quick Prompts */}
-            <div className="px-4 py-2 border-t border-white/5 bg-slate-900/50 flex flex-wrap gap-1.5">
+            <div className="px-4 py-2 border-t border-theme-mint/20 bg-white/50 flex flex-wrap gap-1.5">
               {sampleQuestions.map((q, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleSend(q)}
-                  className="text-[10px] px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white border border-white/10 transition-colors text-left"
+                  className="text-[10px] px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/15 text-theme-forest hover:text-theme-dark border border-theme-mint/30 transition-colors text-left"
                 >
                   {q}
                 </button>
@@ -156,7 +156,7 @@ export const CrisisAIModal: React.FC = () => {
             </div>
 
             {/* Input Box */}
-            <div className="p-3 border-t border-white/10 bg-slate-900/80">
+            <div className="p-3 border-t border-theme-mint/30 bg-white/80">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -169,12 +169,12 @@ export const CrisisAIModal: React.FC = () => {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Ask for first-aid or safety guidance..."
-                  className="flex-1 bg-slate-800/80 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400 transition-colors"
+                  className="flex-1 bg-theme-sage/80 border border-theme-mint/30 rounded-xl px-3.5 py-2.5 text-xs text-theme-dark placeholder:text-theme-forest/60 focus:outline-none focus:border-sky-400 transition-colors"
                 />
                 <button
                   type="submit"
                   disabled={!inputValue.trim() || isTyping}
-                  className="p-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-40 text-white transition-all"
+                  className="p-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-40 text-theme-dark transition-all"
                 >
                   <Send className="w-4 h-4" />
                 </button>

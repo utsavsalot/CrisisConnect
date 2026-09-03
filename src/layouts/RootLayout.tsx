@@ -6,7 +6,7 @@ import { CrisisAIModal } from '../components/chatbot/CrisisAIModal';
 
 export const RootLayout: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-200 selection:bg-emergency-500 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-200 selection:bg-emergency-500 selection:text-theme-dark">
       {/* Global Navbar with Persistent Request Help CTA */}
 
       {/* Global Navbar with Persistent Request Help CTA */}

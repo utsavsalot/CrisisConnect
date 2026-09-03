@@ -29,22 +29,22 @@ export const UserDashboard: React.FC = () => {
   const activeRequest = myRequests.find(r => r.status === 'active' || r.status === 'accepted' || r.status === 'in_progress');
 
   return (
-    <div className="min-h-screen bg-[#070B14] py-8 px-4 sm:px-6 lg:px-8 text-slate-100">
+    <div className="min-h-screen bg-theme-light py-8 px-4 sm:px-6 lg:px-8 text-theme-dark">
       <div className="max-w-7xl mx-auto space-y-8">
 
         {/* Greeting Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-theme-mint/30 pb-6">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-theme-forest/80">
                 Citizen Incident Center
               </span>
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white font-display mt-1">
+            <h1 className="text-2xl sm:text-3xl font-black text-theme-dark font-display mt-1">
               Good day, {userName}
             </h1>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-theme-forest/80 mt-1">
               Community status: <span className="text-emerald-400 font-semibold">{activeCount} active emergencies</span> in your region.
             </p>
           </div>
@@ -63,16 +63,16 @@ export const UserDashboard: React.FC = () => {
                   <span className="w-1.5 h-1.5 rounded-full bg-emergency-500 animate-ping" />
                   <span>Zero-Friction Emergency</span>
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-black text-white font-display">
+                <h2 className="text-2xl sm:text-3xl font-black text-theme-dark font-display">
                   Need Immediate Help?
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-300 mt-2 max-w-md leading-relaxed">
+                <p className="text-xs sm:text-sm text-theme-forest mt-2 max-w-md leading-relaxed">
                   Broadcast an emergency request in under 15 seconds. Nearby verified community responders and NGOs will receive your GPS coordinates.
                 </p>
               </div>
 
               <div className="mt-6">
-                <span className="text-[11px] text-slate-400 font-mono">
+                <span className="text-[11px] text-theme-forest/80 font-mono">
                   No lengthy forms • Automatic GPS
                 </span>
               </div>
@@ -80,7 +80,7 @@ export const UserDashboard: React.FC = () => {
 
             <Link
               to="/request-help"
-              className="w-full sm:w-[30%] sm:shrink-0 min-h-[220px] rounded-[2.5rem] bg-gradient-to-b from-emergency-900/20 to-emergency-950/60 text-white flex flex-col items-center justify-center gap-5 transition-all active:scale-95 relative z-10 p-6 text-center border border-emergency-500/40 shadow-[0_0_40px_rgba(239,68,68,0.2)_inset] hover:shadow-[0_0_50px_rgba(239,68,68,0.3)_inset,0_0_20px_rgba(239,68,68,0.3)] group overflow-hidden backdrop-blur-md"
+              className="w-full sm:w-[30%] sm:shrink-0 min-h-[220px] rounded-[2.5rem] bg-gradient-to-b from-emergency-900/20 to-emergency-950/60 text-theme-dark flex flex-col items-center justify-center gap-5 transition-all active:scale-95 relative z-10 p-6 text-center border border-emergency-500/40 shadow-[0_0_40px_rgba(239,68,68,0.2)_inset] hover:shadow-[0_0_50px_rgba(239,68,68,0.3)_inset,0_0_20px_rgba(239,68,68,0.3)] group overflow-hidden backdrop-blur-md"
             >
               {/* High-tech Glowing Edges */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-[4px] bg-emergency-400 shadow-[0_0_20px_5px_rgba(239,68,68,0.7)]" />
@@ -89,7 +89,7 @@ export const UserDashboard: React.FC = () => {
               {/* Dot Pattern Overlay */}
               <div className="absolute inset-0 opacity-[0.15] bg-[radial-gradient(circle_at_center,_#ef4444_1px,_transparent_1px)] bg-[length:10px_10px]" />
 
-              <AlertTriangle className="w-12 h-12 sm:w-14 sm:h-14 text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.7)] relative z-10 transition-transform group-hover:scale-110" />
+              <AlertTriangle className="w-12 h-12 sm:w-14 sm:h-14 text-theme-dark drop-shadow-[0_0_12px_rgba(255,255,255,0.7)] relative z-10 transition-transform group-hover:scale-110" />
 
               <span className="font-black text-2xl sm:text-[28px] uppercase tracking-widest leading-[1.1] relative z-10 drop-shadow-md">
                 REQUEST<br />HELP<br />NOW
@@ -100,20 +100,20 @@ export const UserDashboard: React.FC = () => {
           {/* Responder Mode Card */}
           <div className={`rounded-3xl p-6 sm:p-8 border transition-all flex flex-col justify-between ${isResponder && isAvailable
               ? 'bg-emerald-950/20 border-emerald-500/40 shadow-lg'
-              : 'bg-slate-900/60 border-white/10'
+              : 'bg-white/60 border-theme-mint/30'
             }`}>
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <Shield className={`w-5 h-5 ${isResponder && isAvailable ? 'text-emerald-400' : 'text-slate-400'}`} />
-                  <span className="font-bold text-xs uppercase tracking-wider text-slate-300">
+                  <Shield className={`w-5 h-5 ${isResponder && isAvailable ? 'text-emerald-400' : 'text-theme-forest/80'}`} />
+                  <span className="font-bold text-xs uppercase tracking-wider text-theme-forest">
                     RESPONDER MODE
                   </span>
                 </div>
 
                 {/* On/Off Switch */}
                 <div className="flex items-center gap-2">
-                  <span className={`text-xs font-bold ${isResponder && isAvailable ? 'text-emerald-400' : 'text-slate-500'}`}>
+                  <span className={`text-xs font-bold ${isResponder && isAvailable ? 'text-emerald-400' : 'text-theme-forest/60'}`}>
                     {isResponder && isAvailable ? 'AVAILABLE' : 'OFF'}
                   </span>
                   <button
@@ -132,19 +132,19 @@ export const UserDashboard: React.FC = () => {
                 </div>
               </div>
 
-              <h2 className="text-xl sm:text-2xl font-black text-white font-display">
+              <h2 className="text-xl sm:text-2xl font-black text-theme-dark font-display">
                 {isResponder && isAvailable
                   ? "You're Available to Help"
                   : 'Turn on Responder Mode'}
               </h2>
-              <p className="text-xs text-slate-300 mt-2 leading-relaxed">
+              <p className="text-xs text-theme-forest mt-2 leading-relaxed">
                 {isResponder && isAvailable
                   ? 'Your status is active. Nearby emergency requests matching your capabilities will be delivered to your feed.'
                   : 'Receive nearby assistance requests when someone in your radius needs medical aid, shelter, food, or rare blood.'}
               </p>
             </div>
 
-            <div className="mt-6 pt-6 border-t border-white/10 flex items-center justify-between">
+            <div className="mt-6 pt-6 border-t border-theme-mint/30 flex items-center justify-between">
               <Link
                 to="/responder"
                 className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 transition-colors"
@@ -159,11 +159,11 @@ export const UserDashboard: React.FC = () => {
 
         {/* Active Emergency Tracker if current user has an ongoing request */}
         {activeRequest && (
-          <div className="relative rounded-[2.5rem] p-6 sm:p-8 border border-white/10 bg-slate-950 overflow-hidden flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 shadow-2xl">
+          <div className="relative rounded-[2.5rem] p-6 sm:p-8 border border-theme-mint/30 bg-theme-sage/40 overflow-hidden flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 shadow-2xl">
             
             {/* Background Map Graphic - Realistic Roads */}
             <div className="absolute inset-0 opacity-[0.06] pointer-events-none overflow-hidden flex items-center justify-center">
-              <svg viewBox="0 0 1000 500" className="min-w-full min-h-full object-cover text-white" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg viewBox="0 0 1000 500" className="min-w-full min-h-full object-cover text-theme-dark" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M-100,200 L150,150 L250,250 L450,200 L600,250 L900,100" />
                 <path d="M200,-50 L250,100 L200,200 L300,350 L250,550" />
                 <path d="M450,-50 L420,150 L350,250 L400,450" />
@@ -188,7 +188,7 @@ export const UserDashboard: React.FC = () => {
                 </div>
                 <div>
                   <div className="flex items-center gap-3 mb-1.5">
-                    <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-theme-forest/80">
                       Your Active Emergency
                     </span>
                     <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emergency-500/20 border border-emergency-500/30 text-emergency-400 text-[9px] font-black tracking-wider uppercase">
@@ -196,12 +196,12 @@ export const UserDashboard: React.FC = () => {
                       Active
                     </span>
                   </div>
-                  <h3 className="text-2xl font-black text-white tracking-wide pr-32">
+                  <h3 className="text-2xl font-black text-theme-dark tracking-wide pr-32">
                     {activeRequest.needs.join(', ') || 'Emergency Assistance'}
                   </h3>
                 </div>
               </div>
-              <p className="text-sm text-slate-300 mb-3 truncate pr-32">
+              <p className="text-sm text-theme-forest mb-3 truncate pr-32">
                 {activeRequest.description}
               </p>
               <div className="flex items-center gap-2 text-xs text-sky-400 font-medium">
@@ -217,8 +217,8 @@ export const UserDashboard: React.FC = () => {
                 <div className="absolute inset-0 border border-slate-500/40 rounded-full animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite]" />
                 <div className="absolute inset-3 border border-slate-400/50 rounded-full animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite_0.8s]" />
                 <div className="absolute inset-6 border border-slate-300/60 rounded-full animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite_1.6s]" />
-                <div className="w-10 h-10 rounded-full bg-slate-800/80 border border-slate-600 flex items-center justify-center relative z-10 shadow-lg backdrop-blur-md">
-                  <MapPin className="w-5 h-5 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+                <div className="w-10 h-10 rounded-full bg-theme-sage/80 border border-slate-600 flex items-center justify-center relative z-10 shadow-lg backdrop-blur-md">
+                  <MapPin className="w-5 h-5 text-theme-dark drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
                 </div>
               </div>
             </div>
@@ -227,10 +227,10 @@ export const UserDashboard: React.FC = () => {
             <div className="absolute top-6 right-6 sm:top-8 sm:right-8 z-20">
               <Link
                 to={`/requests/${activeRequest.id}`}
-                className="relative group px-5 py-2.5 rounded-full bg-cyan-500/10 border border-cyan-400 text-white font-black text-[10px] sm:text-xs uppercase tracking-widest flex items-center gap-2 transition-all active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.4),inset_0_0_10px_rgba(6,182,212,0.3)] hover:shadow-[0_0_25px_rgba(6,182,212,0.6),inset_0_0_15px_rgba(6,182,212,0.5)] hover:bg-cyan-500/20 backdrop-blur-sm"
+                className="relative group px-5 py-2.5 rounded-full bg-cyan-500/10 border border-cyan-400 text-theme-dark font-black text-[10px] sm:text-xs uppercase tracking-widest flex items-center gap-2 transition-all active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.4),inset_0_0_10px_rgba(6,182,212,0.3)] hover:shadow-[0_0_25px_rgba(6,182,212,0.6),inset_0_0_15px_rgba(6,182,212,0.5)] hover:bg-cyan-500/20 backdrop-blur-sm"
               >
                 <span className="drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]">Live Tracking & Chat</span>
-                <span className="bg-emergency-500 text-white text-[8px] px-1.5 py-0.5 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.9)] animate-pulse border border-white/30">
+                <span className="bg-emergency-500 text-theme-dark text-[8px] px-1.5 py-0.5 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.9)] animate-pulse border border-white/30">
                   LIVE
                 </span>
               </Link>
@@ -243,11 +243,11 @@ export const UserDashboard: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* My Recent Requests (2 cols) */}
-          <div className="lg:col-span-2 glass-panel rounded-3xl p-6 border border-white/10 space-y-4">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          <div className="lg:col-span-2 glass-panel rounded-3xl p-6 border border-theme-mint/30 space-y-4">
+            <div className="flex items-center justify-between border-b border-theme-mint/30 pb-4">
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-sky-400" />
-                <h3 className="font-bold text-sm uppercase tracking-wider text-white">
+                <h3 className="font-bold text-sm uppercase tracking-wider text-theme-dark">
                   My Emergency Requests
                 </h3>
               </div>
@@ -257,7 +257,7 @@ export const UserDashboard: React.FC = () => {
             </div>
 
             {myRequests.length === 0 ? (
-              <div className="text-center py-12 text-xs text-slate-500">
+              <div className="text-center py-12 text-xs text-theme-forest/60">
                 No emergency requests yet. You're all clear.
               </div>
             ) : (
@@ -266,20 +266,20 @@ export const UserDashboard: React.FC = () => {
                   <Link
                     key={req.id}
                     to={`/requests/${req.id}`}
-                    className="p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all flex items-center justify-between gap-4 block"
+                    className="p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-theme-mint/20 hover:border-theme-mint/40 transition-all flex items-center justify-between gap-4 block"
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-bold text-xs text-white">
+                        <span className="font-bold text-xs text-theme-dark">
                           {req.needs.join(', ')}
                         </span>
                         <StatusBadge status={req.status} size="sm" />
                       </div>
-                      <p className="text-xs text-slate-400 truncate max-w-md">
+                      <p className="text-xs text-theme-forest/80 truncate max-w-md">
                         {req.description}
                       </p>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-slate-500 shrink-0" />
+                    <ChevronRight className="w-4 h-4 text-theme-forest/60 shrink-0" />
                   </Link>
                 ))}
               </div>
@@ -287,9 +287,9 @@ export const UserDashboard: React.FC = () => {
           </div>
 
           {/* Quick Actions & Capabilities Sidebar */}
-          <div className="glass-panel rounded-3xl p-6 border border-white/10 space-y-4">
-            <div className="border-b border-white/10 pb-3">
-              <h3 className="font-bold text-xs uppercase tracking-wider text-slate-400">
+          <div className="glass-panel rounded-3xl p-6 border border-theme-mint/30 space-y-4">
+            <div className="border-b border-theme-mint/30 pb-3">
+              <h3 className="font-bold text-xs uppercase tracking-wider text-theme-forest/80">
                 Quick Actions
               </h3>
             </div>
@@ -297,7 +297,7 @@ export const UserDashboard: React.FC = () => {
             <div className="space-y-2.5">
               <Link
                 to="/request-help"
-                className="w-full p-3 rounded-xl bg-emergency-600/20 hover:bg-emergency-600/30 border border-emergency-500/30 text-white font-bold text-xs flex items-center justify-between transition-colors"
+                className="w-full p-3 rounded-xl bg-emergency-600/20 hover:bg-emergency-600/30 border border-emergency-500/30 text-theme-forest font-bold text-xs flex items-center justify-between transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 text-emergency-500" />
@@ -308,7 +308,7 @@ export const UserDashboard: React.FC = () => {
 
               <Link
                 to="/responder"
-                className="w-full p-3 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-white font-bold text-xs flex items-center justify-between transition-colors"
+                className="w-full p-3 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-theme-dark font-bold text-xs flex items-center justify-between transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <Shield className="w-4 h-4 text-emerald-400" />
@@ -319,17 +319,17 @@ export const UserDashboard: React.FC = () => {
 
               <Link
                 to="/notifications"
-                className="w-full p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-xs flex items-center justify-between transition-colors"
+                className="w-full p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-theme-mint/30 text-theme-dark font-medium text-xs flex items-center justify-between transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <Bell className="w-4 h-4 text-sky-400" />
                   <span>Notification Center</span>
                 </div>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+                <ArrowRight className="w-3.5 h-3.5 text-theme-forest/80" />
               </Link>
             </div>
 
-            <div className="pt-4 border-t border-white/10 text-[11px] text-slate-400 leading-relaxed">
+            <div className="pt-4 border-t border-theme-mint/30 text-[11px] text-theme-forest/80 leading-relaxed">
               💡 <strong>Remember:</strong> Even if Responder Mode is active, you retain full access to request help anytime if you encounter danger.
             </div>
           </div>

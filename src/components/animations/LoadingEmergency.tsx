@@ -19,11 +19,11 @@ export const LoadingEmergency: React.FC<LoadingEmergencyProps> = ({
         </div>
       </div>
       <div className="space-y-1">
-        <h4 className="text-sm font-bold text-white font-display tracking-wide flex items-center justify-center gap-2">
+        <h4 className="text-sm font-bold text-theme-dark font-display tracking-wide flex items-center justify-center gap-2">
           <Radio className="w-4 h-4 text-emergency-500 animate-pulse" />
           <span>{message}</span>
         </h4>
-        <p className="text-[11px] text-slate-400 font-mono">
+        <p className="text-[11px] text-theme-forest/80 font-mono">
           COMMUNITY MESH • ACTIVE BROADCAST
         </p>
       </div>

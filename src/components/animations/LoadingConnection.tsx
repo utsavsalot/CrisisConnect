@@ -17,8 +17,8 @@ export const LoadingConnection: React.FC<LoadingConnectionProps> = ({
         </div>
       </div>
       <div className="space-y-0.5">
-        <p className="text-xs font-bold text-white">{message}</p>
-        <p className="text-[10px] text-slate-400 font-mono">
+        <p className="text-xs font-bold text-theme-dark">{message}</p>
+        <p className="text-[10px] text-theme-forest/80 font-mono">
           CHECKING MEDICAL & RESCUE CAPABILITIES
         </p>
       </div>

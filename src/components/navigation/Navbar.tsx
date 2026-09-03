@@ -77,10 +77,10 @@ export const Navbar: React.FC = () => {
               <AlertTriangle className="w-5 h-5 text-emergency-500" />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-black tracking-wider text-slate-100 font-display">
+              <span className="text-lg font-black tracking-wider text-theme-dark font-display">
                 CRISIS<span className="text-emergency-500">CONNECT</span>
               </span>
-              <span className="text-[9px] tracking-widest text-slate-400 font-semibold uppercase -mt-1 hidden sm:block">
+              <span className="text-[9px] tracking-widest text-theme-forest/80 font-semibold uppercase -mt-1 hidden sm:block">
                 Real-Time Emergency Network
               </span>
             </div>
@@ -91,13 +91,13 @@ export const Navbar: React.FC = () => {
         <nav className="hidden md:flex items-center gap-1 lg:gap-2">
           {isPublic ? (
             <>
-              <a href="/#how-it-works" className="px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white transition-colors">
+              <a href="/#how-it-works" className="px-3 py-1.5 text-xs font-medium text-theme-forest hover:text-theme-dark transition-colors">
                 How It Works
               </a>
-              <a href="/#crisis-ai" className="px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white transition-colors">
+              <a href="/#crisis-ai" className="px-3 py-1.5 text-xs font-medium text-theme-forest hover:text-theme-dark transition-colors">
                 CrisisAI
               </a>
-              <a href="/#about" className="px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white transition-colors">
+              <a href="/#about" className="px-3 py-1.5 text-xs font-medium text-theme-forest hover:text-theme-dark transition-colors">
                 About Us
               </a>
             </>
@@ -110,8 +110,8 @@ export const Navbar: React.FC = () => {
                   to={item.path}
                   className={`relative px-3 py-1.5 text-xs font-medium rounded-lg transition-all flex items-center gap-1.5 ${
                     active
-                      ? 'text-white bg-white/10 border border-white/10 shadow-sm'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                      ? 'text-theme-dark bg-white/10 border border-theme-mint/30 shadow-sm'
+                      : 'text-theme-forest/80 hover:text-theme-dark/90 hover:bg-white/5'
                   }`}
                 >
                   {item.label === 'Live Map' && <MapPin className="w-3.5 h-3.5 text-sky-400 animate-pulse" />}
@@ -122,7 +122,7 @@ export const Navbar: React.FC = () => {
                     </span>
                   )}
                   {typeof item.badgeCount === 'number' && item.badgeCount > 0 && (
-                    <span className="w-4 h-4 rounded-full text-[10px] font-bold bg-emergency-500 text-white flex items-center justify-center">
+                    <span className="w-4 h-4 rounded-full text-[10px] font-bold bg-emergency-500 text-theme-dark flex items-center justify-center">
                       {item.badgeCount}
                     </span>
                   )}
@@ -141,7 +141,7 @@ export const Navbar: React.FC = () => {
           {!currentUser ? (
             <Link
               to="/login"
-              className="px-4 py-2 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-emergency-600/20 transition-all active:scale-95"
+              className="px-4 py-2 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-theme-dark font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-emergency-600/20 transition-all active:scale-95"
             >
               <LogIn className="w-3.5 h-3.5" />
               <span>Login</span>
@@ -152,7 +152,7 @@ export const Navbar: React.FC = () => {
               {isPublic ? (
                 <Link
                   to={role === 'ngo' ? '/ngo/dashboard' : '/dashboard'}
-                  className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-all border border-white/15"
+                  className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-theme-dark font-semibold text-xs transition-all border border-theme-mint/40"
                 >
                   Dashboard
                 </Link>
@@ -165,30 +165,30 @@ export const Navbar: React.FC = () => {
                 <button
                   onClick={() => setDropdownOpen(d => !d)}
                   aria-label="User menu"
-                  className="w-8 h-8 rounded-full bg-slate-800 border border-white/20 flex items-center justify-center text-slate-200 hover:border-white/40 transition-colors"
+                  className="w-8 h-8 rounded-full bg-theme-sage border border-theme-mint/40 flex items-center justify-center text-theme-dark/90 hover:border-white/40 transition-colors"
                 >
                   <User className="w-4 h-4" />
                 </button>
 
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 rounded-xl glass-panel p-2 shadow-xl z-50 text-xs border border-white/15 animate-in fade-in zoom-in-95 duration-150">
-                    <div className="px-3 py-2 border-b border-white/10">
-                      <p className="font-semibold text-white truncate">
+                  <div className="absolute right-0 mt-2 w-48 rounded-xl glass-panel p-2 shadow-xl z-50 text-xs border border-theme-mint/40 animate-in fade-in zoom-in-95 duration-150">
+                    <div className="px-3 py-2 border-b border-theme-mint/30">
+                      <p className="font-semibold text-theme-dark truncate">
                         {'name' in currentUser ? currentUser.name : currentUser.orgName}
                       </p>
-                      <p className="text-[10px] text-slate-400 truncate">{currentUser.email}</p>
+                      <p className="text-[10px] text-theme-forest/80 truncate">{currentUser.email}</p>
                     </div>
                     <Link
                       to={role === 'ngo' ? '/ngo/profile' : '/profile'}
                       onClick={() => setDropdownOpen(false)}
-                      className="block px-3 py-2 rounded-lg hover:bg-white/10 text-slate-300 hover:text-white"
+                      className="block px-3 py-2 rounded-lg hover:bg-white/10 text-theme-forest hover:text-theme-dark"
                     >
                       View Profile
                     </Link>
                     <Link
                       to={role === 'ngo' ? '/ngo/settings' : '/settings'}
                       onClick={() => setDropdownOpen(false)}
-                      className="block px-3 py-2 rounded-lg hover:bg-white/10 text-slate-300 hover:text-white"
+                      className="block px-3 py-2 rounded-lg hover:bg-white/10 text-theme-forest hover:text-theme-dark"
                     >
                       Settings
                     </Link>
@@ -214,7 +214,7 @@ export const Navbar: React.FC = () => {
             <button
               onClick={() => setMobileMenuOpen((prev) => !prev)}
               aria-label="Toggle navigation menu"
-              className="md:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+              className="md:hidden p-2 rounded-xl text-theme-forest/80 hover:text-theme-dark hover:bg-white/10 transition-colors"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -224,25 +224,25 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Landing Dropdown Menu */}
       {isPublic && mobileMenuOpen && (
-        <div className="md:hidden border-b border-white/10 bg-[#070B14]/95 backdrop-blur-2xl px-6 py-4 flex flex-col gap-3 text-sm animate-in slide-in-from-top-2 duration-150">
+        <div className="md:hidden border-b border-theme-mint/30 bg-theme-light/95 backdrop-blur-2xl px-6 py-4 flex flex-col gap-3 text-sm animate-in slide-in-from-top-2 duration-150">
           <a
             href="/#how-it-works"
             onClick={() => setMobileMenuOpen(false)}
-            className="py-2 text-slate-300 hover:text-white font-medium transition-colors border-b border-white/5"
+            className="py-2 text-theme-forest hover:text-theme-dark font-medium transition-colors border-b border-theme-mint/20"
           >
             How It Works
           </a>
           <a
             href="/#crisis-ai"
             onClick={() => setMobileMenuOpen(false)}
-            className="py-2 text-slate-300 hover:text-white font-medium transition-colors border-b border-white/5"
+            className="py-2 text-theme-forest hover:text-theme-dark font-medium transition-colors border-b border-theme-mint/20"
           >
             CrisisAI
           </a>
           <a
             href="/#about"
             onClick={() => setMobileMenuOpen(false)}
-            className="py-2 text-slate-300 hover:text-white font-medium transition-colors"
+            className="py-2 text-theme-forest hover:text-theme-dark font-medium transition-colors"
           >
             About Us
           </a>

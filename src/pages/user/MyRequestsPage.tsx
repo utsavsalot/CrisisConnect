@@ -15,28 +15,28 @@ export const MyRequestsPage: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#070B14] py-8 px-4 sm:px-6 lg:px-8 text-slate-100">
+    <div className="min-h-screen bg-theme-light py-8 px-4 sm:px-6 lg:px-8 text-theme-dark">
       <div className="max-w-6xl mx-auto space-y-6">
         
         {/* Top Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-theme-mint/30 pb-6">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-theme-forest/80">
                 Incident History
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white font-display mt-1">
+            <h1 className="text-2xl sm:text-3xl font-black text-theme-dark font-display mt-1">
               My Emergency Requests
             </h1>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-theme-forest/80 mt-0.5">
               Live status tracking, assigned responders, and coordination logs
             </p>
           </div>
 
           <Link
             to="/request-help"
-            className="emergency-cta px-4 py-2.5 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-white font-bold text-xs uppercase tracking-wider shadow-emergency-glow flex items-center gap-2"
+            className="emergency-cta px-4 py-2.5 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-theme-dark font-bold text-xs uppercase tracking-wider shadow-emergency-glow flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             <span>New Emergency Request</span>
@@ -51,8 +51,8 @@ export const MyRequestsPage: React.FC = () => {
               onClick={() => setStatusFilter(st)}
               className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all ${
                 statusFilter === st
-                  ? 'bg-white/15 border-white/30 text-white'
-                  : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'
+                  ? 'bg-white/15 border-white/30 text-theme-dark'
+                  : 'bg-white/5 border-theme-mint/30 text-theme-forest/80 hover:text-theme-dark'
               }`}
             >
               {st === 'ALL' ? 'All Incidents' : st.replace('_', ' ')}
@@ -62,19 +62,19 @@ export const MyRequestsPage: React.FC = () => {
 
         {/* Requests Feed */}
         {filteredRequests.length === 0 ? (
-          <div className="glass-panel rounded-3xl p-12 text-center border border-white/10 max-w-lg mx-auto mt-8">
-            <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 mx-auto mb-4">
+          <div className="glass-panel rounded-3xl p-12 text-center border border-theme-mint/30 max-w-lg mx-auto mt-8">
+            <div className="w-12 h-12 rounded-2xl bg-white/5 border border-theme-mint/30 flex items-center justify-center text-theme-forest/80 mx-auto mb-4">
               <Clock className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-white font-display">
+            <h3 className="text-lg font-bold text-theme-dark font-display">
               No emergency requests found
             </h3>
-            <p className="text-xs text-slate-400 mt-1 max-w-xs mx-auto">
+            <p className="text-xs text-theme-forest/80 mt-1 max-w-xs mx-auto">
               You do not have any emergency requests matching this filter.
             </p>
             <Link
               to="/request-help"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-white font-bold text-xs uppercase tracking-wider mt-6 shadow-emergency-glow"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-theme-dark font-bold text-xs uppercase tracking-wider mt-6 shadow-emergency-glow"
             >
               <AlertTriangle className="w-4 h-4" />
               <span>Create Emergency Request</span>

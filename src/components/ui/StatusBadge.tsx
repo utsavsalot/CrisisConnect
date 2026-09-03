@@ -40,7 +40,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'md' })
       default:
         return {
           label: status,
-          badgeClass: 'bg-slate-500/15 text-slate-400 border-slate-500/30',
+          badgeClass: 'bg-slate-500/15 text-theme-forest/80 border-slate-500/30',
           dotClass: 'bg-slate-400',
           staticDot: 'bg-slate-400'
         };

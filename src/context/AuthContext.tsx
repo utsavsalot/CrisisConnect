@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { UserProfile, NGOProfile, UserRole, EmergencyNeedCategory, LocationCoordinates } from '../types';
+import { UserProfile, NGOProfile, UserRole, EmergencyNeedCategory, LocationCoordinates, FamilyMemberContact } from '../types';
 import { authService, responderService } from '../services/serviceManager';
 
 interface AuthContextType {
@@ -17,6 +17,12 @@ interface AuthContextType {
   role: 'user' | 'ngo';
   orgType?: string;
   location?: LocationCoordinates;
+  address?: string;
+  gender?: string;
+  age?: string | number;
+  bloodGroup?: string;
+  medicalHistory?: string[];
+  emergencyContacts?: FamilyMemberContact[];
 }) => Promise<void>;
   logout: () => Promise<void>;
   toggleResponderMode: (enabled: boolean) => Promise<void>;
@@ -65,6 +71,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   role: 'user' | 'ngo';
   orgType?: string;
   location?: LocationCoordinates;
+  address?: string;
+  gender?: string;
+  age?: string | number;
+  bloodGroup?: string;
+  medicalHistory?: string[];
+  emergencyContacts?: FamilyMemberContact[];
 }) => {
     const user = await authService.signup(data);
     setCurrentUser(user);

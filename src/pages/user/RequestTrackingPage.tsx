@@ -51,16 +51,16 @@ export const RequestTrackingPage: React.FC = () => {
 
   if (!request) {
     return (
-      <div className="min-h-screen bg-[#070B14] py-16 px-4 text-center text-slate-100">
-        <div className="max-w-md mx-auto glass-panel p-8 rounded-3xl border border-white/10">
+      <div className="min-h-screen bg-theme-light py-16 px-4 text-center text-theme-dark">
+        <div className="max-w-md mx-auto glass-panel p-8 rounded-3xl border border-theme-mint/30">
           <AlertTriangle className="w-12 h-12 text-emergency-500 mx-auto mb-4" />
           <h2 className="text-xl font-bold font-display">Emergency Request Not Found</h2>
-          <p className="text-xs text-slate-400 mt-2">
+          <p className="text-xs text-theme-forest/80 mt-2">
             The requested incident dossier could not be located or has been archived.
           </p>
           <button
             onClick={() => navigate('/dashboard')}
-            className="mt-6 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold"
+            className="mt-6 px-4 py-2 bg-white/10 hover:bg-white/20 text-theme-dark rounded-xl text-xs font-bold"
           >
             Return to Dashboard
           </button>
@@ -91,26 +91,26 @@ export const RequestTrackingPage: React.FC = () => {
   const isAccepted = request.status === 'accepted' || request.status === 'in_progress' || request.status === 'resolved';
 
   return (
-    <div className="min-h-screen bg-[#070B14] py-8 px-4 sm:px-6 lg:px-8 text-slate-100">
+    <div className="min-h-screen bg-theme-light py-8 px-4 sm:px-6 lg:px-8 text-theme-dark">
       <div className="max-w-5xl mx-auto space-y-6">
         
         {/* Navigation & Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-theme-mint/30 pb-4">
           <div>
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors mb-2"
+              className="flex items-center gap-1.5 text-xs font-semibold text-theme-forest/80 hover:text-theme-dark transition-colors mb-2"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back to Requests</span>
             </button>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl sm:text-3xl font-black text-white font-display">
+              <h1 className="text-2xl sm:text-3xl font-black text-theme-dark font-display">
                 REQUEST TRACKING
               </h1>
               <StatusBadge status={request.status} size="md" />
             </div>
-            <p className="text-xs text-slate-400 mt-0.5 font-mono">
+            <p className="text-xs text-theme-forest/80 mt-0.5 font-mono">
               INCIDENT REF: #{request.id} • REPORTED {new Date(request.createdAt).toLocaleTimeString()}
             </p>
           </div>
@@ -118,7 +118,7 @@ export const RequestTrackingPage: React.FC = () => {
           {request.status !== 'resolved' && (
             <button
               onClick={handleMarkResolved}
-              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-md flex items-center gap-2 transition-transform active:scale-95"
+              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-theme-dark font-bold text-xs uppercase tracking-wider shadow-md flex items-center gap-2 transition-transform active:scale-95"
             >
               <CheckCircle2 className="w-4 h-4" />
               <span>Mark Resolved</span>
@@ -127,7 +127,7 @@ export const RequestTrackingPage: React.FC = () => {
         </div>
 
         {/* 5-Step Visual Timeline Component */}
-        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 shadow-xl">
+        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-theme-mint/30 shadow-xl">
           <RequestTimeline status={request.status} />
         </div>
 
@@ -136,7 +136,7 @@ export const RequestTrackingPage: React.FC = () => {
           <div className="p-5 rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-start gap-4">
             <Radio className="w-6 h-6 text-sky-400 shrink-0 mt-0.5 animate-pulse" />
             <div>
-              <h4 className="text-sm font-bold text-white uppercase tracking-wider font-display">
+              <h4 className="text-sm font-bold text-theme-dark uppercase tracking-wider font-display">
                 NO RESPONDER HAS ACCEPTED YET
               </h4>
               <p className="text-xs text-sky-300 mt-1 leading-relaxed">
@@ -150,7 +150,7 @@ export const RequestTrackingPage: React.FC = () => {
           <div className="p-5 rounded-2xl bg-sky-500/15 border border-sky-500/40 flex items-start gap-4">
             <ShieldCheck className="w-6 h-6 text-sky-400 shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-sm font-bold text-white uppercase tracking-wider font-display">
+              <h4 className="text-sm font-bold text-theme-dark uppercase tracking-wider font-display">
                 ASSISTANCE ACCEPTED
               </h4>
               <p className="text-xs text-sky-300 mt-1 leading-relaxed">
@@ -164,7 +164,7 @@ export const RequestTrackingPage: React.FC = () => {
           <div className="p-5 rounded-2xl bg-amber-500/15 border border-amber-500/40 flex items-start gap-4">
             <UserCheck className="w-6 h-6 text-amber-400 shrink-0 mt-0.5 animate-pulse" />
             <div>
-              <h4 className="text-sm font-bold text-white uppercase tracking-wider font-display">
+              <h4 className="text-sm font-bold text-theme-dark uppercase tracking-wider font-display">
                 ASSISTANCE IN PROGRESS
               </h4>
               <p className="text-xs text-amber-300 mt-1 leading-relaxed">
@@ -178,7 +178,7 @@ export const RequestTrackingPage: React.FC = () => {
           <div className="p-5 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 flex items-start gap-4">
             <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-sm font-bold text-white uppercase tracking-wider font-display">
+              <h4 className="text-sm font-bold text-theme-dark uppercase tracking-wider font-display">
                 ✓ EMERGENCY RESOLVED
               </h4>
               <p className="text-xs text-emerald-300 mt-1 leading-relaxed">
@@ -195,8 +195,8 @@ export const RequestTrackingPage: React.FC = () => {
           <div className="lg:col-span-5 space-y-6">
             
             {/* Request Summary Card */}
-            <div className="glass-panel rounded-3xl p-6 border border-white/10 space-y-4">
-              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400">
+            <div className="glass-panel rounded-3xl p-6 border border-theme-mint/30 space-y-4">
+              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-theme-forest/80">
                 Incident Dossier
               </h3>
 
@@ -211,16 +211,16 @@ export const RequestTrackingPage: React.FC = () => {
                 ))}
               </div>
 
-              <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
+              <p className="text-xs sm:text-sm text-theme-dark/90 leading-relaxed font-medium">
                 {request.description}
               </p>
 
-              <div className="pt-4 border-t border-white/10 text-xs space-y-2">
-                <div className="flex items-center gap-2 text-slate-400">
+              <div className="pt-4 border-t border-theme-mint/30 text-xs space-y-2">
+                <div className="flex items-center gap-2 text-theme-forest/80">
                   <MapPin className="w-4 h-4 text-sky-400 shrink-0" />
-                  <span className="text-white truncate">{request.location.address || 'Detected Location'}</span>
+                  <span className="text-theme-dark truncate">{request.location.address || 'Detected Location'}</span>
                 </div>
-                <div className="text-[10px] text-slate-500 font-mono pl-6">
+                <div className="text-[10px] text-theme-forest/60 font-mono pl-6">
                   {request.location.latitude.toFixed(4)}° N, {request.location.longitude.toFixed(4)}° W
                 </div>
               </div>
@@ -243,10 +243,10 @@ export const RequestTrackingPage: React.FC = () => {
                     {request.acceptedByType === 'ngo' ? <Building2 className="w-6 h-6" /> : <UserCheck className="w-6 h-6" />}
                   </div>
                   <div>
-                    <h4 className="font-bold text-base text-white font-display">
+                    <h4 className="font-bold text-base text-theme-dark font-display">
                       {request.acceptedByName || 'Emergency Responder'}
                     </h4>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-theme-forest/80">
                       Approx. distance: <span className="text-emerald-400 font-semibold font-mono">{request.distanceKm || 1.4} km away</span>
                     </p>
                   </div>
@@ -256,7 +256,7 @@ export const RequestTrackingPage: React.FC = () => {
                 <div className="flex items-center gap-2 pt-2">
                   <a
                     href="tel:+15559110000"
-                    className="flex-1 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-colors border border-white/10"
+                    className="flex-1 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-theme-dark font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-colors border border-theme-mint/30"
                   >
                     <Phone className="w-4 h-4 text-emerald-400" />
                     <span>Call Unit</span>
@@ -265,7 +265,7 @@ export const RequestTrackingPage: React.FC = () => {
                   {request.status === 'accepted' && (
                     <button
                       onClick={handleAdvanceStatus}
-                      className="px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs uppercase tracking-wider transition-colors"
+                      className="px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-theme-dark font-bold text-xs uppercase tracking-wider transition-colors"
                     >
                       Start Assistance
                     </button>
@@ -273,7 +273,7 @@ export const RequestTrackingPage: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="glass-panel rounded-3xl p-6 border border-white/10 text-center text-slate-500 text-xs py-8">
+              <div className="glass-panel rounded-3xl p-6 border border-theme-mint/30 text-center text-theme-forest/60 text-xs py-8">
                 <Radio className="w-8 h-8 mx-auto mb-2 text-slate-600 animate-pulse" />
                 <span>Awaiting responder commitment...</span>
               </div>
@@ -282,13 +282,13 @@ export const RequestTrackingPage: React.FC = () => {
           </div>
 
           {/* Right Column: Real-Time Coordination Chat (7 cols) */}
-          <div className="lg:col-span-7 glass-panel rounded-3xl border border-white/10 flex flex-col h-[520px] overflow-hidden shadow-2xl">
+          <div className="lg:col-span-7 glass-panel rounded-3xl border border-theme-mint/30 flex flex-col h-[520px] overflow-hidden shadow-2xl">
             
             {/* Chat Header */}
-            <div className="p-4 border-b border-white/10 bg-slate-900/80 flex items-center justify-between">
+            <div className="p-4 border-b border-theme-mint/30 bg-white/80 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <MessageSquare className="w-4 h-4 text-sky-400" />
-                <span className="font-bold text-xs uppercase tracking-wider text-white">
+                <span className="font-bold text-xs uppercase tracking-wider text-theme-dark">
                   Live Dispatch Coordination Chat
                 </span>
               </div>
@@ -301,7 +301,7 @@ export const RequestTrackingPage: React.FC = () => {
             {/* Message Feed */}
             <div className="flex-1 p-4 overflow-y-auto space-y-3 no-scrollbar">
               {messages.length === 0 ? (
-                <div className="text-center py-16 text-slate-500 text-xs">
+                <div className="text-center py-16 text-theme-forest/60 text-xs">
                   {isAccepted 
                     ? 'Coordination channel established. Send a message to coordinate arrival.'
                     : 'Chat will activate once a responder or NGO accepts your emergency request.'}
@@ -314,19 +314,19 @@ export const RequestTrackingPage: React.FC = () => {
                       key={msg.id}
                       className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}
                     >
-                      <span className="text-[10px] text-slate-400 mb-1 px-1">
+                      <span className="text-[10px] text-theme-forest/80 mb-1 px-1">
                         {msg.senderName} • {msg.senderRole}
                       </span>
                       <div
                         className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-xs leading-relaxed ${
                           isMine
-                            ? 'bg-sky-600 text-white rounded-br-none shadow-md'
-                            : 'bg-white/10 text-slate-100 rounded-bl-none border border-white/10'
+                            ? 'bg-sky-600 text-theme-dark rounded-br-none shadow-md'
+                            : 'bg-white/10 text-theme-dark rounded-bl-none border border-theme-mint/30'
                         }`}
                       >
                         {msg.text}
                       </div>
-                      <span className="text-[9px] text-slate-500 mt-1 px-1">
+                      <span className="text-[9px] text-theme-forest/60 mt-1 px-1">
                         {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
@@ -337,7 +337,7 @@ export const RequestTrackingPage: React.FC = () => {
             </div>
 
             {/* Chat Input */}
-            <div className="p-3 border-t border-white/10 bg-slate-900/80">
+            <div className="p-3 border-t border-theme-mint/30 bg-white/80">
               <form onSubmit={handleSendMessage} className="flex items-center gap-2">
                 <input
                   type="text"
@@ -345,12 +345,12 @@ export const RequestTrackingPage: React.FC = () => {
                   onChange={(e) => setInputText(e.target.value)}
                   placeholder={isAccepted ? "Type a coordination message or arrival detail..." : "Awaiting responder acceptance to chat..."}
                   disabled={!isAccepted}
-                  className="flex-1 bg-slate-800/80 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400 disabled:opacity-50"
+                  className="flex-1 bg-theme-sage/80 border border-theme-mint/30 rounded-xl px-4 py-2.5 text-xs text-theme-dark placeholder:text-theme-forest/60 focus:outline-none focus:border-sky-400 disabled:opacity-50"
                 />
                 <button
                   type="submit"
                   disabled={!inputText.trim() || !isAccepted}
-                  className="p-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-40 text-white transition-all"
+                  className="p-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-40 text-theme-dark transition-all"
                 >
                   <Send className="w-4 h-4" />
                 </button>

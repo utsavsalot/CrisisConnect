@@ -38,22 +38,22 @@ export const NGORequestsPage: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#070B14] py-8 px-4 sm:px-6 lg:px-8 text-slate-100">
+    <div className="min-h-screen bg-theme-light py-8 px-4 sm:px-6 lg:px-8 text-theme-dark">
       <div className="max-w-7xl mx-auto space-y-6">
         
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-theme-mint/30 pb-6">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white font-display">
+            <h1 className="text-2xl sm:text-3xl font-black text-theme-dark font-display">
               EMERGENCY INCIDENT QUEUE
             </h1>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-theme-forest/80 mt-0.5">
               Live district triage, active emergency filtering, and team dispatch
             </p>
           </div>
           <Link
             to="/ngo/map"
-            className="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2"
+            className="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-theme-dark text-xs font-bold uppercase tracking-wider flex items-center gap-2"
           >
             <MapPin className="w-4 h-4" />
             <span>Map View</span>
@@ -61,17 +61,17 @@ export const NGORequestsPage: React.FC = () => {
         </div>
 
         {/* Filters Toolbar */}
-        <div className="glass-panel rounded-2xl p-4 border border-white/10 flex flex-col md:flex-row items-center justify-between gap-3">
+        <div className="glass-panel rounded-2xl p-4 border border-theme-mint/30 flex flex-col md:flex-row items-center justify-between gap-3">
           
           {/* Search box */}
           <div className="relative w-full md:w-80">
-            <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-theme-forest/60 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search emergency keywords, address..."
-              className="w-full bg-slate-900/80 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400"
+              className="w-full bg-white/80 border border-theme-mint/30 rounded-xl pl-9 pr-3 py-2 text-xs text-theme-dark placeholder:text-theme-forest/60 focus:outline-none focus:border-sky-400"
             />
           </div>
 
@@ -83,8 +83,8 @@ export const NGORequestsPage: React.FC = () => {
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all ${
                   selectedCategory === cat
-                    ? 'bg-sky-600 text-white border-sky-500 shadow-sm'
-                    : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'
+                    ? 'bg-sky-600 text-theme-dark border-sky-500 shadow-sm'
+                    : 'bg-white/5 border-theme-mint/30 text-theme-forest/80 hover:text-theme-dark'
                 }`}
               >
                 {cat}
@@ -97,14 +97,14 @@ export const NGORequestsPage: React.FC = () => {
         {/* Requests Table / Cards */}
         <div className="space-y-3">
           {filteredRequests.length === 0 ? (
-            <div className="glass-panel rounded-3xl p-12 text-center border border-white/10 max-w-md mx-auto">
-              <p className="text-xs text-slate-400">No emergency requests match the current filters.</p>
+            <div className="glass-panel rounded-3xl p-12 text-center border border-theme-mint/30 max-w-md mx-auto">
+              <p className="text-xs text-theme-forest/80">No emergency requests match the current filters.</p>
             </div>
           ) : (
             filteredRequests.map((r) => (
               <div
                 key={r.id}
-                className="glass-panel rounded-2xl p-5 border border-white/10 hover:border-sky-500/40 transition-all flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 group"
+                className="glass-panel rounded-2xl p-5 border border-theme-mint/30 hover:border-sky-500/40 transition-all flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 group"
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -117,31 +117,31 @@ export const NGORequestsPage: React.FC = () => {
                       </span>
                     ))}
                     <StatusBadge status={r.status} size="sm" />
-                    <span className="text-[11px] text-slate-400 font-mono">
+                    <span className="text-[11px] text-theme-forest/80 font-mono">
                       Ref #{r.id} • {new Date(r.createdAt).toLocaleTimeString()}
                     </span>
                   </div>
 
-                  <p className="text-xs sm:text-sm text-slate-200 font-medium leading-relaxed">
+                  <p className="text-xs sm:text-sm text-theme-dark/90 font-medium leading-relaxed">
                     {r.description}
                   </p>
 
-                  <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 mt-2">
-                    <div className="flex items-center gap-1.5 text-slate-300">
+                  <div className="flex flex-wrap items-center gap-4 text-xs text-theme-forest/80 mt-2">
+                    <div className="flex items-center gap-1.5 text-theme-forest">
                       <MapPin className="w-3.5 h-3.5 text-sky-400 shrink-0" />
                       <span className="truncate">{r.location.address || 'Detected Location'}</span>
                     </div>
                     <span className="text-emerald-400 font-mono font-semibold">
                       {r.distanceKm || 1.4} km away
                     </span>
-                    <span>Reported by: <strong className="text-white">{r.requesterName}</strong></span>
+                    <span>Reported by: <strong className="text-theme-dark">{r.requesterName}</strong></span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0 w-full lg:w-auto justify-end pt-3 lg:pt-0 border-t lg:border-t-0 border-white/10">
+                <div className="flex items-center gap-2 shrink-0 w-full lg:w-auto justify-end pt-3 lg:pt-0 border-t lg:border-t-0 border-theme-mint/30">
                   <Link
                     to={`/ngo/requests/${r.id}`}
-                    className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-colors"
+                    className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-theme-dark font-semibold text-xs transition-colors"
                   >
                     View Dossier
                   </Link>
@@ -149,7 +149,7 @@ export const NGORequestsPage: React.FC = () => {
                   {r.status === 'active' && (
                     <button
                       onClick={() => acceptRequest(r.id)}
-                      className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-transform active:scale-95 flex items-center gap-1.5"
+                      className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-theme-dark font-bold text-xs uppercase tracking-wider shadow-sm transition-transform active:scale-95 flex items-center gap-1.5"
                     >
                       <Shield className="w-4 h-4" />
                       <span>Accept & Dispatch</span>

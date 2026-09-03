@@ -19,6 +19,11 @@ export interface LocationCoordinates {
   address?: string;
 }
 
+export interface FamilyMemberContact {
+  relation: string;
+  phone: string;
+}
+
 export interface UserProfile {
   uid: string;
   name: string;
@@ -30,6 +35,12 @@ export interface UserProfile {
   capabilities: EmergencyNeedCategory[];
   location: LocationCoordinates;
   createdAt: string;
+  address?: string;
+  gender?: string;
+  age?: string | number;
+  bloodGroup?: string;
+  medicalHistory?: string[];
+  emergencyContacts?: FamilyMemberContact[];
 }
 
 export interface NGOProfile {

@@ -48,7 +48,7 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-[#070B14] flex items-center justify-center p-4 sm:p-8 relative overflow-hidden grain-overlay">
+    <div className="min-h-[calc(100vh-4rem)] bg-theme-light flex items-center justify-center p-4 sm:p-8 relative overflow-hidden ">
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emergency-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -59,37 +59,37 @@ export const LoginPage: React.FC = () => {
           <div className="w-12 h-12 rounded-2xl bg-emergency-600/20 border border-emergency-500/40 flex items-center justify-center text-emergency-500 mx-auto mb-4 shadow-emergency-glow">
             <AlertTriangle className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white font-display">
+          <h1 className="text-2xl sm:text-3xl font-black text-theme-dark font-display">
             Welcome to CrisisConnect
           </h1>
-          <p className="text-xs text-slate-400 mt-2">
+          <p className="text-xs text-theme-forest/80 mt-2">
             Sign in to access your dashboard, responder feed, or NGO command
           </p>
         </div>
 
         {/* Login Glass Panel */}
-        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl">
+        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-theme-mint/30 shadow-2xl">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-theme-forest mb-1.5">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-theme-forest/60 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="alex@crisisconnect.org"
                   required
-                  className="w-full bg-slate-900/80 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-emergency-500 transition-colors"
+                  className="w-full bg-white/80 border border-theme-mint/30 rounded-xl pl-10 pr-4 py-3 text-xs text-theme-dark placeholder:text-theme-forest/50 bg-white border-theme-mint/30 focus:outline-none focus:border-emergency-500 transition-colors"
                 />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                <label className="text-xs font-bold uppercase tracking-wider text-theme-forest">
                   Password
                 </label>
                 <a href="#" className="text-[11px] text-sky-400 hover:underline">
@@ -97,13 +97,13 @@ export const LoginPage: React.FC = () => {
                 </a>
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-theme-forest/60 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-slate-900/80 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-emergency-500 transition-colors"
+                  className="w-full bg-white/80 border border-theme-mint/30 rounded-xl pl-10 pr-4 py-3 text-xs text-theme-dark placeholder:text-theme-forest/50 bg-white border-theme-mint/30 focus:outline-none focus:border-emergency-500 transition-colors"
                 />
               </div>
             </div>
@@ -111,7 +111,7 @@ export const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-white font-bold text-xs uppercase tracking-wider shadow-emergency-glow transition-all flex items-center justify-center gap-2 transform active:scale-98"
+              className="w-full py-3.5 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-theme-dark font-bold text-xs uppercase tracking-wider shadow-emergency-glow transition-all flex items-center justify-center gap-2 transform active:scale-98"
             >
               <span>{loading ? 'Authenticating...' : 'Sign In'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -119,8 +119,8 @@ export const LoginPage: React.FC = () => {
           </form>
 
           {/* Hackathon 1-Click Evaluation Presets */}
-          <div className="mt-8 pt-6 border-t border-white/10">
-            <span className="block text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-3 text-center">
+          <div className="mt-8 pt-6 border-t border-theme-mint/30">
+            <span className="block text-[10px] font-mono font-bold uppercase tracking-wider text-theme-forest/80 mb-3 text-center">
               ⚡ Instant 1-Click Hackathon Evaluation
             </span>
 
@@ -128,12 +128,12 @@ export const LoginPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleQuickDemo('demo-user')}
-                className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-colors flex items-center gap-2 group"
+                className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-theme-mint/30 text-left transition-colors flex items-center gap-2 group"
               >
                 <User className="w-4 h-4 text-emerald-400 shrink-0" />
                 <div className="min-w-0">
-                  <div className="text-[11px] font-bold text-white truncate">Demo User</div>
-                  <div className="text-[9px] text-slate-400">Needs help</div>
+                  <div className="text-[11px] font-bold text-theme-dark truncate">Demo User</div>
+                  <div className="text-[9px] text-theme-forest/80">Needs help</div>
                 </div>
               </button>
 
@@ -145,7 +145,7 @@ export const LoginPage: React.FC = () => {
                 <Shield className="w-4 h-4 text-emerald-400 shrink-0" />
                 <div className="min-w-0">
                   <div className="text-[11px] font-bold text-emerald-300 truncate">Responder ON</div>
-                  <div className="text-[9px] text-slate-400">Dr. Sarah (User)</div>
+                  <div className="text-[9px] text-theme-forest/80">Dr. Sarah (User)</div>
                 </div>
               </button>
 
@@ -157,7 +157,7 @@ export const LoginPage: React.FC = () => {
                 <Building2 className="w-4 h-4 text-sky-400 shrink-0" />
                 <div className="min-w-0">
                   <div className="text-[11px] font-bold text-sky-300 truncate">Demo NGO</div>
-                  <div className="text-[9px] text-slate-400">Map & resources</div>
+                  <div className="text-[9px] text-theme-forest/80">Map & resources</div>
                 </div>
               </button>
 
@@ -169,15 +169,15 @@ export const LoginPage: React.FC = () => {
                 <Activity className="w-4 h-4 text-amber-400 shrink-0" />
                 <div className="min-w-0">
                   <div className="text-[11px] font-bold text-amber-300 truncate">Demo Admin</div>
-                  <div className="text-[9px] text-slate-400">Fallback dispatch</div>
+                  <div className="text-[9px] text-theme-forest/80">Fallback dispatch</div>
                 </div>
               </button>
             </div>
           </div>
 
-          <div className="mt-6 text-center text-xs text-slate-400">
+          <div className="mt-6 text-center text-xs text-theme-forest/80">
             Don't have an account?{' '}
-            <Link to="/signup" className="text-white font-bold hover:underline">
+            <Link to="/signup" className="text-theme-dark font-bold hover:underline">
               Sign Up Now
             </Link>
           </div>

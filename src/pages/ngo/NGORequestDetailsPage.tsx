@@ -41,7 +41,7 @@ export const NGORequestDetailsPage: React.FC = () => {
 
   if (!request) {
     return (
-      <div className="min-h-screen bg-[#070B14] py-16 px-4 text-center text-slate-100">
+      <div className="min-h-screen bg-theme-light py-16 px-4 text-center text-theme-dark">
         <p>Incident not found.</p>
       </div>
     );
@@ -65,21 +65,21 @@ export const NGORequestDetailsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#070B14] py-8 px-4 sm:px-6 lg:px-8 text-slate-100">
+    <div className="min-h-screen bg-theme-light py-8 px-4 sm:px-6 lg:px-8 text-theme-dark">
       <div className="max-w-5xl mx-auto space-y-6">
         
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-theme-mint/30 pb-4">
           <div>
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors mb-2"
+              className="flex items-center gap-1.5 text-xs font-semibold text-theme-forest/80 hover:text-theme-dark transition-colors mb-2"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back to Queue</span>
             </button>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl sm:text-3xl font-black text-white font-display">
+              <h1 className="text-2xl sm:text-3xl font-black text-theme-dark font-display">
                 INCIDENT DOSSIER #{request.id}
               </h1>
               <StatusBadge status={request.status} size="md" />
@@ -90,7 +90,7 @@ export const NGORequestDetailsPage: React.FC = () => {
             {request.status === 'active' && (
               <button
                 onClick={handleAccept}
-                className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg flex items-center gap-2"
+                className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-theme-dark font-bold text-xs uppercase tracking-wider shadow-lg flex items-center gap-2"
               >
                 <ShieldCheck className="w-4 h-4" />
                 <span>Accept & Deploy Unit</span>
@@ -100,7 +100,7 @@ export const NGORequestDetailsPage: React.FC = () => {
             {request.status !== 'resolved' && request.status !== 'active' && (
               <button
                 onClick={handleMarkResolved}
-                className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg flex items-center gap-2"
+                className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-theme-dark font-bold text-xs uppercase tracking-wider shadow-lg flex items-center gap-2"
               >
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Mark Assistance Complete</span>
@@ -114,8 +114,8 @@ export const NGORequestDetailsPage: React.FC = () => {
           
           {/* Left Details (5 cols) */}
           <div className="lg:col-span-5 space-y-4">
-            <div className="glass-panel rounded-3xl p-6 border border-white/10 space-y-4">
-              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400">
+            <div className="glass-panel rounded-3xl p-6 border border-theme-mint/30 space-y-4">
+              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-theme-forest/80">
                 Incident Triage Details
               </h3>
 
@@ -130,18 +130,18 @@ export const NGORequestDetailsPage: React.FC = () => {
                 ))}
               </div>
 
-              <p className="text-sm text-white leading-relaxed font-medium">
+              <p className="text-sm text-theme-dark leading-relaxed font-medium">
                 {request.description}
               </p>
 
-              <div className="pt-4 border-t border-white/10 space-y-2 text-xs">
-                <div className="flex items-center gap-2 text-slate-400">
+              <div className="pt-4 border-t border-theme-mint/30 space-y-2 text-xs">
+                <div className="flex items-center gap-2 text-theme-forest/80">
                   <MapPin className="w-4 h-4 text-sky-400" />
-                  <span className="text-slate-200">{request.location.address || 'Detected Location'}</span>
+                  <span className="text-theme-dark/90">{request.location.address || 'Detected Location'}</span>
                 </div>
-                <div className="flex items-center gap-2 text-slate-400">
+                <div className="flex items-center gap-2 text-theme-forest/80">
                   <UserCheck className="w-4 h-4 text-emerald-400" />
-                  <span className="text-slate-200">Requester: {request.requesterName}</span>
+                  <span className="text-theme-dark/90">Requester: {request.requesterName}</span>
                 </div>
               </div>
 
@@ -149,7 +149,7 @@ export const NGORequestDetailsPage: React.FC = () => {
               <div className="pt-2">
                 <a
                   href={`tel:${request.requesterPhone || '+15550009999'}`}
-                  className="w-full py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-colors border border-white/10"
+                  className="w-full py-3 rounded-xl bg-white/10 hover:bg-white/20 text-theme-dark font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-colors border border-theme-mint/30"
                 >
                   <Phone className="w-4 h-4 text-emerald-400" />
                   <span>Call Requester Directly</span>
@@ -159,11 +159,11 @@ export const NGORequestDetailsPage: React.FC = () => {
           </div>
 
           {/* Right Coordination Chat (7 cols) */}
-          <div className="lg:col-span-7 glass-panel rounded-3xl border border-white/10 flex flex-col h-[520px] overflow-hidden shadow-2xl">
-            <div className="p-4 border-b border-white/10 bg-slate-900/80 flex items-center justify-between">
+          <div className="lg:col-span-7 glass-panel rounded-3xl border border-theme-mint/30 flex flex-col h-[520px] overflow-hidden shadow-2xl">
+            <div className="p-4 border-b border-theme-mint/30 bg-white/80 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <MessageSquare className="w-4 h-4 text-sky-400" />
-                <span className="font-bold text-xs uppercase tracking-wider text-white">
+                <span className="font-bold text-xs uppercase tracking-wider text-theme-dark">
                   Field Coordination Channel
                 </span>
               </div>
@@ -172,7 +172,7 @@ export const NGORequestDetailsPage: React.FC = () => {
 
             <div className="flex-1 p-4 overflow-y-auto space-y-3 no-scrollbar">
               {messages.length === 0 ? (
-                <div className="text-center py-20 text-xs text-slate-500">
+                <div className="text-center py-20 text-xs text-theme-forest/60">
                   No coordination messages yet. Send a message to contact the requester.
                 </div>
               ) : (
@@ -183,19 +183,19 @@ export const NGORequestDetailsPage: React.FC = () => {
                       key={m.id}
                       className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}
                     >
-                      <span className="text-[10px] text-slate-400 mb-0.5 px-1">
+                      <span className="text-[10px] text-theme-forest/80 mb-0.5 px-1">
                         {m.senderName} ({m.senderRole})
                       </span>
                       <div
                         className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-xs leading-relaxed ${
                           isMine
-                            ? 'bg-sky-600 text-white rounded-br-none'
-                            : 'bg-white/10 text-slate-100 rounded-bl-none border border-white/10'
+                            ? 'bg-sky-600 text-theme-dark rounded-br-none'
+                            : 'bg-white/10 text-theme-dark rounded-bl-none border border-theme-mint/30'
                         }`}
                       >
                         {m.text}
                       </div>
-                      <span className="text-[9px] text-slate-500 mt-1 px-1">
+                      <span className="text-[9px] text-theme-forest/60 mt-1 px-1">
                         {new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
@@ -204,19 +204,19 @@ export const NGORequestDetailsPage: React.FC = () => {
               )}
             </div>
 
-            <div className="p-3 border-t border-white/10 bg-slate-900/80">
+            <div className="p-3 border-t border-theme-mint/30 bg-white/80">
               <form onSubmit={handleSendMessage} className="flex items-center gap-2">
                 <input
                   type="text"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   placeholder="Send arrival update or instructions to requester..."
-                  className="flex-1 bg-slate-800/80 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400"
+                  className="flex-1 bg-theme-sage/80 border border-theme-mint/30 rounded-xl px-4 py-2.5 text-xs text-theme-dark placeholder:text-theme-forest/60 focus:outline-none focus:border-sky-400"
                 />
                 <button
                   type="submit"
                   disabled={!inputText.trim()}
-                  className="p-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-40 text-white transition-all"
+                  className="p-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-40 text-theme-dark transition-all"
                 >
                   <Send className="w-4 h-4" />
                 </button>

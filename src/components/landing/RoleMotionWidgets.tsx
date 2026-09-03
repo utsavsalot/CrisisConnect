@@ -30,21 +30,21 @@ export const RequesterMotionWidget: React.FC = () => {
   ];
 
   return (
-    <div className="h-[185px] w-full rounded-2xl bg-[#070B14]/90 border border-emergency-500/20 p-3.5 flex flex-col justify-between relative overflow-hidden backdrop-blur-md shadow-inner select-none">
+    <div className="h-[185px] w-full rounded-2xl bg-theme-light/90 border border-emergency-500/20 p-3.5 flex flex-col justify-between relative overflow-hidden backdrop-blur-md shadow-inner select-none">
       {/* Top Status: GPS Lock & Demo Label */}
       <div className="flex items-center justify-between text-[10px] font-mono">
         <div className="flex items-center gap-1.5 text-emerald-400">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse motion-reduce:animate-none" />
           <span className="font-semibold tracking-wider">GPS: LOCKED (HIGH-PRECISION)</span>
         </div>
-        <span className="text-[9px] text-slate-500 font-semibold tracking-wider uppercase">
+        <span className="text-[9px] text-theme-forest/60 font-semibold tracking-wider uppercase">
           SIMULATED TELEMETRY
         </span>
       </div>
 
       {/* Middle: Interactive-style Need Selector Chips */}
       <div className="space-y-1.5 my-auto">
-        <div className="text-[10px] text-slate-400 font-mono uppercase tracking-wider flex items-center gap-1">
+        <div className="text-[10px] text-theme-forest/80 font-mono uppercase tracking-wider flex items-center gap-1">
           <span>Selected Emergency Needs:</span>
         </div>
         <div className="flex flex-wrap gap-1.5">
@@ -56,7 +56,7 @@ export const RequesterMotionWidget: React.FC = () => {
                 className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all duration-300 flex items-center gap-1.5 ${
                   isActive
                     ? 'bg-emergency-500/20 border border-emergency-500/60 text-emergency-300 shadow-sm shadow-emergency-500/20 scale-[1.02]'
-                    : 'bg-white/5 border border-white/10 text-slate-400'
+                    : 'bg-white/5 border border-theme-mint/30 text-theme-forest/80'
                 }`}
               >
                 <span>{chip.label}</span>
@@ -70,12 +70,12 @@ export const RequesterMotionWidget: React.FC = () => {
       </div>
 
       {/* Bottom: Transmission Wave Status */}
-      <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono">
+      <div className="pt-2 border-t border-theme-mint/30 flex items-center justify-between text-[10px] font-mono">
         <div className="flex items-center gap-2 text-emergency-400">
           <Radio className="w-3.5 h-3.5 animate-pulse motion-reduce:animate-none" />
           <span className="truncate">Broadcasting signal across local mesh...</span>
         </div>
-        <span className="text-slate-500 text-[9px] shrink-0 font-bold">1-TAP DISPATCH</span>
+        <span className="text-theme-forest/60 text-[9px] shrink-0 font-bold">1-TAP DISPATCH</span>
       </div>
     </div>
   );
@@ -106,14 +106,14 @@ export const ResponderMotionWidget: React.FC = () => {
   const CurrentIcon = current.icon;
 
   return (
-    <div className="h-[185px] w-full rounded-2xl bg-[#070B14]/90 border border-emerald-500/20 p-3.5 flex flex-col justify-between relative overflow-hidden backdrop-blur-md shadow-inner select-none">
+    <div className="h-[185px] w-full rounded-2xl bg-theme-light/90 border border-emerald-500/20 p-3.5 flex flex-col justify-between relative overflow-hidden backdrop-blur-md shadow-inner select-none">
       {/* Top Status */}
       <div className="flex items-center justify-between text-[10px] font-mono">
         <div className="flex items-center gap-1.5 text-emerald-400">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse motion-reduce:animate-none" />
           <span className="font-semibold tracking-wider">STANDBY MODE: ACTIVE</span>
         </div>
-        <span className="text-[9px] text-slate-500 font-semibold tracking-wider uppercase">
+        <span className="text-[9px] text-theme-forest/60 font-semibold tracking-wider uppercase">
           SIMULATED WORKFLOW
         </span>
       </div>
@@ -125,7 +125,7 @@ export const ResponderMotionWidget: React.FC = () => {
             <CurrentIcon className="w-4 h-4 transition-transform duration-300" />
           </div>
           <div className="min-w-0">
-            <p className="text-xs font-semibold text-white truncate font-display">
+            <p className="text-xs font-semibold text-theme-dark truncate font-display">
               {current.desc}
             </p>
             <p className="text-[10px] text-emerald-400/80 font-mono mt-0.5">
@@ -139,7 +139,7 @@ export const ResponderMotionWidget: React.FC = () => {
       </div>
 
       {/* Bottom: 3-Step Lifecycle Indicator */}
-      <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono">
+      <div className="pt-2 border-t border-theme-mint/30 flex items-center justify-between text-[10px] font-mono">
         <div className="flex items-center gap-3">
           {stages.map((s, idx) => (
             <div key={s.label} className="flex items-center gap-1">
@@ -148,13 +148,13 @@ export const ResponderMotionWidget: React.FC = () => {
                   idx === stage ? 'bg-emerald-400 ring-2 ring-emerald-400/30' : 'bg-slate-600'
                 }`} 
               />
-              <span className={idx === stage ? 'text-emerald-300 font-bold' : 'text-slate-500'}>
+              <span className={idx === stage ? 'text-emerald-300 font-bold' : 'text-theme-forest/60'}>
                 {s.label}
               </span>
             </div>
           ))}
         </div>
-        <span className="text-slate-500 text-[9px] font-bold">DISPATCH CYCLE</span>
+        <span className="text-theme-forest/60 text-[9px] font-bold">DISPATCH CYCLE</span>
       </div>
     </div>
   );
@@ -182,14 +182,14 @@ export const NGOMotionWidget: React.FC = () => {
   ];
 
   return (
-    <div className="h-[185px] w-full rounded-2xl bg-[#070B14]/90 border border-sky-500/20 p-3.5 flex flex-col justify-between relative overflow-hidden backdrop-blur-md shadow-inner select-none">
+    <div className="h-[185px] w-full rounded-2xl bg-theme-light/90 border border-sky-500/20 p-3.5 flex flex-col justify-between relative overflow-hidden backdrop-blur-md shadow-inner select-none">
       {/* Top Status */}
       <div className="flex items-center justify-between text-[10px] font-mono">
         <div className="flex items-center gap-1.5 text-sky-400">
           <Database className="w-3 h-3 animate-pulse motion-reduce:animate-none" />
           <span className="font-semibold tracking-wider">COMMAND TELEMETRY</span>
         </div>
-        <span className="text-[9px] text-slate-500 font-semibold tracking-wider uppercase">
+        <span className="text-[9px] text-theme-forest/60 font-semibold tracking-wider uppercase">
           SAMPLE INVENTORY
         </span>
       </div>
@@ -199,10 +199,10 @@ export const NGOMotionWidget: React.FC = () => {
         {resources.map((res, i) => (
           <div key={res.label} className="space-y-1">
             <div className="flex items-center justify-between text-[10px] font-mono">
-              <span className={i === pulseIndex ? 'text-sky-300 font-semibold' : 'text-slate-400'}>
+              <span className={i === pulseIndex ? 'text-sky-300 font-semibold' : 'text-theme-forest/80'}>
                 {res.label}
               </span>
-              <span className="text-slate-400 font-bold">{res.pct}%</span>
+              <span className="text-theme-forest/80 font-bold">{res.pct}%</span>
             </div>
             <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
               <div
@@ -215,12 +215,12 @@ export const NGOMotionWidget: React.FC = () => {
       </div>
 
       {/* Bottom: Coordinated Sector Status */}
-      <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono">
+      <div className="pt-2 border-t border-theme-mint/30 flex items-center justify-between text-[10px] font-mono">
         <div className="flex items-center gap-1.5 text-sky-400">
           <MapPin className="w-3 h-3" />
           <span>Multi-sector inventory & dispatch</span>
         </div>
-        <span className="text-slate-500 text-[9px] font-bold">INCIDENT HQ</span>
+        <span className="text-theme-forest/60 text-[9px] font-bold">INCIDENT HQ</span>
       </div>
     </div>
   );

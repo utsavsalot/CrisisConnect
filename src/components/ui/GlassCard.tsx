@@ -21,16 +21,16 @@ export const GlassCard: React.FC<GlassCardProps> = ({
       case 'tech':
         return 'border-tech-blue/30 bg-tech-blue/[0.03] shadow-tech-glow/20';
       case 'elevated':
-        return 'border-white/15 dark:border-white/10 bg-slate-900/80 dark:bg-[#0E1528]/80';
+        return 'border-theme-mint/40 dark:border-theme-mint/30 bg-white/80 dark:bg-[#0E1528]/80';
       default:
-        return 'border-slate-200/40 dark:border-white/8 bg-white/70 dark:bg-slate-900/60';
+        return 'border-slate-200/40 dark:border-white/8 bg-white/70 dark:bg-white/60';
     }
   };
 
   return (
     <div
       className={`rounded-2xl backdrop-blur-xl border transition-all duration-300 ${getVariantStyles()} ${
-        interactive ? 'glass-panel-interactive cursor-pointer hover:border-slate-300 dark:hover:border-white/20' : ''
+        interactive ? 'glass-panel-interactive cursor-pointer hover:border-slate-300 dark:hover:border-theme-mint/40' : ''
       } ${className}`}
       {...props}
     >

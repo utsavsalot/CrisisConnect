@@ -33,7 +33,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({
       className={`relative rounded-2xl glass-panel p-5 border transition-all duration-200 overflow-hidden group ${
         isActive
           ? 'border-emergency-500/40 hover:border-emergency-500/70 shadow-emergency-glow/10'
-          : 'border-white/10 hover:border-white/20'
+          : 'border-theme-mint/30 hover:border-theme-mint/40'
       }`}
     >
       {/* Subtle pulsing red accent edge for active emergency requests */}
@@ -53,14 +53,14 @@ export const RequestCard: React.FC<RequestCardProps> = ({
             </span>
           ))}
           {request.otherNeed && (
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-800 text-slate-300 border border-slate-700">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-theme-sage text-theme-forest border border-slate-700">
               +{request.otherNeed}
             </span>
           )}
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1 text-[11px] text-slate-400 font-mono">
+          <span className="flex items-center gap-1 text-[11px] text-theme-forest/80 font-mono">
             <Clock className="w-3 h-3" />
             {getAge(request.createdAt)}
           </span>
@@ -69,15 +69,15 @@ export const RequestCard: React.FC<RequestCardProps> = ({
       </div>
 
       {/* Description */}
-      <p className="text-sm font-medium text-slate-100 mb-3 line-clamp-2 leading-relaxed">
+      <p className="text-sm font-medium text-theme-dark mb-3 line-clamp-2 leading-relaxed">
         {request.description}
       </p>
 
       {/* Location & Metadata */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-white/5 text-xs text-slate-400">
+      <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-theme-mint/20 text-xs text-theme-forest/80">
         <div className="flex items-center gap-1.5 min-w-0">
           <MapPin className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-          <span className="truncate max-w-[200px] sm:max-w-xs text-slate-300">
+          <span className="truncate max-w-[200px] sm:max-w-xs text-theme-forest">
             {request.location.address || `${request.location.latitude.toFixed(3)}, ${request.location.longitude.toFixed(3)}`}
           </span>
           {typeof request.distanceKm === 'number' && (
@@ -92,7 +92,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({
           {showAcceptAction && isActive && onAccept && (
             <button
               onClick={() => onAccept(request.id)}
-              className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition-transform active:scale-95"
+              className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-theme-dark font-bold text-xs flex items-center gap-1.5 shadow-sm transition-transform active:scale-95"
             >
               <Shield className="w-3.5 h-3.5" />
               <span>Accept</span>
@@ -101,7 +101,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({
 
           <Link
             to={`${baseLink}/${request.id}`}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-semibold transition-colors"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-theme-dark/90 text-xs font-semibold transition-colors"
           >
             <span>Details</span>
             <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />

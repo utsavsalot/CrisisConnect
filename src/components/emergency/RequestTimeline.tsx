@@ -54,7 +54,7 @@ export const RequestTimeline: React.FC<RequestTimelineProps> = ({ status }) => {
                     ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 shadow-sm'
                     : state === 'current'
                     ? 'bg-emergency-500/20 border-emergency-500 text-emergency-400 shadow-emergency-glow scale-110 animate-pulse'
-                    : 'bg-slate-900 border-white/15 text-slate-500'
+                    : 'bg-white border-theme-mint/40 text-theme-forest/60'
                 }`}
               >
                 {state === 'completed' ? (
@@ -69,7 +69,7 @@ export const RequestTimeline: React.FC<RequestTimelineProps> = ({ status }) => {
                     ? 'text-emerald-400'
                     : state === 'current'
                     ? 'text-emergency-400 font-extrabold'
-                    : 'text-slate-500'
+                    : 'text-theme-forest/60'
                 }`}
               >
                 {step.label}
@@ -80,7 +80,7 @@ export const RequestTimeline: React.FC<RequestTimelineProps> = ({ status }) => {
       </div>
 
       {/* Mobile Vertical Stepper */}
-      <div className="sm:hidden space-y-4 relative pl-6 border-l-2 border-white/10 ml-2">
+      <div className="sm:hidden space-y-4 relative pl-6 border-l-2 border-theme-mint/30 ml-2">
         {steps.map((step) => {
           const state = getStepState(step.key);
           const Icon = step.icon;
@@ -89,10 +89,10 @@ export const RequestTimeline: React.FC<RequestTimelineProps> = ({ status }) => {
               <div
                 className={`absolute -left-[31px] w-6 h-6 rounded-full flex items-center justify-center border text-xs ${
                   state === 'completed'
-                    ? 'bg-emerald-500 border-emerald-400 text-white'
+                    ? 'bg-emerald-500 border-emerald-400 text-theme-dark'
                     : state === 'current'
-                    ? 'bg-emergency-500 border-emergency-400 text-white animate-pulse'
-                    : 'bg-slate-900 border-slate-700 text-slate-600'
+                    ? 'bg-emergency-500 border-emergency-400 text-theme-dark animate-pulse'
+                    : 'bg-white border-slate-700 text-slate-600'
                 }`}
               >
                 {state === 'completed' ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Icon className="w-3 h-3" />}
@@ -103,7 +103,7 @@ export const RequestTimeline: React.FC<RequestTimelineProps> = ({ status }) => {
                     ? 'text-emerald-400'
                     : state === 'current'
                     ? 'text-emergency-400 font-bold'
-                    : 'text-slate-500'
+                    : 'text-theme-forest/60'
                 }`}
               >
                 {step.label}

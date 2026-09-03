@@ -38,7 +38,7 @@ export const MobileNav: React.FC = () => {
       <RequestHelpButton variant="floating" />
 
       {/* Bottom bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#070B14]/90 backdrop-blur-xl border-t border-white/10 px-2 py-2 flex items-center justify-around">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-theme-light/90 backdrop-blur-xl border-t border-theme-mint/30 px-2 py-2 flex items-center justify-around">
         {items.map((it) => {
           const active = location.pathname === it.path;
           const Icon = it.icon;
@@ -47,13 +47,13 @@ export const MobileNav: React.FC = () => {
               key={it.path}
               to={it.path}
               className={`flex flex-col items-center gap-1 p-1.5 rounded-lg text-[10px] font-medium transition-colors relative ${
-                active ? 'text-emergency-400 font-bold' : 'text-slate-400 hover:text-slate-200'
+                active ? 'text-emergency-400 font-bold' : 'text-theme-forest/80 hover:text-theme-dark/90'
               }`}
             >
               <Icon className="w-5 h-5" />
               <span>{it.label}</span>
               {typeof it.count === 'number' && it.count > 0 && (
-                <span className="absolute top-1 right-2 w-3.5 h-3.5 rounded-full bg-emergency-500 text-white text-[9px] font-bold flex items-center justify-center">
+                <span className="absolute top-1 right-2 w-3.5 h-3.5 rounded-full bg-emergency-500 text-theme-dark text-[9px] font-bold flex items-center justify-center">
                   {it.count}
                 </span>
               )}

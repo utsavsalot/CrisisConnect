@@ -10,24 +10,24 @@ export const SettingsPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#070B14] py-8 px-4 sm:px-6 lg:px-8 text-slate-100">
+    <div className="min-h-screen bg-theme-light py-8 px-4 sm:px-6 lg:px-8 text-theme-dark">
       <div className="max-w-3xl mx-auto space-y-6">
         
-        <div className="border-b border-white/10 pb-4">
-          <h1 className="text-2xl font-black text-white font-display">
+        <div className="border-b border-theme-mint/30 pb-4">
+          <h1 className="text-2xl font-black text-theme-dark font-display">
             Platform Settings
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-theme-forest/80 mt-0.5">
             Appearance, immediate theme tokens, notifications, and telemetry
           </p>
         </div>
 
         {/* Appearance Settings */}
-        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 space-y-4">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-300">
+        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-theme-mint/30 space-y-4">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-theme-forest">
             Appearance & Theme
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-theme-forest/80">
             Toggle instantly between high-contrast dark emergency-tech mode and crisp daytime light mode.
           </p>
 
@@ -36,14 +36,14 @@ export const SettingsPage: React.FC = () => {
               onClick={() => setTheme('dark')}
               className={`p-4 rounded-2xl border flex items-center gap-3 transition-all ${
                 theme === 'dark'
-                  ? 'bg-slate-900 border-sky-400 text-white shadow-lg'
-                  : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'
+                  ? 'bg-white border-sky-400 text-theme-dark shadow-lg'
+                  : 'bg-white/5 border-theme-mint/30 text-theme-forest/80 hover:text-theme-dark'
               }`}
             >
               <Moon className="w-5 h-5 text-indigo-400" />
               <div className="text-left">
                 <span className="font-bold text-xs block">Dark Mode</span>
-                <span className="text-[10px] text-slate-500">OLED Navy & Glass</span>
+                <span className="text-[10px] text-theme-forest/60">OLED Navy & Glass</span>
               </div>
             </button>
 
@@ -52,34 +52,34 @@ export const SettingsPage: React.FC = () => {
               className={`p-4 rounded-2xl border flex items-center gap-3 transition-all ${
                 theme === 'light'
                   ? 'bg-slate-200 border-sky-600 text-slate-900 shadow-lg'
-                  : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'
+                  : 'bg-white/5 border-theme-mint/30 text-theme-forest/80 hover:text-theme-dark'
               }`}
             >
               <Sun className="w-5 h-5 text-amber-500" />
               <div className="text-left">
                 <span className="font-bold text-xs block">Light Mode</span>
-                <span className="text-[10px] text-slate-400">High Visibility</span>
+                <span className="text-[10px] text-theme-forest/80">High Visibility</span>
               </div>
             </button>
           </div>
         </div>
 
         {/* Safety & Privacy */}
-        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 space-y-4">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-300">
+        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-theme-mint/30 space-y-4">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-theme-forest">
             Privacy & Geolocation Controls
           </h3>
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <p className="text-xs text-theme-forest/80 leading-relaxed">
             CrisisConnect enforces privacy-preserving radius dispatch. Before a responder commits to your emergency request, 
             only approximate street-level coordinates are exposed. Exact contact details unlock only upon verified mission acceptance.
           </p>
         </div>
 
         {/* Account Termination / Sign Out */}
-        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 flex items-center justify-between">
+        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-theme-mint/30 flex items-center justify-between">
           <div>
-            <h4 className="text-sm font-bold text-white">Sign Out</h4>
-            <p className="text-xs text-slate-400">End your active emergency dispatch session</p>
+            <h4 className="text-sm font-bold text-theme-dark">Sign Out</h4>
+            <p className="text-xs text-theme-forest/80">End your active emergency dispatch session</p>
           </div>
           <button
             onClick={() => {

@@ -17,7 +17,8 @@ import { auth, db } from './config';
 import {
   UserProfile,
   NGOProfile,
-  LocationCoordinates
+  LocationCoordinates,
+  FamilyMemberContact
 } from '../../types';
 
 export const firebaseAuthService = {
@@ -75,6 +76,12 @@ export const firebaseAuthService = {
     role: 'user' | 'ngo';
     orgType?: string;
     location?: LocationCoordinates;
+    address?: string;
+    gender?: string;
+    age?: string | number;
+    bloodGroup?: string;
+    medicalHistory?: string[];
+    emergencyContacts?: FamilyMemberContact[];
   }): Promise<UserProfile | NGOProfile> {
 
     if (!auth || !db) {
@@ -129,7 +136,13 @@ export const firebaseAuthService = {
         isAvailable: false,
         capabilities: [],
         location: loc,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        ...(data.address && { address: data.address }),
+        ...(data.gender && { gender: data.gender }),
+        ...(data.age && { age: data.age }),
+        ...(data.bloodGroup && { bloodGroup: data.bloodGroup }),
+        ...(data.medicalHistory && { medicalHistory: data.medicalHistory }),
+        ...(data.emergencyContacts && { emergencyContacts: data.emergencyContacts })
       };
 
       await setDoc(

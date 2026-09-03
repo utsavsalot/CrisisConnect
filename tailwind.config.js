@@ -8,6 +8,13 @@ export default {
   theme: {
     extend: {
       colors: {
+        theme: {
+          light: '#F6F5F0',
+          sage: '#DFE7DE',
+          mint: '#98B59C',
+          forest: '#3F6B4A',
+          dark: '#1E2B22',
+        },
         emergency: {
           50: '#fef2f2',
           100: '#fee2e2',

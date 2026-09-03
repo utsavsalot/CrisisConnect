@@ -23,34 +23,34 @@ export const NGOActiveAssistancePage: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#070B14] py-8 px-4 sm:px-6 lg:px-8 text-slate-100">
+    <div className="min-h-screen bg-theme-light py-8 px-4 sm:px-6 lg:px-8 text-theme-dark">
       <div className="max-w-6xl mx-auto space-y-6">
         
-        <div className="border-b border-white/10 pb-4">
+        <div className="border-b border-theme-mint/30 pb-4">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400">
               Active Deployments
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white font-display mt-1">
+          <h1 className="text-2xl sm:text-3xl font-black text-theme-dark font-display mt-1">
             Active Assistance Missions ({activeMissions.length})
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-theme-forest/80 mt-0.5">
             Incidents committed to by your organization currently in progress
           </p>
         </div>
 
         {activeMissions.length === 0 ? (
-          <div className="glass-panel rounded-3xl p-12 text-center border border-white/10 max-w-md mx-auto">
-            <Activity className="w-10 h-10 text-slate-500 mx-auto mb-3" />
-            <h3 className="font-bold text-base text-white">No active missions right now</h3>
-            <p className="text-xs text-slate-400 mt-1 mb-6">
+          <div className="glass-panel rounded-3xl p-12 text-center border border-theme-mint/30 max-w-md mx-auto">
+            <Activity className="w-10 h-10 text-theme-forest/60 mx-auto mb-3" />
+            <h3 className="font-bold text-base text-theme-dark">No active missions right now</h3>
+            <p className="text-xs text-theme-forest/80 mt-1 mb-6">
               Review incoming emergency queue or live map to dispatch units.
             </p>
             <Link
               to="/ngo/requests"
-              className="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs uppercase tracking-wider"
+              className="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-theme-dark font-bold text-xs uppercase tracking-wider"
             >
               Browse Emergency Queue
             </Link>
@@ -77,26 +77,26 @@ export const NGOActiveAssistancePage: React.FC = () => {
                     <StatusBadge status={m.status} size="sm" />
                   </div>
 
-                  <h3 className="text-base font-bold text-white mb-2">
+                  <h3 className="text-base font-bold text-theme-dark mb-2">
                     {m.needs.join(' + ')} Deployment
                   </h3>
-                  <p className="text-xs text-slate-300 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-theme-forest line-clamp-2 leading-relaxed">
                     {m.description}
                   </p>
 
-                  <div className="pt-3 mt-3 border-t border-white/10 text-xs text-slate-400 space-y-1">
-                    <div className="flex items-center gap-1.5 text-slate-300">
+                  <div className="pt-3 mt-3 border-t border-theme-mint/30 text-xs text-theme-forest/80 space-y-1">
+                    <div className="flex items-center gap-1.5 text-theme-forest">
                       <MapPin className="w-3.5 h-3.5 text-sky-400" />
                       <span className="truncate">{m.location.address || 'Detected Location'}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-slate-500" />
+                      <Clock className="w-3.5 h-3.5 text-theme-forest/60" />
                       <span>Requester: {m.requesterName}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2">
+                <div className="pt-3 border-t border-theme-mint/30 flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <a
                       href={`tel:${m.requesterPhone || '+15550000000'}`}
@@ -107,7 +107,7 @@ export const NGOActiveAssistancePage: React.FC = () => {
                     </a>
                     <Link
                       to={`/ngo/requests/${m.id}`}
-                      className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center gap-1.5"
+                      className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-theme-dark text-xs font-semibold flex items-center gap-1.5"
                     >
                       <MessageSquare className="w-3.5 h-3.5 text-sky-400" />
                       <span>Chat & Dossier</span>
@@ -116,7 +116,7 @@ export const NGOActiveAssistancePage: React.FC = () => {
 
                   <button
                     onClick={() => resolveRequest(m.id)}
-                    className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm"
+                    className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-theme-dark font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm"
                   >
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     <span>Complete</span>
