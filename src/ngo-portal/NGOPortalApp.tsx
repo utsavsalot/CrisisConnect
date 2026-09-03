@@ -5,6 +5,7 @@ import { useEmergency } from '../context/EmergencyContext';
 import { useChat } from '../context/ChatContext';
 import { EmergencyRequest, EmergencyNeedCategory, ChatMessage } from '../types';
 import { SOSLocationMap } from '../components/emergency/SOSLocationMap';
+import { runSimulation } from '../services/simulationService';
 
 const needs: EmergencyNeedCategory[] = ['Medical Assistance', 'Food', 'Rescue', 'Blood', 'Medicine', 'Shelter', 'Transportation', 'Water', 'Other'];
 
@@ -44,6 +45,9 @@ export const NGOPortalApp: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [messageText, setMessageText] = useState('');
   const [sending, setSending] = useState(false);
+  const [simulationResult, setSimulationResult] = useState<Awaited<ReturnType<typeof runSimulation>> | null>(null);
+const [simulating, setSimulating] = useState(false);
+const [simulationError, setSimulationError] = useState('');
 
   const ngo = currentUser && 'orgName' in currentUser ? currentUser : null;
   const activeRequests = useMemo(() => {
@@ -112,6 +116,24 @@ export const NGOPortalApp: React.FC = () => {
       setAuthError('Unable to register this organization. Please check the entered details.');
     }
   };
+  const handleSimulation = async () => {
+  setSimulating(true);
+  setSimulationError('');
+
+  try {
+    const result = await runSimulation();
+    setSimulationResult(result);
+  } catch (error) {
+    console.error('Simulation failed:', error);
+    setSimulationError(
+      error instanceof Error
+        ? error.message
+        : 'Unable to run simulation.'
+    );
+  } finally {
+    setSimulating(false);
+  }
+};
 
   const handleAccept = async (request: EmergencyRequest) => {
     await acceptRequest(request.id);
@@ -145,7 +167,201 @@ export const NGOPortalApp: React.FC = () => {
       </header>
 
       <main className="mx-auto max-w-[1500px] px-5 py-7 sm:px-8">
-        <div className="mb-7 flex flex-col justify-between gap-4 lg:flex-row lg:items-end"><div><p className="text-xs font-bold uppercase tracking-[.16em] text-red-600">Live dispatch</p><h1 className="mt-1 font-display text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Nearby requests</h1><p className="mt-2 text-sm text-slate-500">Triage active requests, accept a mission, then coordinate directly with the person asking for help.</p></div><div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-xs font-bold text-emerald-800"><span className="h-2.5 w-2.5 animate-pulse rounded-full bg-emerald-500" /> Live request feed</div></div>
+       <div className="mb-7 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
+  <div>
+    <p className="text-xs font-bold uppercase tracking-[.16em] text-red-600">
+      Live dispatch
+    </p>
+
+    <h1 className="mt-1 font-display text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
+      Nearby requests
+    </h1>
+
+    <p className="mt-2 text-sm text-slate-500">
+      Triage active requests, accept a mission, then coordinate directly with the person asking for help.
+    </p>
+  </div>
+
+  <div className="flex flex-wrap items-center gap-3">
+    <button
+      onClick={() => void handleSimulation()}
+      disabled={simulating}
+      className="flex min-h-11 items-center gap-2 rounded-xl bg-slate-950 px-4 py-3 text-xs font-black text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      {simulating ? (
+        <>
+          <span className="h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent" />
+          SIMULATING...
+        </>
+      ) : (
+        <>
+          <AlertTriangle className="h-4 w-4" />
+          SIMULATE NEXT 30 MINUTES
+        </>
+      )}
+    </button>
+
+    <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-xs font-bold text-emerald-800">
+      <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-emerald-500" />
+      Live request feed
+    </div>
+  </div>
+</div>
+{simulationError && (
+  <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">
+    Simulation error: {simulationError}
+  </div>
+)}
+
+{simulationResult && (
+  <section className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+      <div>
+        <p className="text-xs font-bold uppercase tracking-[.16em] text-slate-400">
+          What-if analysis
+        </p>
+
+        <h2 className="mt-1 font-display text-2xl font-black text-slate-950">
+          Next {simulationResult.simulationDurationMinutes} Minutes
+        </h2>
+
+        <p className="mt-1 text-sm text-slate-500">
+          Predicted emergency pressure if no additional response is deployed.
+        </p>
+      </div>
+
+      <div
+        className={`rounded-xl px-4 py-3 text-center ${
+          simulationResult.risk.level === 'HIGH'
+            ? 'bg-red-50 text-red-700'
+            : simulationResult.risk.level === 'MEDIUM'
+            ? 'bg-amber-50 text-amber-700'
+            : 'bg-emerald-50 text-emerald-700'
+        }`}
+      >
+        <p className="text-[10px] font-black uppercase tracking-widest">
+          Risk Level
+        </p>
+
+        <p className="text-xl font-black">
+          {simulationResult.risk.level}
+        </p>
+
+        <p className="text-xs font-bold">
+          Score: {simulationResult.risk.score}/100
+        </p>
+      </div>
+    </div>
+
+    <div className="grid gap-3 sm:grid-cols-3">
+      <div className="rounded-xl bg-red-50 p-4">
+        <p className="text-xs font-bold text-red-600">CRITICAL</p>
+
+        <p className="mt-1 text-2xl font-black text-red-700">
+          {simulationResult.current.critical}
+          <span className="mx-2 text-slate-300">→</span>
+          {simulationResult.predicted.critical}
+        </p>
+
+        <p className="mt-1 text-xs text-slate-500">
+          Current → predicted
+        </p>
+      </div>
+
+      <div className="rounded-xl bg-amber-50 p-4">
+        <p className="text-xs font-bold text-amber-600">HIGH</p>
+
+        <p className="mt-1 text-2xl font-black text-amber-700">
+          {simulationResult.current.high}
+          <span className="mx-2 text-slate-300">→</span>
+          {simulationResult.predicted.high}
+        </p>
+
+        <p className="mt-1 text-xs text-slate-500">
+          Current → predicted
+        </p>
+      </div>
+
+      <div className="rounded-xl bg-slate-50 p-4">
+        <p className="text-xs font-bold text-slate-600">MEDIUM</p>
+
+        <p className="mt-1 text-2xl font-black text-slate-700">
+          {simulationResult.current.medium}
+          <span className="mx-2 text-slate-300">→</span>
+          {simulationResult.predicted.medium}
+        </p>
+
+        <p className="mt-1 text-xs text-slate-500">
+          Current → predicted
+        </p>
+      </div>
+    </div>
+
+    <div className="mt-4 grid gap-3 sm:grid-cols-3">
+      <div className="rounded-xl border border-slate-200 p-4">
+        <p className="text-xs font-bold uppercase text-slate-400">
+          Available Responders
+        </p>
+
+        <p className="mt-1 text-xl font-black">
+          {simulationResult.responderAnalysis.availableResponders}
+        </p>
+      </div>
+
+      <div className="rounded-xl border border-slate-200 p-4">
+        <p className="text-xs font-bold uppercase text-slate-400">
+          Unassigned Emergencies
+        </p>
+
+        <p className="mt-1 text-xl font-black">
+          {simulationResult.current.unassignedEmergencies}
+        </p>
+      </div>
+
+      <div className="rounded-xl border border-slate-200 p-4">
+        <p className="text-xs font-bold uppercase text-slate-400">
+          Resource Shortages
+        </p>
+
+        <p className="mt-1 text-xl font-black">
+          {simulationResult.resourceShortages.length}
+        </p>
+      </div>
+    </div>
+
+    {simulationResult.responderAnalysis.responderShortage && (
+      <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4">
+        <p className="font-black text-red-800">
+          ⚠ Responder shortage predicted
+        </p>
+
+        <p className="mt-1 text-sm text-red-700">
+          Current available responders may not be sufficient for the
+          predicted critical emergencies.
+        </p>
+      </div>
+    )}
+
+    {simulationResult.resourceShortages.length > 0 && (
+      <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
+        <p className="font-black text-amber-800">
+          ⚠ Resource shortage predicted
+        </p>
+
+        <div className="mt-2 flex flex-wrap gap-2">
+          {simulationResult.resourceShortages.map((resource) => (
+            <span
+              key={resource.type}
+              className="rounded-full bg-white px-3 py-1 text-xs font-bold text-amber-800"
+            >
+              {resource.type}: {resource.availableQuantity} available
+            </span>
+          ))}
+        </div>
+      </div>
+    )}
+  </section>
+)}
         <div className="grid gap-6 xl:grid-cols-[minmax(320px,430px)_1fr]">
           <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5"><div className="mb-4 flex items-center justify-between"><h2 className="font-display text-lg font-black">Request queue</h2><span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-bold text-red-700">{activeRequests.filter((request) => request.status === 'active').length} active</span></div><div className="space-y-3">{activeRequests.length === 0 ? <div className="rounded-xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-500">No nearby requests right now.</div> : activeRequests.map((request) => <RequestRow key={request.id} request={request} selected={request.id === selectedId} onSelect={() => setSelectedId(request.id)} onAccept={() => void handleAccept(request)} />)}</div></section>
           <section className="min-h-[620px] rounded-2xl border border-slate-200 bg-white shadow-sm">{selectedRequest ? <IncidentWorkspace request={selectedRequest} accepted={isAcceptedByThisNgo} messages={messages} messageText={messageText} setMessageText={setMessageText} onSend={handleSend} sending={sending} onAccept={() => void handleAccept(selectedRequest)} /> : <div className="flex h-full min-h-[620px] flex-col items-center justify-center p-8 text-center"><Navigation className="h-12 w-12 text-slate-300" /><h2 className="mt-4 font-display text-2xl font-black text-slate-900">Waiting for emergency requests</h2><p className="mt-2 max-w-sm text-sm leading-6 text-slate-500">New user SOS requests will appear here automatically when the shared Firebase feed is connected.</p></div>}</section>
