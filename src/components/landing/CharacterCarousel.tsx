@@ -14,7 +14,6 @@ import {
   Radio
 } from 'lucide-react';
 import { CrisisCharacter } from '../../types';
-import { RequestHelpButton } from '../ui/RequestHelpButton';
 
 const EMERGENCY_CHARACTERS: CrisisCharacter[] = [
   {
@@ -285,12 +284,7 @@ export const CharacterCarousel: React.FC = () => {
                   </h3>
                 </div>
 
-                {/* Bottom Stats Badge */}
-                <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-center">
-                  <span className="text-[11px] font-mono font-semibold text-slate-300">
-                    {char.stats}
-                  </span>
-                </div>
+
               </div>
             );
           })}
@@ -316,36 +310,22 @@ export const CharacterCarousel: React.FC = () => {
           </p>
         </div>
 
-        {/* Controls & Emergency CTA */}
-        <div className="flex items-center gap-4">
-          {/* Carousel Arrows */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handlePrev}
-              aria-label="Previous character"
-              className="p-3 rounded-xl border border-white/15 bg-white/5 hover:bg-white/15 text-white transition-all transform active:scale-95"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              onClick={handleNext}
-              aria-label="Next character"
-              className="p-3 rounded-xl border border-white/15 bg-white/5 hover:bg-white/15 text-white transition-all transform active:scale-95"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Prominent Emergency CTA */}
-          <RequestHelpButton variant="hero" />
-
-          <a
-            href="#storyboard"
-            className="hidden lg:flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-white transition-colors"
+        {/* Controls */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handlePrev}
+            aria-label="Previous character"
+            className="p-3 rounded-xl border border-white/15 bg-white/5 hover:bg-white/15 text-white transition-all transform active:scale-95 shadow-sm"
           >
-            <span>Discover It</span>
-            <ArrowRight className="w-4 h-4" />
-          </a>
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={handleNext}
+            aria-label="Next character"
+            className="p-3 rounded-xl border border-white/15 bg-white/5 hover:bg-white/15 text-white transition-all transform active:scale-95 shadow-sm"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
         </div>
       </div>
 

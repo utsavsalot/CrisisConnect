@@ -43,7 +43,7 @@ export const LoginPage: React.FC = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emergency-500/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10">
-        
+
         {/* Card Header */}
         <div className="text-center mb-8">
           <div className="w-12 h-12 rounded-2xl bg-emergency-600/20 border border-emergency-500/40 flex items-center justify-center text-emergency-500 mx-auto mb-4 shadow-emergency-glow">

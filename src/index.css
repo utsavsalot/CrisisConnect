@@ -164,15 +164,4 @@ html.light .leaflet-tile {
   filter: none !important;
 }
 
-/* Custom Cursor Hide Native Cursor on Desktop with Custom Cursor Active */
-body.custom-cursor-active a,
-body.custom-cursor-active button,
-body.custom-cursor-active input,
-body.custom-cursor-active textarea,
-body.custom-cursor-active [role="button"] {
-  cursor: none !important;
-}
 
-body.custom-cursor-active {
-  cursor: none !important;
-}

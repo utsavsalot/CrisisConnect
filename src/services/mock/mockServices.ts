@@ -75,13 +75,13 @@ let requests: EmergencyRequest[] = loadFromStorage('requests', INITIAL_REQUESTS)
 let resources: NGOResource[] = loadFromStorage('resources', INITIAL_RESOURCES);
 let notifications: NotificationItem[] = loadFromStorage('notifications', INITIAL_NOTIFICATIONS);
 let messages: Record<string, ChatMessage[]> = loadFromStorage('messages', INITIAL_MESSAGES);
-let currentUserId: string = loadFromStorage('currentUserId', 'demo-user');
+let currentUserId: string | null = loadFromStorage<string | null>('currentUserId', null);
 
 export const mockAuthService = {
   getCurrentUser(): UserProfile | NGOProfile | null {
-    if (users[currentUserId]) return users[currentUserId];
-    if (ngos[currentUserId]) return ngos[currentUserId];
-    return users['demo-user'] || null;
+    if (currentUserId && users[currentUserId]) return users[currentUserId];
+    if (currentUserId && ngos[currentUserId]) return ngos[currentUserId];
+    return null;
   },
 
   async login(email: string, _pass: string): Promise<UserProfile | NGOProfile> {
@@ -159,8 +159,8 @@ export const mockAuthService = {
   },
 
   async logout(): Promise<void> {
-    currentUserId = 'demo-user';
-    saveToStorage('currentUserId', currentUserId);
+    currentUserId = null;
+    saveToStorage('currentUserId', null);
     eventBus.emit('auth_changed');
   },
 
