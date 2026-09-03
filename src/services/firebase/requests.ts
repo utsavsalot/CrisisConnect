@@ -69,10 +69,8 @@ export const firebaseRequestService = {
     const newReqData: Omit<EmergencyRequest, 'id'> = {
       requesterId: data.requesterId,
       requesterName: data.requesterName,
-      requesterPhone: data.requesterPhone,
       requesterRole: data.requesterRole,
       needs: data.needs,
-      otherNeed: data.otherNeed,
       description: data.description,
       location: data.location,
       status: 'active',
@@ -80,7 +78,9 @@ export const firebaseRequestService = {
       escalationRadiusKm: 5,
       notifiedResponderIds: [],
       escalationHistory: [{ level: 'local', radiusKm: 5, timestamp: new Date().toISOString(), event: 'Request created; local dispatch started.' }],
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      ...(data.requesterPhone ? { requesterPhone: data.requesterPhone } : {}),
+      ...(data.otherNeed ? { otherNeed: data.otherNeed } : {})
     };
 
     const docRef = await addDoc(collection(db, 'emergencyRequests'), newReqData);
