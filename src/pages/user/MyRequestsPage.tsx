@@ -1,0 +1,94 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { AlertTriangle, Clock, MapPin, Plus, Filter } from 'lucide-react';
+import { useEmergency } from '../../context/EmergencyContext';
+import { RequestCard } from '../../components/emergency/RequestCard';
+import { EmergencyStatus } from '../../types';
+
+export const MyRequestsPage: React.FC = () => {
+  const { myRequests } = useEmergency();
+  const [statusFilter, setStatusFilter] = useState<string>('ALL');
+
+  const filteredRequests = myRequests.filter(r => {
+    if (statusFilter === 'ALL') return true;
+    return r.status === statusFilter;
+  });
+
+  return (
+    <div className="min-h-screen bg-[#070B14] py-8 px-4 sm:px-6 lg:px-8 text-slate-100">
+      <div className="max-w-6xl mx-auto space-y-6">
+        
+        {/* Top Header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400">
+                Incident History
+              </span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-white font-display mt-1">
+              My Emergency Requests
+            </h1>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Live status tracking, assigned responders, and coordination logs
+            </p>
+          </div>
+
+          <Link
+            to="/request-help"
+            className="emergency-cta px-4 py-2.5 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-white font-bold text-xs uppercase tracking-wider shadow-emergency-glow flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            <span>New Emergency Request</span>
+          </Link>
+        </div>
+
+        {/* Status Filter Tabs */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
+          {['ALL', 'active', 'accepted', 'in_progress', 'resolved'].map((st) => (
+            <button
+              key={st}
+              onClick={() => setStatusFilter(st)}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all ${
+                statusFilter === st
+                  ? 'bg-white/15 border-white/30 text-white'
+                  : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'
+              }`}
+            >
+              {st === 'ALL' ? 'All Incidents' : st.replace('_', ' ')}
+            </button>
+          ))}
+        </div>
+
+        {/* Requests Feed */}
+        {filteredRequests.length === 0 ? (
+          <div className="glass-panel rounded-3xl p-12 text-center border border-white/10 max-w-lg mx-auto mt-8">
+            <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 mx-auto mb-4">
+              <Clock className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-white font-display">
+              No emergency requests found
+            </h3>
+            <p className="text-xs text-slate-400 mt-1 max-w-xs mx-auto">
+              You do not have any emergency requests matching this filter.
+            </p>
+            <Link
+              to="/request-help"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-white font-bold text-xs uppercase tracking-wider mt-6 shadow-emergency-glow"
+            >
+              <AlertTriangle className="w-4 h-4" />
+              <span>Create Emergency Request</span>
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {filteredRequests.map((req) => (
+              <RequestCard key={req.id} request={req} baseLink="/requests" />
+            ))}
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+};
