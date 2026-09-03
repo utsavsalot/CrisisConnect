@@ -32,7 +32,7 @@ const MapRecenter: React.FC<{ center: [number, number] }> = ({ center }) => {
 // Create custom SVG Leaflet DivIcon
 const createCustomIcon = (need: EmergencyNeedCategory, status: string) => {
   const isEmergency = status === 'active';
-  const color = isEmergency ? '#EF4444' : '#38BDF8';
+  const color = isEmergency ? '#FF4D4D' : '#22D3EE';
 
   const html = `
     <div style="

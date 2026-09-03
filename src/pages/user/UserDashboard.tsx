@@ -87,7 +87,7 @@ export const UserDashboard: React.FC = () => {
               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2/3 h-[4px] bg-emergency-400 shadow-[0_0_20px_5px_rgba(239,68,68,0.7)]" />
 
               {/* Dot Pattern Overlay */}
-              <div className="absolute inset-0 opacity-[0.15] bg-[radial-gradient(circle_at_center,_#ef4444_1px,_transparent_1px)] bg-[length:10px_10px]" />
+              <div className="absolute inset-0 opacity-[0.15] bg-[radial-gradient(circle_at_center,_#FF4D4D_1px,_transparent_1px)] bg-[length:10px_10px]" />
 
               <AlertTriangle className="w-12 h-12 sm:w-14 sm:h-14 text-theme-dark drop-shadow-[0_0_12px_rgba(255,255,255,0.7)] relative z-10 transition-transform group-hover:scale-110" />
 

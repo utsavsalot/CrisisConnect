@@ -113,19 +113,19 @@ export const RequestSubmissionAnimation: React.FC<RequestSubmissionAnimationProp
           <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 200 200">
             <line
               x1="100" y1="100" x2="40" y2="50"
-              stroke="#38BDF8" strokeWidth="2" strokeDasharray="100" className="connection-line"
+              stroke="#22D3EE" strokeWidth="2" strokeDasharray="100" className="connection-line"
             />
             <line
               x1="100" y1="100" x2="160" y2="50"
-              stroke="#38BDF8" strokeWidth="2" strokeDasharray="100" className="connection-line"
+              stroke="#22D3EE" strokeWidth="2" strokeDasharray="100" className="connection-line"
             />
             <line
               x1="100" y1="100" x2="40" y2="150"
-              stroke="#22C55E" strokeWidth="2" strokeDasharray="100" className="connection-line"
+              stroke="#34D399" strokeWidth="2" strokeDasharray="100" className="connection-line"
             />
             <line
               x1="100" y1="100" x2="160" y2="150"
-              stroke="#22C55E" strokeWidth="2" strokeDasharray="100" className="connection-line"
+              stroke="#34D399" strokeWidth="2" strokeDasharray="100" className="connection-line"
             />
           </svg>
 

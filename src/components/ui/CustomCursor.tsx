@@ -75,24 +75,24 @@ export const CustomCursor: React.FC = () => {
       if (isEmergency) {
         gsap.to(ring, {
           scale: 1.8,
-          borderColor: '#EF4444',
+          borderColor: '#FF4D4D',
           backgroundColor: 'rgba(239, 68, 68, 0.15)',
           duration: 0.25,
         });
         gsap.to(dot, {
-          backgroundColor: '#EF4444',
+          backgroundColor: '#FF4D4D',
           scale: 1.4,
           duration: 0.2,
         });
       } else if (isInteractive) {
         gsap.to(ring, {
           scale: 1.4,
-          borderColor: '#38BDF8',
+          borderColor: '#22D3EE',
           backgroundColor: 'rgba(56, 189, 248, 0.12)',
           duration: 0.2,
         });
         gsap.to(dot, {
-          backgroundColor: '#38BDF8',
+          backgroundColor: '#22D3EE',
           scale: 0.8,
           duration: 0.2,
         });

@@ -25,7 +25,7 @@ const EMERGENCY_CHARACTERS: CrisisCharacter[] = [
     ghostWord: 'HELP',
     tagline: 'When every second counts and immediate assistance is vital.',
     description: 'Instant zero-barrier emergency requests broadcast to community responders and humanitarian NGOs within seconds.',
-    color: '#EF4444',
+    color: '#FF4D4D',
     stats: 'Avg. response connection: < 3.2 mins',
     iconName: 'Heart'
   },
@@ -36,7 +36,7 @@ const EMERGENCY_CHARACTERS: CrisisCharacter[] = [
     ghostWord: 'CARE',
     tagline: 'Rapid on-site triage and essential medication delivery.',
     description: 'Verified physicians and nurses mobilizing emergency first-aid kits and asthma/insulin supplies directly to individuals in distress.',
-    color: '#38BDF8',
+    color: '#22D3EE',
     stats: '1,420+ medical interventions coordinated',
     iconName: 'Activity'
   },
@@ -58,7 +58,7 @@ const EMERGENCY_CHARACTERS: CrisisCharacter[] = [
     ghostWord: 'CONNECT',
     tagline: 'Mass resource dispatch and incident command triage.',
     description: 'Overseeing live multi-district emergency map telemetry, ambulance routing, shelter bed allocations, and wholesale blood inventory.',
-    color: '#22D3EE',
+    color: '#818CF8',
     stats: '48 partner NGOs networked in real-time',
     iconName: 'Building2'
   },
@@ -102,7 +102,7 @@ const EMERGENCY_CHARACTERS: CrisisCharacter[] = [
     ghostWord: 'RESCUE',
     tagline: 'Advance life support and cardiac stabilization.',
     description: 'Equipped with defibrillators, oxygen tanks, and trauma tourniquets, delivering hospital-grade stabilization prior to ambulance transit.',
-    color: '#10B981',
+    color: '#34D399',
     stats: 'Paramedic-grade protocol compliance',
     iconName: 'Shield'
   }

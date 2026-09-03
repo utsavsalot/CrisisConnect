@@ -69,12 +69,12 @@ export const NetworkVisual: React.FC = () => {
           <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 800 500">
             <defs>
               <linearGradient id="grad-req-loc" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#EF4444" />
-                <stop offset="100%" stopColor="#38BDF8" />
+                <stop offset="0%" stopColor="#FF4D4D" />
+                <stop offset="100%" stopColor="#22D3EE" />
               </linearGradient>
               <linearGradient id="grad-loc-resp" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#38BDF8" />
-                <stop offset="100%" stopColor="#22C55E" />
+                <stop offset="0%" stopColor="#22D3EE" />
+                <stop offset="100%" stopColor="#34D399" />
               </linearGradient>
             </defs>
 

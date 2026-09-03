@@ -30,7 +30,7 @@ const STORY_FRAMES: StoryFrame[] = [
     desc: 'An acute emergency occurs. A citizen is unable to breathe, displaced by localized flooding, or requires critical rare medicine.',
     tag: 'CRISIS EMERGES',
     icon: AlertTriangle,
-    color: '#EF4444'
+    color: '#FF4D4D'
   },
   {
     id: 2,
@@ -48,7 +48,7 @@ const STORY_FRAMES: StoryFrame[] = [
     desc: 'Browser GPS locks coordinates to sub-meter accuracy, identifying nearby hazard proximity and municipal response sectors.',
     tag: 'GPS LOCKED',
     icon: MapPin,
-    color: '#38BDF8'
+    color: '#22D3EE'
   },
   {
     id: 4,
@@ -84,7 +84,7 @@ const STORY_FRAMES: StoryFrame[] = [
     desc: 'Triage is performed, medical stabilization or evacuation is verified, and the request closes cleanly as Resolved.',
     tag: 'MISSION RESOLVED',
     icon: CheckCircle,
-    color: '#22C55E'
+    color: '#34D399'
   }
 ];
 
@@ -150,7 +150,7 @@ export const VideoScrubber: React.FC = () => {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onTouchMove={handleTouchMove}
-      className="relative min-h-[85vh] bg-[#0B1020] border-t border-b border-theme-mint/30 flex flex-col justify-between py-16 px-4 sm:px-8 cursor-crosshair overflow-hidden select-none"
+      className="relative min-h-[85vh] bg-[#0B1120] border-t border-b border-theme-mint/30 flex flex-col justify-between py-16 px-4 sm:px-8 cursor-crosshair overflow-hidden select-none"
     >
       {/* Background Ambience based on active frame color */}
       <div

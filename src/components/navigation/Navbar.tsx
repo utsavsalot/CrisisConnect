@@ -23,6 +23,7 @@ export const Navbar: React.FC = () => {
   const { unreadNotificationCount } = useEmergency();
   const location = useLocation();
   const navigate = useNavigate();
+  const isLanding = location.pathname === '/';
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -63,7 +64,7 @@ export const Navbar: React.FC = () => {
       : userNavLinks;
 
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-2xl bg-[var(--bg-primary)]/85 border-b border-[var(--border-color)] transition-colors duration-200">
+    <header className={`sticky top-0 z-40 w-full border-b backdrop-blur-2xl transition-colors duration-200 ${isLanding ? 'border-black/10 bg-white/90' : 'border-[var(--border-color)] bg-[var(--bg-primary)]/85'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         
         {/* Brand Logo */}
@@ -73,10 +74,10 @@ export const Navbar: React.FC = () => {
               <AlertTriangle className="w-5 h-5 text-emergency-500" />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-black tracking-wider text-theme-dark font-display">
+              <span className={`font-display text-lg font-black tracking-wider ${isLanding ? 'text-black' : 'text-theme-dark'}`}>
                 CRISIS<span className="text-emergency-500">CONNECT</span>
               </span>
-              <span className="text-[9px] tracking-widest text-theme-forest/80 font-semibold uppercase -mt-1 hidden sm:block">
+              <span className={`-mt-1 hidden text-[9px] font-semibold uppercase tracking-widest sm:block ${isLanding ? 'text-black/60' : 'text-theme-forest/80'}`}>
                 Real-Time Emergency Network
               </span>
             </div>
@@ -87,13 +88,13 @@ export const Navbar: React.FC = () => {
         <nav className="hidden md:flex items-center gap-1 lg:gap-2">
           {isPublic ? (
             <>
-              <a href="/#how-it-works" className="px-3 py-1.5 text-xs font-medium text-theme-forest hover:text-theme-dark transition-colors">
+              <a href="/#how-it-works" className={`px-3 py-1.5 text-xs font-medium transition-colors ${isLanding ? 'text-black/70 hover:text-black' : 'text-theme-forest hover:text-theme-dark'}`}>
                 How It Works
               </a>
-              <a href="/#crisis-ai" className="px-3 py-1.5 text-xs font-medium text-theme-forest hover:text-theme-dark transition-colors">
+              <a href="/#crisis-ai" className={`px-3 py-1.5 text-xs font-medium transition-colors ${isLanding ? 'text-black/70 hover:text-black' : 'text-theme-forest hover:text-theme-dark'}`}>
                 CrisisAI
               </a>
-              <a href="/#about" className="px-3 py-1.5 text-xs font-medium text-theme-forest hover:text-theme-dark transition-colors">
+              <a href="/#about" className={`px-3 py-1.5 text-xs font-medium transition-colors ${isLanding ? 'text-black/70 hover:text-black' : 'text-theme-forest hover:text-theme-dark'}`}>
                 About Us
               </a>
             </>

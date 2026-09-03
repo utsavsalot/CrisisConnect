@@ -9,11 +9,11 @@ export default {
     extend: {
       colors: {
         theme: {
-          light: '#F6F5F0',
-          sage: '#DFE7DE',
-          mint: '#98B59C',
-          forest: '#3F6B4A',
-          dark: '#1E2B22',
+          light: '#E2E8F0',
+          sage: '#111827',
+          mint: '#22D3EE',
+          forest: '#94A3B8',
+          dark: '#050816',
         },
         emergency: {
           50: '#fef2f2',
@@ -21,14 +21,14 @@ export default {
           200: '#fecaca',
           300: '#fca5a5',
           400: '#f87171',
-          500: '#ef4444',
-          600: '#dc2626',
-          700: '#b91c1c',
-          DEFAULT: '#EF4444',
+          500: '#FF4D4D',
+          600: '#E13F46',
+          700: '#B91C2B',
+          DEFAULT: '#FF4D4D',
         },
         dark: {
-          bg: '#070B14',
-          surface: '#0B1020',
+          bg: '#050816',
+          surface: '#0B1120',
           elevated: '#111827',
           card: 'rgba(15, 23, 42, 0.75)',
           border: 'rgba(255, 255, 255, 0.08)',
@@ -40,15 +40,15 @@ export default {
           border: 'rgba(0, 0, 0, 0.06)',
         },
         tech: {
-          blue: '#38BDF8',
+          blue: '#22D3EE',
           cyan: '#22D3EE',
-          darkBlue: '#0284C7',
+          darkBlue: '#0891B2',
         },
         status: {
-          success: '#22C55E',
-          warning: '#F59E0B',
-          danger: '#EF4444',
-          info: '#38BDF8',
+          success: '#34D399',
+          warning: '#FBBF24',
+          danger: '#FF4D4D',
+          info: '#22D3EE',
         }
       },
       fontFamily: {
