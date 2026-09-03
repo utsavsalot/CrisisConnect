@@ -10,13 +10,14 @@ interface AuthContextType {
   capabilities: EmergencyNeedCategory[];
   login: (email: string, pass: string) => Promise<void>;
   signup: (data: {
-    name: string;
-    email: string;
-    phone: string;
-    role: 'user' | 'ngo';
-    orgType?: string;
-    location?: LocationCoordinates;
-  }) => Promise<void>;
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  role: 'user' | 'ngo';
+  orgType?: string;
+  location?: LocationCoordinates;
+}) => Promise<void>;
   logout: () => Promise<void>;
   toggleResponderMode: (enabled: boolean) => Promise<void>;
   setAvailability: (available: boolean) => Promise<void>;
@@ -57,13 +58,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signup = async (data: {
-    name: string;
-    email: string;
-    phone: string;
-    role: 'user' | 'ngo';
-    orgType?: string;
-    location?: LocationCoordinates;
-  }) => {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  role: 'user' | 'ngo';
+  orgType?: string;
+  location?: LocationCoordinates;
+}) => {
     const user = await authService.signup(data);
     setCurrentUser(user);
   };

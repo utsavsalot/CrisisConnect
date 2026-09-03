@@ -10,7 +10,10 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
-
+console.log("🔥 FIREBASE ENV CHECK");
+console.log("USE_FIREBASE:", import.meta.env.VITE_USE_FIREBASE);
+console.log("PROJECT_ID:", import.meta.env.VITE_FIREBASE_PROJECT_ID);
+console.log("API_KEY:", import.meta.env.VITE_FIREBASE_API_KEY);
 export const isFirebaseConfigured = Boolean(
   import.meta.env.VITE_FIREBASE_API_KEY && 
   import.meta.env.VITE_FIREBASE_PROJECT_ID &&
