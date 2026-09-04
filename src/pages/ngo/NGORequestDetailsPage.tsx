@@ -199,7 +199,7 @@ export const NGORequestDetailsPage: React.FC = () => {
                 </div>
               ) : (
                 messages.map(m => {
-                  const alignRight = m.senderRole !== 'user';
+                  const alignRight = m.senderId !== currentUser?.uid;
                   return (
                     <div
                       key={m.id}

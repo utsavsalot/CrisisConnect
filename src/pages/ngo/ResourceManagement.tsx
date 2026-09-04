@@ -78,7 +78,6 @@ export const ResourceManagement: React.FC<ResourceManagementProps> = ({ onBack }
     }, 1000);
 
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, resources.length]);
 
 

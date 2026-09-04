@@ -11,6 +11,7 @@ import {
 } from 'firebase/firestore';
 import { db } from './config';
 import { EmergencyRequest, EmergencyNeedCategory, EmergencyStatus, LocationCoordinates } from '../../types';
+import { firebaseNotificationService } from './notifications';
 
 let cachedRequests: EmergencyRequest[] = [];
 
@@ -69,10 +70,8 @@ export const firebaseRequestService = {
     const newReqData: Omit<EmergencyRequest, 'id'> = {
       requesterId: data.requesterId,
       requesterName: data.requesterName,
-      requesterPhone: data.requesterPhone,
       requesterRole: data.requesterRole,
       needs: data.needs,
-      otherNeed: data.otherNeed,
       description: data.description,
       location: data.location,
       status: 'active',
@@ -80,11 +79,32 @@ export const firebaseRequestService = {
       escalationRadiusKm: 5,
       notifiedResponderIds: [],
       escalationHistory: [{ level: 'local', radiusKm: 5, timestamp: new Date().toISOString(), event: 'Request created; local dispatch started.' }],
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      ...(data.requesterPhone ? { requesterPhone: data.requesterPhone } : {}),
+      ...(data.otherNeed ? { otherNeed: data.otherNeed } : {})
     };
 
     const docRef = await addDoc(collection(db, 'emergencyRequests'), newReqData);
     const created = { ...newReqData, id: docRef.id };
+    const ngosSnapshot = await getDocs(collection(db, 'ngos'));
+    await Promise.all([
+      firebaseNotificationService.sendNotification({
+        userId: data.requesterId,
+        type: 'request_created',
+        title: 'SOS request sent',
+        message: 'Your emergency request is active and being broadcast to verified responders.',
+        requestId: docRef.id,
+      }),
+      ...ngosSnapshot.docs
+        .filter((ngo) => ngo.data().verified !== false)
+        .map((ngo) => firebaseNotificationService.sendNotification({
+          userId: ngo.id,
+          type: 'request_created',
+          title: 'New emergency SOS nearby',
+          message: `${data.requesterName} needs ${data.needs.join(', ')}. Open the request to review and respond.`,
+          requestId: docRef.id,
+        })),
+    ]);
     return created;
   },
 
@@ -111,6 +131,14 @@ export const firebaseRequestService = {
       target = { ...snapshot.data(), id: snapshot.id } as EmergencyRequest;
       if (target.status !== 'active' || target.acceptedBy) throw new Error('Request has already been assigned');
       transaction.update(ref, updates);
+    });
+
+    await firebaseNotificationService.sendNotification({
+      userId: target!.requesterId,
+      type: 'request_accepted',
+      title: 'Assistance accepted',
+      message: `${responderName} accepted your emergency request. Open it to coordinate in chat.`,
+      requestId,
     });
 
     return target ? { ...target, ...updates } : ({} as EmergencyRequest);

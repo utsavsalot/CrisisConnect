@@ -3,8 +3,8 @@ import path from 'path';
 import type { Plugin } from 'vite';
 
 const syncFile = path.resolve(__dirname, '.crisisconnect-dev-sync.json');
-type SyncKey = 'requests' | 'messages';
-type SyncState = { requests?: unknown; messages?: unknown };
+type SyncKey = 'users' | 'ngos' | 'requests' | 'messages' | 'notifications';
+type SyncState = Partial<Record<SyncKey, unknown>>;
 
 function readState(): SyncState {
   try {
@@ -23,7 +23,7 @@ export const crisisConnectSyncPlugin = (): Plugin => ({
   configureServer(server) {
     server.middlewares.use('/__crisisconnect', (request, response, next) => {
       const key = request.url?.replace(/^\//, '').split('?')[0] as SyncKey | undefined;
-      if (key !== 'requests' && key !== 'messages') {
+      if (!key || !['users', 'ngos', 'requests', 'messages', 'notifications'].includes(key)) {
         next();
         return;
       }

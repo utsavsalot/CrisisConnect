@@ -95,9 +95,9 @@ export const RequestSubmissionAnimation: React.FC<RequestSubmissionAnimationProp
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-theme-light/90 backdrop-blur-2xl p-6 animate-in fade-in duration-200"
+      className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/35 p-6 backdrop-blur-2xl animate-in fade-in duration-200"
     >
-      <div className="w-full max-w-md glass-panel p-8 rounded-3xl text-center flex flex-col items-center relative overflow-hidden border border-emergency-500/30 shadow-2xl">
+      <div className="relative flex w-full max-w-md flex-col items-center overflow-hidden rounded-3xl border border-slate-200 bg-[#fffefa] p-8 text-center text-black shadow-[0_20px_60px_rgba(15,23,42,0.25)]">
         
         {/* Background Radar Rings */}
         <div ref={radarRef} className="radar-layer absolute inset-0 pointer-events-none flex items-center justify-center">
@@ -148,7 +148,7 @@ export const RequestSubmissionAnimation: React.FC<RequestSubmissionAnimationProp
           {/* Central Pin */}
           <div
             ref={pinRef}
-            className="w-16 h-16 rounded-full bg-emergency-600/30 border border-emergency-500 flex items-center justify-center text-emergency-500 shadow-emergency-glow relative z-10"
+            className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full border border-red-500 bg-red-50 text-red-600 shadow-emergency-glow"
           >
             <MapPin className="w-8 h-8 animate-bounce" />
           </div>
@@ -158,17 +158,17 @@ export const RequestSubmissionAnimation: React.FC<RequestSubmissionAnimationProp
             ref={checkRef}
             className="absolute inset-0 flex items-center justify-center z-20 opacity-0"
           >
-            <div className="w-20 h-20 rounded-full bg-emerald-500 text-theme-dark flex items-center justify-center shadow-lg shadow-emerald-500/40">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-red-600 text-white shadow-lg shadow-red-500/40">
               <CheckCircle className="w-12 h-12 stroke-[2.5]" />
             </div>
           </div>
         </div>
 
         {/* Text sequence */}
-        <h3 className="text-lg font-bold text-theme-dark mb-2 transition-all">
+        <h3 className="mb-2 text-lg font-bold text-black transition-all">
           {stepText}
         </h3>
-        <p className="text-xs text-theme-forest/80 max-w-xs">
+        <p className="max-w-xs text-xs text-red-700">
           Broadcasting priority emergency telemetry across the CrisisConnect community mesh.
         </p>
       </div>

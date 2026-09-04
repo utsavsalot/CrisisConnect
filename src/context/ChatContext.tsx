@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { ChatMessage } from '../types';
 import { chatService } from '../services/serviceManager';
 import { useAuth } from './AuthContext';
@@ -23,11 +23,11 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => window.removeEventListener('storage', handler);
   }, []);
 
-  const getMessages = (requestId: string): ChatMessage[] => {
+  const getMessages = useCallback((requestId: string): ChatMessage[] => {
     return chatService.getMessages(requestId);
-  };
+  }, []);
 
-  const sendMessage = async (requestId: string, text: string): Promise<ChatMessage> => {
+  const sendMessage = useCallback(async (requestId: string, text: string): Promise<ChatMessage> => {
     if (!currentUser) throw new Error('Must be logged in to send message');
     const senderName = 'name' in currentUser ? currentUser.name : currentUser.orgName;
     const senderRole = role === 'ngo' ? 'ngo' : ('responderMode' in currentUser && currentUser.responderMode ? 'responder' : 'user');
@@ -41,14 +41,14 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
     setTick(t => t + 1);
     return msg;
-  };
+  }, [currentUser, role]);
 
-  const subscribeToChat = (requestId: string, callback: (messages: ChatMessage[]) => void) => {
+  const subscribeToChat = useCallback((requestId: string, callback: (messages: ChatMessage[]) => void) => {
     return chatService.onMessagesChanged(requestId, (msgs) => {
       callback(msgs);
       setTick(t => t + 1);
     });
-  };
+  }, []);
 
   return (
     <ChatContext.Provider value={{ getMessages, sendMessage, subscribeToChat }}>

@@ -1,4 +1,4 @@
-import { collection, addDoc, updateDoc, doc, onSnapshot, query, where, orderBy } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, doc, onSnapshot, query, where, getDocs, writeBatch } from 'firebase/firestore';
 import { db } from './config';
 import { NotificationItem } from '../../types';
 
@@ -24,7 +24,11 @@ export const firebaseNotificationService = {
   },
 
   async markAllAsRead(userId: string): Promise<void> {
-    // Client-side batch or individual update
+    if (!db) return;
+    const snapshot = await getDocs(query(collection(db, 'notifications'), where('userId', '==', userId), where('read', '==', false)));
+    const batch = writeBatch(db);
+    snapshot.forEach((item) => batch.update(item.ref, { read: true }));
+    await batch.commit();
   },
 
   onNotificationsChanged(userId: string, callback: (items: NotificationItem[]) => void) {
@@ -32,17 +36,16 @@ export const firebaseNotificationService = {
       callback([]);
       return () => {};
     }
-    const q = query(
-      collection(db, 'notifications'),
-      where('userId', '==', userId),
-      orderBy('timestamp', 'desc')
-    );
+    const q = query(collection(db, 'notifications'), where('userId', '==', userId));
     return onSnapshot(q, (snapshot) => {
       const notifs: NotificationItem[] = [];
       snapshot.forEach(docSnap => {
         notifs.push({ ...docSnap.data(), id: docSnap.id } as NotificationItem);
       });
-      callback(notifs);
+      callback(notifs.sort((first, second) => new Date(second.timestamp).getTime() - new Date(first.timestamp).getTime()));
+    }, (error) => {
+      console.warn('Firebase notification subscription error:', error);
+      callback([]);
     });
   }
 };

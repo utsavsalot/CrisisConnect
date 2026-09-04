@@ -41,7 +41,8 @@ export const RequestHelpPage: React.FC = () => {
     } catch (error) {
       console.error('SOS request creation error:', error);
       setIsSubmitting(false);
-      alert('Unable to send the SOS. Please check your connection and try again.');
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Unable to send the SOS. ${message}`);
     }
   };
 

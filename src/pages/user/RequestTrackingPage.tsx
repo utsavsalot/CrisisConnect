@@ -133,19 +133,19 @@ export const RequestTrackingPage: React.FC = () => {
             </p>
           </div>
 
-          {request.status !== 'resolved' && (
+          {request.status === 'in_progress' && (
             <button
               onClick={handleMarkResolved}
               className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-theme-dark font-bold text-xs uppercase tracking-wider shadow-md flex items-center gap-2 transition-transform active:scale-95"
             >
               <CheckCircle2 className="w-4 h-4" />
-              <span>Mark Resolved</span>
+              <span>Mark Assistance Complete</span>
             </button>
           )}
         </div>
 
         {/* 5-Step Visual Timeline Component */}
-        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-theme-mint/30 shadow-xl">
+        <div className="rounded-3xl border border-slate-200 bg-[#fffefa] p-6 shadow-[0_14px_40px_rgba(15,23,42,0.10)] sm:p-8">
           <RequestTimeline status={request.status} />
         </div>
 
@@ -227,8 +227,8 @@ export const RequestTrackingPage: React.FC = () => {
           <div className="lg:col-span-5 space-y-6">
             
             {/* Request Summary Card */}
-            <div className="glass-panel rounded-3xl p-6 border border-theme-mint/30 space-y-4">
-              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-theme-forest/80">
+            <div className="space-y-4 rounded-3xl border border-slate-200 bg-[#fffefa] p-6 shadow-[0_14px_40px_rgba(15,23,42,0.10)]">
+              <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-red-700">
                 Incident Dossier
               </h3>
 
@@ -236,23 +236,23 @@ export const RequestTrackingPage: React.FC = () => {
                 {request.needs.map(n => (
                   <span
                     key={n}
-                    className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emergency-500/20 text-emergency-300 border border-emergency-500/30"
+                    className="rounded-full border border-red-200 bg-red-50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-700"
                   >
                     {n}
                   </span>
                 ))}
               </div>
 
-              <p className="text-xs sm:text-sm text-theme-dark/90 leading-relaxed font-medium">
+              <p className="text-xs font-medium leading-relaxed text-black sm:text-sm">
                 {request.description}
               </p>
 
-              <div className="pt-4 border-t border-theme-mint/30 text-xs space-y-2">
-                <div className="flex items-center gap-2 text-theme-forest/80">
-                  <MapPin className="w-4 h-4 text-sky-400 shrink-0" />
-                  <span className="text-theme-dark truncate">{request.location.address || 'Detected Location'}</span>
+              <div className="space-y-2 border-t border-red-100 pt-4 text-xs">
+                <div className="flex items-center gap-2 text-red-700">
+                  <MapPin className="h-4 w-4 shrink-0 text-red-600" />
+                  <span className="truncate text-black">{request.location.address || 'Detected Location'}</span>
                 </div>
-                <div className="text-[10px] text-theme-forest/60 font-mono pl-6">
+                <div className="pl-6 font-mono text-[10px] text-slate-600">
                   {request.location.latitude.toFixed(4)}° N, {request.location.longitude.toFixed(4)}° W
                 </div>
               </div>
@@ -260,26 +260,26 @@ export const RequestTrackingPage: React.FC = () => {
 
             {/* Assigned Responder / NGO Card */}
             {isAccepted ? (
-              <div className="glass-panel rounded-3xl p-6 border border-emerald-500/30 bg-emerald-500/[0.03] space-y-4">
+              <div className="space-y-4 rounded-3xl border border-slate-200 bg-[#fffefa] p-6 shadow-[0_14px_40px_rgba(15,23,42,0.10)]">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400">
+                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-red-700">
                     Assigned Unit
                   </span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                  <span className="rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-[10px] font-bold uppercase text-red-700">
                     {request.acceptedByType === 'ngo' ? 'NGO Operation' : 'Community Responder'}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-400 font-bold text-lg">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-red-200 bg-red-50 text-lg font-bold text-red-600">
                     {request.acceptedByType === 'ngo' ? <Building2 className="w-6 h-6" /> : <UserCheck className="w-6 h-6" />}
                   </div>
                   <div>
-                    <h4 className="font-bold text-base text-theme-dark font-display">
+                    <h4 className="font-display text-base font-bold text-black">
                       {request.acceptedByName || 'Emergency Responder'}
                     </h4>
-                    <p className="text-xs text-theme-forest/80">
-                      Approx. distance: <span className="text-emerald-400 font-semibold font-mono">{request.distanceKm || 1.4} km away</span>
+                    <p className="text-xs text-slate-600">
+                      Approx. distance: <span className="font-mono font-semibold text-red-700">{request.distanceKm || 1.4} km away</span>
                     </p>
                   </div>
                 </div>
@@ -288,16 +288,16 @@ export const RequestTrackingPage: React.FC = () => {
                 <div className="flex items-center gap-2 pt-2">
                   <a
                     href="tel:+15559110000"
-                    className="flex-1 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-theme-dark font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-colors border border-theme-mint/30"
+                    className="flex-1 rounded-xl border border-red-200 bg-white py-2.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-red-50"
                   >
-                    <Phone className="w-4 h-4 text-emerald-400" />
+                    <Phone className="h-4 w-4 text-red-600" />
                     <span>Call Unit</span>
                   </a>
 
                   {request.status === 'accepted' && (
                     <button
                       onClick={handleAdvanceStatus}
-                      className="px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-theme-dark font-bold text-xs uppercase tracking-wider transition-colors"
+                      className="rounded-xl bg-red-600 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-red-700"
                     >
                       Start Assistance
                     </button>
@@ -305,8 +305,8 @@ export const RequestTrackingPage: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="glass-panel rounded-3xl p-6 border border-theme-mint/30 text-center text-theme-forest/60 text-xs py-8">
-                <Radio className="w-8 h-8 mx-auto mb-2 text-slate-600 animate-pulse" />
+              <div className="rounded-3xl border border-slate-200 bg-[#fffefa] px-6 py-8 text-center text-xs text-slate-600 shadow-[0_14px_40px_rgba(15,23,42,0.10)]">
+                <Radio className="mx-auto mb-2 h-8 w-8 animate-pulse text-red-600" />
                 <span>Awaiting responder commitment...</span>
               </div>
             )}
@@ -314,51 +314,51 @@ export const RequestTrackingPage: React.FC = () => {
           </div>
 
           {/* Right Column: Real-Time Coordination Chat (7 cols) */}
-          <div className="lg:col-span-7 glass-panel rounded-3xl border border-theme-mint/30 flex flex-col h-[520px] overflow-hidden shadow-2xl">
+          <div className="flex h-[520px] flex-col overflow-hidden rounded-3xl border border-slate-200 bg-[#fffefa] shadow-[0_14px_40px_rgba(15,23,42,0.10)] lg:col-span-7">
             
             {/* Chat Header */}
-            <div className="p-4 border-b border-theme-mint/30 bg-white/80 flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-red-100 bg-white p-4">
               <div className="flex items-center gap-2.5">
-                <MessageSquare className="w-4 h-4 text-sky-400" />
-                <span className="font-bold text-xs uppercase tracking-wider text-theme-dark">
+                <MessageSquare className="h-4 w-4 text-red-600" />
+                <span className="text-xs font-bold uppercase tracking-wider text-black">
                   Live Dispatch Coordination Chat
                 </span>
               </div>
-              <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span className="flex items-center gap-1.5 font-mono text-[10px] text-red-600">
+                <span className="h-2 w-2 animate-ping rounded-full bg-red-600" />
                 MESH ACTIVE
               </span>
             </div>
 
             {/* Message Feed */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-3 no-scrollbar">
+            <div className="flex-1 space-y-3 overflow-y-auto bg-[#fffefa] p-4 no-scrollbar">
               {messages.length === 0 ? (
-                <div className="text-center py-16 text-theme-forest/60 text-xs">
+                <div className="py-16 text-center text-xs text-slate-600">
                   {isAccepted 
                     ? 'Coordination channel established. Send a message to coordinate arrival.'
                     : 'Chat will activate once a responder or NGO accepts your emergency request.'}
                 </div>
               ) : (
                 messages.map((msg) => {
-                  const alignRight = msg.senderRole !== 'user';
+                  const alignRight = msg.senderId !== currentUser?.uid;
                   return (
                     <div
                       key={msg.id}
                       className={`flex flex-col ${alignRight ? 'items-end' : 'items-start'}`}
                     >
-                      <span className="text-[10px] text-theme-forest/80 mb-1 px-1">
+                      <span className="mb-1 px-1 text-[10px] text-red-700">
                         {msg.senderName} • {msg.senderRole}
                       </span>
                       <div
                         className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-xs leading-relaxed ${
                           alignRight
-                            ? 'bg-sky-600 text-theme-dark rounded-br-none shadow-md'
-                            : 'bg-white/10 text-theme-dark rounded-bl-none border border-theme-mint/30'
+                            ? 'rounded-br-none bg-red-600 text-white shadow-md'
+                            : 'rounded-bl-none border border-red-100 bg-white text-black shadow-sm'
                         }`}
                       >
                         {msg.text}
                       </div>
-                      <span className="text-[9px] text-theme-forest/60 mt-1 px-1">
+                      <span className="mt-1 px-1 text-[9px] text-slate-500">
                         {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
@@ -369,7 +369,7 @@ export const RequestTrackingPage: React.FC = () => {
             </div>
 
             {/* Chat Input */}
-            <div className="p-3 border-t border-theme-mint/30 bg-white/80">
+            <div className="border-t border-red-100 bg-white p-3">
               <form onSubmit={handleSendMessage} className="flex items-center gap-2">
                 <input
                   type="text"
@@ -377,12 +377,12 @@ export const RequestTrackingPage: React.FC = () => {
                   onChange={(e) => setInputText(e.target.value)}
                   placeholder={isAccepted ? "Type a coordination message or arrival detail..." : "Awaiting responder acceptance to chat..."}
                   disabled={!isAccepted}
-                  className="flex-1 bg-theme-sage/80 border border-theme-mint/30 rounded-xl px-4 py-2.5 text-xs text-theme-dark placeholder:text-theme-forest/60 focus:outline-none focus:border-sky-400 disabled:opacity-50"
+                  className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs text-black placeholder:text-slate-500 focus:border-red-500 focus:outline-none disabled:opacity-50"
                 />
                 <button
                   type="submit"
                   disabled={!inputText.trim() || !isAccepted}
-                  className="p-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-40 text-theme-dark transition-all"
+                  className="rounded-xl bg-red-600 p-2.5 text-white transition-all hover:bg-red-700 disabled:opacity-40"
                 >
                   <Send className="w-4 h-4" />
                 </button>

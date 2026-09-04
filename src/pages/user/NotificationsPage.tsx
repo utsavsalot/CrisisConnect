@@ -2,9 +2,12 @@ import React from 'react';
 import { Bell, CheckCheck, AlertTriangle, ShieldCheck, Activity, Info } from 'lucide-react';
 import { useEmergency } from '../../context/EmergencyContext';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 export const NotificationsPage: React.FC = () => {
   const { notifications, markNotificationAsRead, markAllNotificationsAsRead } = useEmergency();
+  const { role } = useAuth();
+  const requestPath = role === 'ngo' ? '/ngo/requests' : '/requests';
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -20,15 +23,15 @@ export const NotificationsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-theme-light py-8 px-4 sm:px-6 lg:px-8 text-theme-dark">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <div className="min-h-screen bg-[#eef2f7] px-4 py-8 text-slate-950 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-4xl space-y-6">
         
-        <div className="flex items-center justify-between border-b border-theme-mint/30 pb-4">
+        <div className="flex items-center justify-between border-b border-red-200 pb-4">
           <div>
-            <h1 className="text-2xl font-black text-theme-dark font-display">
+            <h1 className="font-display text-2xl font-black text-slate-950">
               Notifications & Alerts
             </h1>
-            <p className="text-xs text-theme-forest/80 mt-0.5">
+            <p className="mt-0.5 text-xs text-slate-500">
               Live status updates, nearby alerts, and coordination updates
             </p>
           </div>
@@ -36,7 +39,7 @@ export const NotificationsPage: React.FC = () => {
           {notifications.some(n => !n.read) && (
             <button
               onClick={markAllNotificationsAsRead}
-              className="flex items-center gap-1.5 text-xs text-sky-400 hover:text-sky-300 font-semibold transition-colors"
+              className="flex items-center gap-1.5 text-xs font-bold text-red-600 transition-colors hover:text-red-700"
             >
               <CheckCheck className="w-4 h-4" />
               <span>Mark all as read</span>
@@ -58,24 +61,24 @@ export const NotificationsPage: React.FC = () => {
               <div
                 key={n.id}
                 onClick={() => markNotificationAsRead(n.id)}
-                className={`p-4 rounded-2xl border transition-all flex items-start justify-between gap-4 cursor-pointer ${
+                className={`flex cursor-pointer items-start justify-between gap-4 rounded-2xl border p-4 shadow-[0_12px_30px_rgba(127,29,29,0.10)] transition-all ${
                   n.read
-                    ? 'glass-panel border-theme-mint/20 opacity-75'
-                    : 'glass-panel border-sky-500/30 bg-sky-500/[0.04]'
+                    ? 'border-red-100 bg-[#fffdf8] opacity-70'
+                    : 'border-red-200 bg-[#fffdf8] hover:border-red-400 hover:shadow-[0_16px_34px_rgba(127,29,29,0.15)]'
                 }`}
               >
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className="w-8 h-8 rounded-xl bg-white/5 border border-theme-mint/30 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-red-200 bg-red-50">
                     {getIcon(n.type)}
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-theme-dark leading-tight">
+                    <h4 className="text-xs font-bold leading-tight text-slate-950">
                       {n.title}
                     </h4>
-                    <p className="text-xs text-theme-forest mt-1 leading-relaxed">
+                    <p className="mt-1 text-xs leading-relaxed text-slate-700">
                       {n.message}
                     </p>
-                    <span className="text-[10px] text-theme-forest/60 font-mono mt-2 block">
+                    <span className="mt-2 block font-mono text-[10px] text-slate-400">
                       {new Date(n.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
@@ -83,8 +86,8 @@ export const NotificationsPage: React.FC = () => {
 
                 {n.requestId && (
                   <Link
-                    to={`/requests/${n.requestId}`}
-                    className="text-[11px] px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-theme-dark font-semibold shrink-0"
+                    to={`${requestPath}/${n.requestId}`}
+                    className="shrink-0 rounded-lg bg-red-600 px-3 py-1.5 text-[11px] font-bold text-white transition-colors hover:bg-red-700"
                   >
                     View
                   </Link>

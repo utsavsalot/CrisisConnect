@@ -20,6 +20,7 @@ import {
 import { ESCALATION_STEPS } from '../escalation';
 
 type Listener = () => void;
+type SyncKey = 'users' | 'ngos' | 'requests' | 'messages' | 'notifications';
 
 class MockEventManager {
   private listeners: Map<string, Set<Listener>> = new Map();
@@ -64,6 +65,7 @@ function saveToStorage<T>(key: string, data: T): void {
   try {
     if (typeof window === 'undefined' || !window.localStorage) return;
     localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(data));
+    if (['users', 'ngos', 'notifications'].includes(key)) pushDevState(key as SyncKey, data);
   } catch (e) {
     console.error('Storage save error:', e);
   }
@@ -79,7 +81,7 @@ async function pullDevState<T>(key: string): Promise<T | null> {
   }
 }
 
-function pushDevState<T>(key: string, data: T): void {
+function pushDevState<T>(key: SyncKey, data: T): void {
   void fetch(`/__crisisconnect/${key}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -95,6 +97,15 @@ let resources: NGOResource[] = loadFromStorage('resources', INITIAL_RESOURCES);
 let notifications: NotificationItem[] = loadFromStorage('notifications', INITIAL_NOTIFICATIONS);
 let messages: Record<string, ChatMessage[]> = loadFromStorage('messages', INITIAL_MESSAGES);
 let currentUserId: string | null = loadFromStorage<string | null>('currentUserId', null);
+
+const syncDevProfiles = async (): Promise<void> => {
+  const [syncedUsers, syncedNgos] = await Promise.all([
+    pullDevState<Record<string, UserProfile>>('users'),
+    pullDevState<Record<string, NGOProfile>>('ngos')
+  ]);
+  if (syncedUsers) users = syncedUsers;
+  if (syncedNgos) ngos = syncedNgos;
+};
 
 const LOCAL_BROADCAST_RADIUS_KM = 5;
 
@@ -192,6 +203,7 @@ export const mockAuthService = {
   },
 
   async login(email: string, _pass: string): Promise<UserProfile | NGOProfile> {
+    await syncDevProfiles();
     const userFound = Object.values(users).find(u => u.email.toLowerCase() === email.toLowerCase());
     if (userFound) {
       currentUserId = userFound.uid;
@@ -225,6 +237,7 @@ export const mockAuthService = {
     emergencyServices?: EmergencyNeedCategory[];
     address?: string;
   }): Promise<UserProfile | NGOProfile> {
+    await syncDevProfiles();
     const uid = 'user-' + Date.now();
     const loc = data.location || { latitude: 40.7128, longitude: -74.0060, address: 'New York, NY' };
     
@@ -362,6 +375,14 @@ export const mockRequestService = {
     requests = [newReq, ...requests];
     saveToStorage('requests', requests);
     pushDevState('requests', requests);
+
+    mockNotificationService.sendNotification({
+      userId: data.requesterId,
+      type: 'request_created',
+      title: 'SOS request sent',
+      message: 'Your emergency request is active and being broadcast to verified responders.',
+      requestId: newReq.id
+    });
 
     Object.values(users)
       .filter((user) => user.responderMode && user.isAvailable && distanceBetween(data.location, user.location) <= LOCAL_BROADCAST_RADIUS_KM)
@@ -688,8 +709,19 @@ export const mockNotificationService = {
 
   onNotificationsChanged(userId: string, callback: (items: NotificationItem[]) => void) {
     callback(this.getNotifications(userId));
-    return eventBus.subscribe('notifications_changed', () => {
+    const unsubscribeBus = eventBus.subscribe('notifications_changed', () => {
       callback(this.getNotifications(userId));
     });
+    const pollId = window.setInterval(() => {
+      void pullDevState<NotificationItem[]>('notifications').then((synced) => {
+        if (!synced || JSON.stringify(synced) === JSON.stringify(notifications)) return;
+        notifications = synced;
+        callback(this.getNotifications(userId));
+      });
+    }, 1000);
+    return () => {
+      unsubscribeBus();
+      window.clearInterval(pollId);
+    };
   }
 };
