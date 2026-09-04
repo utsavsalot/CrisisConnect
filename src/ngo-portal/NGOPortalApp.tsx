@@ -10,6 +10,7 @@ import { ResourceManagement } from '../pages/ngo/ResourceManagement';
 import { WhatIfAnalysis } from '../components/emergency/WhatIfAnalysis';
 import { PriorityBadge } from '../components/ui/PriorityBadge';
 import { PriorityBreakdownModal } from '../components/emergency/PriorityBreakdownModal';
+import { LanguageToggle } from '../components/ui/LanguageToggle';
 
 const needs: EmergencyNeedCategory[] = ['Medical Assistance', 'Food', 'Rescue', 'Blood', 'Medicine', 'Shelter', 'Transportation', 'Water', 'Other'];
 
@@ -183,6 +184,7 @@ const [simulationError, setSimulationError] = useState('');
             <div><p className="font-display text-lg font-black tracking-wide">CRISIS<span className="text-red-600">CONNECT</span></p><p className="text-[10px] font-bold uppercase tracking-[.16em] text-slate-400">NGO operations portal</p></div>
           </div>
           <div className="flex items-center gap-4">
+            <LanguageToggle />
             <div className="relative">
               <button onClick={() => setShowNotifications((visible) => !visible)} className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Open notifications">
                 <Bell className="h-4 w-4" />

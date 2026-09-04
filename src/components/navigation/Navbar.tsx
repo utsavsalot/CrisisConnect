@@ -16,6 +16,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useEmergency } from '../../context/EmergencyContext';
 import { ThemeToggle } from '../ui/ThemeToggle';
+import { LanguageToggle } from '../ui/LanguageToggle';
 import { RequestHelpButton } from '../ui/RequestHelpButton';
 
 export const Navbar: React.FC = () => {
@@ -137,6 +138,7 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center gap-2 sm:gap-3">
 
           <ThemeToggle />
+          <LanguageToggle />
 
           {/* When NOT logged in: Only the single primary Login button */}
           {!currentUser ? (

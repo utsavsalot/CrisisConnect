@@ -176,18 +176,18 @@ export const RequestTrackingPage: React.FC = () => {
 
         {/* Status Callout Banner */}
         {request.status === 'active' && (
-          <div className="p-5 rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-start gap-4">
-            <Radio className="w-6 h-6 text-sky-400 shrink-0 mt-0.5 animate-pulse" />
+          <div className="p-5 rounded-2xl bg-sky-100 border border-sky-300 flex items-start gap-4">
+            <Radio className="w-6 h-6 text-sky-700 shrink-0 mt-0.5 animate-pulse" />
             <div className="flex-1">
-              <h4 className="text-sm font-bold text-theme-dark uppercase tracking-wider font-display">
+              <h4 className="text-sm font-bold text-black uppercase tracking-wider font-display">
                 NO RESPONDER HAS ACCEPTED YET
               </h4>
-              <p className="text-xs text-sky-300 mt-1 leading-relaxed">
+              <p className="text-xs text-black mt-1 leading-relaxed">
                 Searching for available responders within <strong>{displayedRadius} km</strong>. The search expands automatically if nobody accepts.
               </p>
               <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-mono font-bold uppercase tracking-wide">
-                <span className="rounded-lg border border-sky-400/30 bg-sky-400/10 px-2.5 py-1 text-sky-300">Radius: {displayedRadius} km</span>
-                {countdown && <span className="rounded-lg border border-amber-400/30 bg-amber-400/10 px-2.5 py-1 text-amber-300">Next expansion: {countdown}</span>}
+                <span className="rounded-lg border border-sky-400 bg-sky-200 px-2.5 py-1 text-black">Radius: {displayedRadius} km</span>
+                {countdown && <span className="rounded-lg border border-sky-400 bg-sky-200 px-2.5 py-1 text-black">Next expansion: {countdown}</span>}
               </div>
             </div>
             {canHelperAccept && (

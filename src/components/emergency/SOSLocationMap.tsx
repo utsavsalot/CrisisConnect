@@ -29,7 +29,7 @@ const ZoomControls: React.FC = () => {
   const map = useMap();
 
   return (
-    <div className="absolute right-3 top-3 z-[1000] flex flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
+    <div className="sos-map-zoom-controls absolute right-3 top-3 z-[1000] flex flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
       <button
         type="button"
         aria-label="Zoom in"
@@ -62,7 +62,7 @@ export const SOSLocationMap: React.FC<{ location: LocationCoordinates, priorityL
   else if (priorityLevel === 'normal') circleColor = '#10b981';
 
   return (
-    <div className="h-48 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
+    <div className="sos-location-map h-48 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
       <MapContainer center={center} zoom={15} minZoom={3} maxZoom={19} scrollWheelZoom={false} zoomControl={false} className="h-full w-full">
         <ZoomControls />
         <Recenter center={center} />

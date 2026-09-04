@@ -263,6 +263,28 @@ a[class*="bg-sky-"] {
   box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.35);
 }
 
+.sos-location-map .leaflet-container {
+  position: relative;
+  z-index: 0;
+}
+
+.sos-location-map .sos-map-zoom-controls {
+  position: absolute !important;
+  top: 0.75rem !important;
+  right: 0.75rem !important;
+  left: auto !important;
+  z-index: 1000 !important;
+}
+
+.sos-location-map .leaflet-control-attribution {
+  right: 0.5rem;
+  bottom: 0.5rem;
+  margin: 0;
+  border-radius: 0.35rem;
+  padding: 0.15rem 0.35rem;
+  background: rgba(255, 255, 255, 0.88);
+}
+
 /* Subtle Film Grain Overlay */
 .grain-overlay {
   position: relative;
