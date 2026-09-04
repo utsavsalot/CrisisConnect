@@ -36,7 +36,7 @@ export const firebaseRequestService = {
   },
 
   getMyRequests(userId: string): EmergencyRequest[] {
-    return cachedRequests.filter(r => r.requesterId === userId || r.acceptedBy === userId);
+    return cachedRequests.filter(r => r.requesterId === userId || r.acceptedBy === userId || r.communityHelperId === userId || r.ngoResponderId === userId);
   },
 
   getNearbyRequests(userLocation?: LocationCoordinates, capabilities?: EmergencyNeedCategory[]): EmergencyRequest[] {
@@ -117,19 +117,35 @@ export const firebaseRequestService = {
     if (!db) throw new Error('Firestore not initialized');
     const ref = doc(db, 'emergencyRequests', requestId);
     const acceptedAt = new Date().toISOString();
-    const updates = {
-      status: 'accepted' as EmergencyStatus,
-      acceptedBy: acceptedByUid,
-      acceptedByName: responderName,
-      acceptedByType: responderType,
-      acceptedAt
-    };
+    const isCommunityHelper = responderType === 'responder';
+    const isNgo = responderType === 'ngo';
+
     let target: EmergencyRequest | undefined;
+    let updates: Partial<EmergencyRequest> = {};
+
     await runTransaction(db, async (transaction) => {
       const snapshot = await transaction.get(ref);
       if (!snapshot.exists()) throw new Error('Request not found');
       target = { ...snapshot.data(), id: snapshot.id } as EmergencyRequest;
-      if (target.status !== 'active' || target.acceptedBy) throw new Error('Request has already been assigned');
+      
+      updates = {
+        status: 'accepted' as EmergencyStatus,
+        acceptedBy: isNgo ? acceptedByUid : (target.acceptedBy || acceptedByUid),
+        acceptedByName: isNgo ? responderName : (target.acceptedByName || responderName),
+        acceptedByType: isNgo ? 'ngo' : (target.acceptedByType || 'responder'),
+        acceptedAt: target.acceptedAt || acceptedAt,
+        ...(isCommunityHelper ? {
+          communityHelperId: acceptedByUid,
+          communityHelperName: responderName,
+          communityHelperAcceptedAt: acceptedAt
+        } : {}),
+        ...(isNgo ? {
+          ngoResponderId: acceptedByUid,
+          ngoResponderName: responderName,
+          ngoAcceptedAt: acceptedAt
+        } : {})
+      };
+
       transaction.update(ref, updates);
     });
 

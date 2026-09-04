@@ -63,6 +63,32 @@ export const ProfilePage: React.FC = () => {
                 <span className="font-semibold text-black">{currentUser.location.address || 'New York Metro'}</span>
               </div>
             </div>
+
+            {!isNGO && (
+              <div className="rounded-xl border border-slate-100 bg-white p-3 sm:col-span-2 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-red-700">
+                    Community Helper Status
+                  </span>
+                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                    Boolean((currentUser as any).responderMode && (currentUser as any).isAvailable)
+                      ? 'border border-emerald-200 bg-emerald-50 text-emerald-700'
+                      : 'border border-slate-200 bg-slate-100 text-slate-600'
+                  }`}>
+                    {Boolean((currentUser as any).responderMode && (currentUser as any).isAvailable) ? 'Active & Available' : 'Off Duty'}
+                  </span>
+                </div>
+                {(currentUser as any).capabilities && (currentUser as any).capabilities.length > 0 && (
+                  <div className="flex flex-wrap gap-1 pt-1">
+                    {(currentUser as any).capabilities.map((c: string) => (
+                      <span key={c} className="rounded-md border border-red-100 bg-red-50 px-2 py-0.5 text-[10px] font-semibold text-red-700">
+                        {c}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
         </div>

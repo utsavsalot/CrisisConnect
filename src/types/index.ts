@@ -107,6 +107,12 @@ export interface EmergencyRequest {
   acceptedByName?: string;
   acceptedByType?: 'responder' | 'ngo';
   acceptedAt?: string;
+  communityHelperId?: string;
+  communityHelperName?: string;
+  communityHelperAcceptedAt?: string;
+  ngoResponderId?: string;
+  ngoResponderName?: string;
+  ngoAcceptedAt?: string;
   resolvedAt?: string;
   createdAt: string;
 }

@@ -40,6 +40,7 @@ export const Navbar: React.FC = () => {
   const userNavLinks: NavLinkItem[] = [
     { label: 'Dashboard', path: '/dashboard' },
     { label: 'My Requests', path: '/requests' },
+    { label: 'Community Help', path: '/community-help' },
     { label: 'Notifications', path: '/notifications', badgeCount: unreadNotificationCount },
     { label: 'Profile', path: '/profile' },
   ];

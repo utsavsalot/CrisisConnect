@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { EmergencyRequest, EmergencyNeedCategory, EmergencyStatus, LocationCoordinates, NotificationItem, NGOResource } from '../types';
-import { requestService, notificationService, resourceService } from '../services/serviceManager';
+import { requestService, notificationService, resourceService, responderService } from '../services/serviceManager';
 import { useAuth } from './AuthContext';
 
 interface EmergencyContextType {
@@ -86,7 +86,12 @@ export const EmergencyProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, [currentUser]);
 
   const myRequests = requests.filter(r => 
-    currentUser ? (r.requesterId === currentUser.uid || r.acceptedBy === currentUser.uid) : false
+    currentUser ? (
+      r.requesterId === currentUser.uid || 
+      r.acceptedBy === currentUser.uid || 
+      r.communityHelperId === currentUser.uid || 
+      r.ngoResponderId === currentUser.uid
+    ) : false
   );
 
   const nearbyRequests = requests.filter(r => {
@@ -122,6 +127,15 @@ export const EmergencyProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       medicalSeverity: data.medicalSeverity,
       peopleAffected: data.peopleAffected
     });
+
+    if (currentUser && 'responderMode' in currentUser && (currentUser.responderMode || currentUser.isAvailable)) {
+      try {
+        await responderService.setAvailability(currentUser.uid, false);
+        await responderService.toggleResponderMode(currentUser.uid, false);
+      } catch {
+        // ignore
+      }
+    }
 
     return created;
   };

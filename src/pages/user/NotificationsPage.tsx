@@ -1,16 +1,29 @@
 import React from 'react';
-import { Bell, CheckCheck, AlertTriangle, ShieldCheck, Activity, Info } from 'lucide-react';
+import { Bell, CheckCheck, AlertTriangle, ShieldCheck, Activity, Info, Heart } from 'lucide-react';
 import { useEmergency } from '../../context/EmergencyContext';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 export const NotificationsPage: React.FC = () => {
   const { notifications, markNotificationAsRead, markAllNotificationsAsRead } = useEmergency();
   const { role } = useAuth();
-  const requestPath = role === 'ngo' ? '/ngo/requests' : '/requests';
 
-  const getIcon = (type: string) => {
-    switch (type) {
+  const isVolunteerAlert = (n: { title: string; message: string; type: string }) => {
+    const text = `${n.title} ${n.message}`.toLowerCase();
+    return (
+      text.includes('emergency nearby') ||
+      text.includes('search expanded') ||
+      text.includes('offer help') ||
+      text.includes('volunteer') ||
+      text.includes('community helper')
+    );
+  };
+
+  const getIcon = (n: { title: string; message: string; type: string }) => {
+    if (isVolunteerAlert(n)) {
+      return <Heart className="w-4 h-4 text-red-600" />;
+    }
+    switch (n.type) {
       case 'request_created':
         return <AlertTriangle className="w-4 h-4 text-emergency-500" />;
       case 'request_accepted':
@@ -23,15 +36,15 @@ export const NotificationsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#eef2f7] px-4 py-8 text-slate-950 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#f4f5f8] px-4 py-8 text-black sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl space-y-6">
         
-        <div className="flex items-center justify-between border-b border-red-200 pb-4">
+        <div className="flex items-center justify-between border-b border-black/15 pb-4">
           <div>
-            <h1 className="font-display text-2xl font-black text-slate-950">
+            <h1 className="font-display text-2xl font-black text-black">
               Notifications & Alerts
             </h1>
-            <p className="mt-0.5 text-xs text-slate-500">
+            <p className="mt-0.5 text-xs text-black/60">
               Live status updates, nearby alerts, and coordination updates
             </p>
           </div>
@@ -57,43 +70,57 @@ export const NotificationsPage: React.FC = () => {
           </div>
         ) : (
           <div className="space-y-3">
-            {notifications.map((n) => (
-              <div
-                key={n.id}
-                onClick={() => markNotificationAsRead(n.id)}
-                className={`flex cursor-pointer items-start justify-between gap-4 rounded-2xl border p-4 shadow-[0_12px_30px_rgba(127,29,29,0.10)] transition-all ${
-                  n.read
-                    ? 'border-red-100 bg-[#fffdf8] opacity-70'
-                    : 'border-red-200 bg-[#fffdf8] hover:border-red-400 hover:shadow-[0_16px_34px_rgba(127,29,29,0.15)]'
-                }`}
-              >
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-red-200 bg-red-50">
-                    {getIcon(n.type)}
+            {notifications.map((n) => {
+              const isVol = isVolunteerAlert(n);
+              return (
+                <div
+                  key={n.id}
+                  onClick={() => markNotificationAsRead(n.id)}
+                  className={`flex cursor-pointer items-start justify-between gap-4 rounded-2xl border p-4 transition-all ${
+                    n.read
+                      ? 'border-black/10 bg-white/70 opacity-70'
+                      : isVol
+                        ? 'border-red-500/40 bg-red-50/40 shadow-sm'
+                        : 'border-black/15 bg-white shadow-sm hover:border-black/30'
+                  }`}
+                >
+                  <div className="flex items-start gap-3 min-w-0">
+                    <div className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border ${
+                      isVol ? 'border-red-200 bg-red-50 text-red-600' : 'border-black/10 bg-[#f4f5f8]'
+                    }`}>
+                      {getIcon(n)}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <h4 className="text-xs font-bold leading-tight text-black">
+                          {n.title}
+                        </h4>
+                        {isVol && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-red-500/10 border border-red-500/30 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-red-600">
+                            🤝 Volunteer Alert
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-1 text-xs leading-relaxed text-black/70">
+                        {n.message}
+                      </p>
+                      <span className="mt-2 block font-mono text-[10px] text-black/50">
+                        {new Date(n.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-xs font-bold leading-tight text-slate-950">
-                      {n.title}
-                    </h4>
-                    <p className="mt-1 text-xs leading-relaxed text-slate-700">
-                      {n.message}
-                    </p>
-                    <span className="mt-2 block font-mono text-[10px] text-slate-400">
-                      {new Date(n.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                  </div>
-                </div>
 
-                {n.requestId && (
-                  <Link
-                    to={`${requestPath}/${n.requestId}`}
-                    className="shrink-0 rounded-lg bg-red-600 px-3 py-1.5 text-[11px] font-bold text-white transition-colors hover:bg-red-700"
-                  >
-                    View
-                  </Link>
-                )}
-              </div>
-            ))}
+                  {n.requestId && (
+                    <Link
+                      to={role === 'ngo' ? `/ngo/requests/${n.requestId}` : `/requests/${n.requestId}`}
+                      className="shrink-0 rounded-xl bg-red-600 px-3 py-1.5 text-[11px] font-bold text-white transition-colors hover:bg-red-700"
+                    >
+                      View
+                    </Link>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
 
