@@ -23,11 +23,11 @@ export const SettingsPage: React.FC = () => {
         </div>
 
         {/* Appearance Settings */}
-        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-theme-mint/30 space-y-4">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-theme-forest">
+        <div className="light-dialog glass-panel rounded-3xl p-6 sm:p-8 border border-theme-mint/30 space-y-4">
+          <h3 className="light-dialog-heading text-sm font-bold uppercase tracking-wider text-theme-forest">
             Appearance & Theme
           </h3>
-          <p className="text-xs text-theme-forest/80">
+          <p className="light-dialog-copy text-xs text-theme-forest/80">
             Toggle instantly between high-contrast dark emergency-tech mode and crisp daytime light mode.
           </p>
 
@@ -65,21 +65,21 @@ export const SettingsPage: React.FC = () => {
         </div>
 
         {/* Safety & Privacy */}
-        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-theme-mint/30 space-y-4">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-theme-forest">
+        <div className="light-dialog glass-panel rounded-3xl p-6 sm:p-8 border border-theme-mint/30 space-y-4">
+          <h3 className="light-dialog-accent text-sm font-bold uppercase tracking-wider text-theme-forest">
             Privacy & Geolocation Controls
           </h3>
-          <p className="text-xs text-theme-forest/80 leading-relaxed">
+          <p className="light-dialog-copy text-xs text-theme-forest/80 leading-relaxed">
             CrisisConnect enforces privacy-preserving radius dispatch. Before a responder commits to your emergency request, 
             only approximate street-level coordinates are exposed. Exact contact details unlock only upon verified mission acceptance.
           </p>
         </div>
 
         {/* Account Termination / Sign Out */}
-        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-theme-mint/30 flex items-center justify-between">
+        <div className="light-dialog glass-panel rounded-3xl p-6 sm:p-8 border border-theme-mint/30 flex items-center justify-between">
           <div>
-            <h4 className="text-sm font-bold text-theme-dark">Sign Out</h4>
-            <p className="text-xs text-theme-forest/80">End your active emergency dispatch session</p>
+            <h4 className="light-dialog-heading text-sm font-bold text-theme-dark">Sign Out</h4>
+            <p className="light-dialog-copy text-xs text-theme-forest/80">End your active emergency dispatch session</p>
           </div>
           <button
             onClick={() => {

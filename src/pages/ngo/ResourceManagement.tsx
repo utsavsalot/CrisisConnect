@@ -185,7 +185,7 @@ export const ResourceManagement: React.FC<ResourceManagementProps> = ({ onBack }
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 glass-panel p-6 rounded-3xl border border-theme-mint/30 shadow-sm relative overflow-hidden">
+        <div className="light-dialog flex flex-col md:flex-row md:items-end justify-between gap-4 glass-panel p-6 rounded-3xl border border-theme-mint/30 shadow-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4">
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
@@ -205,11 +205,11 @@ export const ResourceManagement: React.FC<ResourceManagementProps> = ({ onBack }
               <div className="p-2.5 rounded-xl bg-sky-500/10 text-sky-600 border border-sky-500/20">
                 <Package className="w-6 h-6" />
               </div>
-              <h1 className="text-2xl font-black text-theme-dark font-display">
+              <h1 className="light-dialog-heading text-2xl font-black text-theme-dark font-display">
                 Resource Management
               </h1>
             </div>
-            <p className="text-sm text-theme-forest/80 max-w-xl leading-relaxed">
+            <p className="light-dialog-copy text-sm text-theme-forest/80 max-w-xl leading-relaxed">
               Manage and update your organization's available emergency resources. 
               Changes made here are reflected in real-time across the CrisisConnect network.
             </p>
@@ -242,7 +242,7 @@ export const ResourceManagement: React.FC<ResourceManagementProps> = ({ onBack }
 
             return (
               <div key={categoryName} className="space-y-4">
-                <h3 className="text-sm font-black uppercase tracking-widest text-theme-dark border-b border-theme-mint/30 pb-2">
+                <h3 className="light-dialog-accent text-sm font-black uppercase tracking-widest text-theme-dark border-b border-theme-mint/30 pb-2">
                   {categoryName}
                 </h3>
                 
@@ -254,7 +254,7 @@ export const ResourceManagement: React.FC<ResourceManagementProps> = ({ onBack }
                     return (
                       <div 
                         key={resource.id} 
-                        className={`glass-panel p-5 rounded-2xl border transition-all duration-300 hover:shadow-md ${
+                        className={`light-dialog glass-panel p-5 rounded-2xl border transition-all duration-300 hover:shadow-md ${
                           isChanged 
                             ? 'border-amber-400/50 bg-amber-50/30' 
                             : 'border-theme-mint/30 hover:border-theme-mint/60'
@@ -270,7 +270,7 @@ export const ResourceManagement: React.FC<ResourceManagementProps> = ({ onBack }
                               Available {resource.unit}
                             </span>
                           </div>
-                          <div className="w-8 h-8 rounded-full bg-theme-sage/50 flex items-center justify-center text-theme-forest/80">
+                          <div className="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center text-red-600 border border-red-200">
                             <Package className="w-4 h-4" />
                           </div>
                         </div>
@@ -280,7 +280,7 @@ export const ResourceManagement: React.FC<ResourceManagementProps> = ({ onBack }
                           <button
                             onClick={() => handleQuantityChange(resource.id, currentQty - 1)}
                             disabled={currentQty <= 0}
-                            className="p-2 rounded-lg hover:bg-theme-sage/50 text-theme-forest disabled:opacity-30 disabled:cursor-not-allowed transition-colors active:scale-95"
+                            className="p-2 rounded-lg hover:bg-red-50 text-red-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors active:scale-95"
                           >
                             <Minus className="w-4 h-4" />
                           </button>
@@ -296,7 +296,7 @@ export const ResourceManagement: React.FC<ResourceManagementProps> = ({ onBack }
 
                           <button
                             onClick={() => handleQuantityChange(resource.id, currentQty + 1)}
-                            className="p-2 rounded-lg hover:bg-theme-sage/50 text-theme-forest transition-colors active:scale-95"
+                            className="p-2 rounded-lg hover:bg-red-50 text-red-600 transition-colors active:scale-95"
                           >
                             <Plus className="w-4 h-4" />
                           </button>
