@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { AlertTriangle, Building2, CheckCircle2, Clock3, LogOut, MapPin, MessageSquare, Navigation, Phone, Send, ShieldCheck, UserRound, Package, ArrowLeft } from 'lucide-react';
+import { AlertTriangle, Bell, Building2, CheckCircle2, Clock3, LogOut, MapPin, MessageSquare, Navigation, Phone, Send, ShieldCheck, UserRound, Package, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useEmergency } from '../context/EmergencyContext';
 import { useChat } from '../context/ChatContext';
@@ -36,7 +36,7 @@ const formatTime = (value: string) => new Date(value).toLocaleTimeString([], { h
 
 export const NGOPortalApp: React.FC = () => {
   const { currentUser, role, login, signup, logout } = useAuth();
-  const { requests, acceptRequest } = useEmergency();
+  const { requests, acceptRequest, notifications, markNotificationAsRead } = useEmergency();
   const { getMessages, sendMessage, subscribeToChat } = useChat();
   const [currentView, setCurrentView] = useState<'dashboard' | 'resources'>('dashboard');
   const [mode, setMode] = useState<'login' | 'register'>('login');
@@ -52,6 +52,7 @@ export const NGOPortalApp: React.FC = () => {
   const simulationResult = simulationState as NonNullable<typeof simulationState>;
 const [simulating, setSimulating] = useState(false);
 const [simulationError, setSimulationError] = useState('');
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const ngo = currentUser && 'orgName' in currentUser ? currentUser : null;
   const activeRequests = useMemo(() => {
@@ -176,6 +177,16 @@ const [simulationError, setSimulationError] = useState('');
             <div><p className="font-display text-lg font-black tracking-wide">CRISIS<span className="text-red-600">CONNECT</span></p><p className="text-[10px] font-bold uppercase tracking-[.16em] text-slate-400">NGO operations portal</p></div>
           </div>
           <div className="flex items-center gap-4">
+            <div className="relative">
+              <button onClick={() => setShowNotifications((visible) => !visible)} className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Open notifications">
+                <Bell className="h-4 w-4" />
+                {notifications.some((notification) => !notification.read) && <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-600" />}
+              </button>
+              {showNotifications && <div className="absolute right-0 top-12 z-30 w-80 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
+                <div className="flex items-center justify-between px-3 py-2"><p className="text-xs font-black uppercase tracking-wider text-slate-500">Notifications</p><span className="text-[10px] font-bold text-slate-400">{notifications.filter((notification) => !notification.read).length} unread</span></div>
+                {notifications.length === 0 ? <p className="px-3 py-5 text-center text-xs text-slate-400">No notifications yet.</p> : notifications.slice(0, 5).map((notification) => <button key={notification.id} onClick={() => { if (notification.requestId) setSelectedId(notification.requestId); void markNotificationAsRead(notification.id); setShowNotifications(false); }} className={`block w-full rounded-xl p-3 text-left hover:bg-red-50 ${notification.read ? 'opacity-60' : 'bg-red-50/50'}`}><p className="text-xs font-black text-slate-900">{notification.title}</p><p className="mt-1 text-[11px] leading-4 text-slate-600">{notification.message}</p></button>)}
+              </div>}
+            </div>
             {currentView === 'dashboard' && (
               <button onClick={() => setCurrentView('resources')} className="flex items-center gap-2 rounded-xl bg-red-600 px-3 py-2 text-xs font-bold text-white hover:bg-red-700 transition-colors"><Package className="h-4 w-4" /> Manage Resources</button>
             )}

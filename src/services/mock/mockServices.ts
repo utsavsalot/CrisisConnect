@@ -376,6 +376,14 @@ export const mockRequestService = {
     saveToStorage('requests', requests);
     pushDevState('requests', requests);
 
+    mockNotificationService.sendNotification({
+      userId: data.requesterId,
+      type: 'request_created',
+      title: 'SOS request sent',
+      message: 'Your emergency request is active and being broadcast to verified responders.',
+      requestId: newReq.id
+    });
+
     Object.values(users)
       .filter((user) => user.responderMode && user.isAvailable && distanceBetween(data.location, user.location) <= LOCAL_BROADCAST_RADIUS_KM)
       .filter((user) => user.capabilities.length === 0 || user.capabilities.some((capability) => data.needs.includes(capability) || capability === 'Other'))
@@ -701,8 +709,19 @@ export const mockNotificationService = {
 
   onNotificationsChanged(userId: string, callback: (items: NotificationItem[]) => void) {
     callback(this.getNotifications(userId));
-    return eventBus.subscribe('notifications_changed', () => {
+    const unsubscribeBus = eventBus.subscribe('notifications_changed', () => {
       callback(this.getNotifications(userId));
     });
+    const pollId = window.setInterval(() => {
+      void pullDevState<NotificationItem[]>('notifications').then((synced) => {
+        if (!synced || JSON.stringify(synced) === JSON.stringify(notifications)) return;
+        notifications = synced;
+        callback(this.getNotifications(userId));
+      });
+    }, 1000);
+    return () => {
+      unsubscribeBus();
+      window.clearInterval(pollId);
+    };
   }
 };

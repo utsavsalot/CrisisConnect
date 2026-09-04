@@ -2,11 +2,8 @@ import React, { useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   AlertTriangle,
-  Shield,
   Clock,
-  MapPin,
   ArrowRight,
-  Activity,
   CheckCircle,
   Bell,
   Users,
@@ -26,8 +23,6 @@ export const UserDashboard: React.FC = () => {
 
   const userName = currentUser && 'name' in currentUser ? currentUser.name : 'Citizen';
 
-  // Find active request if any
-  const activeRequest = myRequests.find(r => r.status === 'active' || r.status === 'accepted' || r.status === 'in_progress');
   const dashboardRef = useRef<HTMLDivElement>(null);
   const storyRef = useRef<HTMLParagraphElement>(null);
   const { scrollYProgress } = useScroll({ target: storyRef, offset: ['start 0.8', 'end 0.2'] });
@@ -103,88 +98,6 @@ export const UserDashboard: React.FC = () => {
             </div>
           </div>
         </section>
-
-        {/* Active Emergency Tracker if current user has an ongoing request */}
-        {activeRequest && (
-          <div className="relative rounded-[2.5rem] p-6 sm:p-8 border border-theme-mint/30 bg-theme-sage/40 overflow-hidden flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 shadow-2xl">
-            
-            {/* Background Map Graphic - Realistic Roads */}
-            <div className="absolute inset-0 opacity-[0.06] pointer-events-none overflow-hidden flex items-center justify-center">
-              <svg viewBox="0 0 1000 500" className="min-w-full min-h-full object-cover text-theme-dark" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M-100,200 L150,150 L250,250 L450,200 L600,250 L900,100" />
-                <path d="M200,-50 L250,100 L200,200 L300,350 L250,550" />
-                <path d="M450,-50 L420,150 L350,250 L400,450" />
-                <path d="M-50,300 L150,320 L250,250 L400,280 L550,200 L750,250 L900,200" />
-                <path d="M150,150 L100,50 L300,-50" />
-                <path d="M600,250 L650,400 L800,450" />
-                <path d="M300,350 L450,380 L600,300" />
-                <path d="M650,50 L750,150 L900,180" />
-                <path d="M800,-50 L750,150 L800,300 L700,500" />
-                <path d="M50,100 L200,100 L300,50" />
-              </svg>
-            </div>
-            {/* Gradient overlays to blend map edges */}
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-transparent to-slate-950 pointer-events-none opacity-80" />
-            <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-transparent to-slate-950 pointer-events-none opacity-80" />
-
-            {/* Left Section: Details */}
-            <div className="relative z-10 flex-1 min-w-0 max-w-xl">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-14 h-14 rounded-2xl bg-emergency-950/80 border border-emergency-500/50 flex items-center justify-center text-emergency-500 shadow-[0_0_20px_rgba(239,68,68,0.2)] shrink-0">
-                  <Activity className="w-7 h-7 animate-pulse" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-3 mb-1.5">
-                    <span className="text-[11px] font-bold uppercase tracking-widest text-theme-forest/80">
-                      Your Active Emergency
-                    </span>
-                    <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emergency-500/20 border border-emergency-500/30 text-emergency-400 text-[9px] font-black tracking-wider uppercase">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emergency-500 animate-pulse" />
-                      Active
-                    </span>
-                  </div>
-                  <h3 className="text-2xl font-black text-theme-dark tracking-wide pr-32">
-                    {activeRequest.needs.join(', ') || 'Emergency Assistance'}
-                  </h3>
-                </div>
-              </div>
-              <p className="text-sm text-theme-forest mb-3 truncate pr-32">
-                {activeRequest.description}
-              </p>
-              <div className="flex items-center gap-2 text-xs text-sky-400 font-medium">
-                <Shield className="w-4 h-4" />
-                <span>{activeRequest.location.address || 'Detected Location'}</span>
-              </div>
-            </div>
-
-            {/* Middle Section: GPS Pin (Absolute Centered) */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden lg:flex items-center justify-center pointer-events-none">
-              {/* GPS Pin with radar rings */}
-              <div className="relative flex items-center justify-center w-20 h-20">
-                <div className="absolute inset-0 border border-slate-500/40 rounded-full animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite]" />
-                <div className="absolute inset-3 border border-slate-400/50 rounded-full animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite_0.8s]" />
-                <div className="absolute inset-6 border border-slate-300/60 rounded-full animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite_1.6s]" />
-                <div className="w-10 h-10 rounded-full bg-theme-sage/80 border border-slate-600 flex items-center justify-center relative z-10 shadow-lg backdrop-blur-md">
-                  <MapPin className="w-5 h-5 text-theme-dark drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
-                </div>
-              </div>
-            </div>
-
-            {/* Top Right Section: Glowing Button */}
-            <div className="absolute top-6 right-6 sm:top-8 sm:right-8 z-20">
-              <Link
-                to={`/requests/${activeRequest.id}`}
-                className="relative group px-5 py-2.5 rounded-full bg-cyan-500/10 border border-cyan-400 text-theme-dark font-black text-[10px] sm:text-xs uppercase tracking-widest flex items-center gap-2 transition-all active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.4),inset_0_0_10px_rgba(6,182,212,0.3)] hover:shadow-[0_0_25px_rgba(6,182,212,0.6),inset_0_0_15px_rgba(6,182,212,0.5)] hover:bg-cyan-500/20 backdrop-blur-sm"
-              >
-                <span className="drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]">Live Tracking & Chat</span>
-                <span className="bg-emergency-500 text-theme-dark text-[8px] px-1.5 py-0.5 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.9)] animate-pulse border border-white/30">
-                  LIVE
-                </span>
-              </Link>
-            </div>
-
-          </div>
-        )}
 
         {/* Dashboard Grid: Recent Requests & Nearby Incidents */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
