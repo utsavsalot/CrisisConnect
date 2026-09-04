@@ -17,8 +17,10 @@ import {
   X,
   AlertTriangle
 } from 'lucide-react';
-import { EmergencyRequest, EmergencyNeedCategory } from '../../types';
+import { EmergencyRequest, EmergencyNeedCategory, CrisisPriority } from '../../types';
 import { StatusBadge } from '../ui/StatusBadge';
+import { PriorityBadge } from '../ui/PriorityBadge';
+import { PriorityBreakdownModal } from '../emergency/PriorityBreakdownModal';
 
 // Helper to center map smoothly
 const MapRecenter: React.FC<{ center: [number, number] }> = ({ center }) => {
@@ -29,16 +31,26 @@ const MapRecenter: React.FC<{ center: [number, number] }> = ({ center }) => {
   return null;
 };
 
-// Create custom SVG Leaflet DivIcon
-const createCustomIcon = (need: EmergencyNeedCategory, status: string) => {
+// Create custom SVG Leaflet DivIcon based on priority
+const createCustomIcon = (need: EmergencyNeedCategory, status: string, priority?: CrisisPriority) => {
   const isEmergency = status === 'active';
-  const color = isEmergency ? '#FF4D4D' : '#22D3EE';
+  
+  let color = '#22D3EE'; // default cyan
+  let bg = 'rgba(56, 189, 248, 0.25)';
+  
+  if (isEmergency) {
+    if (priority === 'critical') { color = '#ef4444'; bg = 'rgba(239, 68, 68, 0.25)'; }
+    else if (priority === 'high') { color = '#f97316'; bg = 'rgba(249, 115, 22, 0.25)'; }
+    else if (priority === 'medium') { color = '#f59e0b'; bg = 'rgba(245, 158, 11, 0.25)'; }
+    else if (priority === 'normal') { color = '#10b981'; bg = 'rgba(16, 185, 129, 0.25)'; }
+    else { color = '#ef4444'; bg = 'rgba(239, 68, 68, 0.25)'; }
+  }
 
   const html = `
     <div style="
       width: 36px;
       height: 36px;
-      background: ${isEmergency ? 'rgba(239, 68, 68, 0.25)' : 'rgba(56, 189, 248, 0.25)'};
+      background: ${bg};
       border: 2px solid ${color};
       border-radius: 50%;
       display: flex;
@@ -53,13 +65,13 @@ const createCustomIcon = (need: EmergencyNeedCategory, status: string) => {
         background: ${color};
         border-radius: 50%;
       "></div>
-      ${isEmergency ? `
+      ${isEmergency && priority === 'critical' ? `
         <div style="
           position: absolute;
           inset: -6px;
           border-radius: 50%;
           border: 1px solid ${color};
-          animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+          animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
         "></div>
       ` : ''}
     </div>
@@ -82,14 +94,23 @@ interface NGOLiveMapProps {
 export const NGOLiveMap: React.FC<NGOLiveMapProps> = ({ requests, onAcceptRequest }) => {
   const [selectedRequest, setSelectedRequest] = useState<EmergencyRequest | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string>('ALL');
+  const [priorityFilter, setPriorityFilter] = useState<string>('ALL');
   const [tileError, setTileError] = useState(false);
+  const [showPriorityModal, setShowPriorityModal] = useState(false);
 
   const defaultCenter: [number, number] = [40.7188, -73.9980]; // NYC Center
 
   const filteredRequests = requests.filter(r => {
-    if (categoryFilter === 'ALL') return true;
-    return r.needs.includes(categoryFilter as EmergencyNeedCategory);
-  });
+    let matchesCat = true;
+    let matchesPri = true;
+    if (categoryFilter !== 'ALL') {
+      matchesCat = r.needs.includes(categoryFilter as EmergencyNeedCategory);
+    }
+    if (priorityFilter !== 'ALL') {
+      matchesPri = r.priorityLevel === priorityFilter.toLowerCase();
+    }
+    return matchesCat && matchesPri;
+  }).sort((a, b) => (b.priorityScore || 0) - (a.priorityScore || 0));
 
   const activeFocus = selectedRequest 
     ? [selectedRequest.location.latitude, selectedRequest.location.longitude] as [number, number]
@@ -124,7 +145,7 @@ export const NGOLiveMap: React.FC<NGOLiveMapProps> = ({ requests, onAcceptReques
               <Marker
                 key={req.id}
                 position={[req.location.latitude, req.location.longitude]}
-                icon={createCustomIcon(req.needs[0] || 'Other', req.status)}
+                icon={createCustomIcon(req.needs[0] || 'Other', req.status, req.priorityLevel)}
                 eventHandlers={{
                   click: () => setSelectedRequest(req)
                 }}
@@ -132,6 +153,9 @@ export const NGOLiveMap: React.FC<NGOLiveMapProps> = ({ requests, onAcceptReques
                 <Popup className="emergency-popup">
                   <div className="p-1 text-slate-900">
                     <div className="font-bold text-xs">{req.needs.join(', ')}</div>
+                    <div className="my-1.5 flex gap-1">
+                      <PriorityBadge level={req.priorityLevel} score={req.priorityScore} size="sm" />
+                    </div>
                     <div className="text-[11px] text-slate-600 line-clamp-2 mt-1">{req.description}</div>
                     <button
                       onClick={() => setSelectedRequest(req)}
@@ -179,19 +203,19 @@ export const NGOLiveMap: React.FC<NGOLiveMapProps> = ({ requests, onAcceptReques
           </div>
         )}
 
-        {/* Floating Category Filter Pills on Top of Map */}
-        <div className="absolute top-4 left-4 right-4 z-20 flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
-          {['ALL', 'Medical Assistance', 'Blood', 'Rescue', 'Medicine', 'Food', 'Shelter', 'Transportation'].map((cat) => (
+        {/* Floating Priority Filter Pills on Top of Map */}
+        <div className="absolute top-14 left-4 right-4 z-20 flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+          {['ALL', 'CRITICAL', 'HIGH', 'MEDIUM', 'NORMAL'].map((pri) => (
             <button
-              key={cat}
-              onClick={() => setCategoryFilter(cat)}
+              key={pri}
+              onClick={() => setPriorityFilter(pri)}
               className={`px-3 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase whitespace-nowrap backdrop-blur-md border transition-all ${
-                categoryFilter === cat
-                  ? 'bg-emergency-600 border-emergency-500 text-theme-dark shadow-emergency-glow'
-                  : 'bg-white/80 hover:bg-theme-sage text-theme-forest border-theme-mint/30'
+                priorityFilter === pri
+                  ? 'bg-amber-600 border-amber-500 text-white shadow-[0_0_10px_rgba(245,158,11,0.5)]'
+                  : 'bg-white/80 hover:bg-amber-50 text-amber-900 border-amber-200/50'
               }`}
             >
-              {cat}
+              {pri}
             </button>
           ))}
         </div>
@@ -222,13 +246,13 @@ export const NGOLiveMap: React.FC<NGOLiveMapProps> = ({ requests, onAcceptReques
           <div className="p-4 overflow-y-auto space-y-4 flex-1 no-scrollbar animate-in fade-in duration-200">
             <div className="flex items-center justify-between">
               <StatusBadge status={selectedRequest.status} size="sm" />
-              <span className="text-xs text-theme-forest/80 font-mono">
-                {selectedRequest.distanceKm || 1.2} km away
-              </span>
+              <button onClick={() => setShowPriorityModal(true)} className="transition hover:scale-105">
+                <PriorityBadge level={selectedRequest.priorityLevel} score={selectedRequest.priorityScore} />
+              </button>
             </div>
 
             <div>
-              <h4 className="font-bold text-base text-theme-dark">
+              <h4 className="font-bold text-base text-theme-dark mt-2">
                 {selectedRequest.needs.join(' + ')}
               </h4>
               <p className="text-xs text-theme-forest mt-2 leading-relaxed">
@@ -275,10 +299,10 @@ export const NGOLiveMap: React.FC<NGOLiveMapProps> = ({ requests, onAcceptReques
                   className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-theme-mint/20 hover:border-sky-500/30 cursor-pointer transition-all text-left"
                 >
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[11px] font-bold text-emergency-400">
-                      {r.needs[0]}
+                    <span className="text-[11px] font-bold text-emergency-400 truncate max-w-[150px]">
+                      {r.needs.join(', ')}
                     </span>
-                    <StatusBadge status={r.status} size="sm" />
+                    <PriorityBadge level={r.priorityLevel} score={r.priorityScore} size="sm" showScore={false} />
                   </div>
                   <p className="text-xs text-theme-dark/90 line-clamp-2 leading-snug">
                     {r.description}
@@ -294,6 +318,13 @@ export const NGOLiveMap: React.FC<NGOLiveMapProps> = ({ requests, onAcceptReques
         )}
 
       </div>
+
+      {showPriorityModal && selectedRequest && (
+        <PriorityBreakdownModal
+          request={selectedRequest}
+          onClose={() => setShowPriorityModal(false)}
+        />
+      )}
     </div>
   );
 };

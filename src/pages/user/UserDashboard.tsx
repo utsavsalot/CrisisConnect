@@ -8,18 +8,25 @@ import {
   Bell,
   Users,
   ChevronRight,
-  Heart
+  Heart,
+  Activity,
+  MapPin
 } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { useEmergency } from '../../context/EmergencyContext';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { GlassCard } from '../../components/ui/GlassCard';
+import { PriorityBadge } from '../../components/ui/PriorityBadge';
+import { PriorityBreakdownModal } from '../../components/emergency/PriorityBreakdownModal';
+import { EmergencyRequest } from '../../types';
 
 export const UserDashboard: React.FC = () => {
-  const { currentUser } = useAuth();
-  const { myRequests, activeCount } = useEmergency();
+  const { currentUser, isResponder } = useAuth();
+  const { myRequests, activeCount, nearbyRequests, acceptRequest } = useEmergency();
   const navigate = useNavigate();
+  
+  const [selectedRequest, setSelectedRequest] = React.useState<EmergencyRequest | null>(null);
 
   const userName = currentUser && 'name' in currentUser ? currentUser.name : 'Citizen';
 
@@ -128,11 +135,12 @@ export const UserDashboard: React.FC = () => {
                     to={`/requests/${req.id}`}
                     className="block flex items-center justify-between gap-4 rounded-xl border border-black/10 bg-[#f4f5f8] p-4 transition-all hover:border-red-300 hover:bg-red-50"
                   >
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="font-bold text-xs text-black">
                           {req.needs.join(', ')}
                         </span>
+                        <PriorityBadge level={req.priorityLevel} score={req.priorityScore} size="sm" />
                         <StatusBadge status={req.status} size="sm" />
                       </div>
                       <p className="max-w-md truncate text-xs text-black/60">
@@ -193,7 +201,63 @@ export const UserDashboard: React.FC = () => {
 
         </div>
 
+        {/* Priority Response Queue for Responders */}
+        {isResponder && nearbyRequests.length > 0 && (
+          <div className="space-y-4 rounded-[2rem] border border-black/10 bg-white/95 p-6 shadow-[0_20px_55px_rgba(15,23,42,0.14)] mt-6">
+            <div className="flex items-center justify-between border-b border-black/10 pb-4">
+              <div className="flex items-center gap-2">
+                <Activity className="w-5 h-5 text-red-600" />
+                <h3 className="font-bold text-sm uppercase tracking-wider text-black">
+                  Responder Live Queue
+                </h3>
+              </div>
+              <span className="text-xs font-semibold text-slate-500">
+                Sorted by Priority Engine
+              </span>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[...nearbyRequests]
+                .sort((a, b) => (b.priorityScore || 0) - (a.priorityScore || 0))
+                .slice(0, 4)
+                .map((req) => (
+                <div key={req.id} className="rounded-xl border border-black/10 bg-[#f4f5f8] p-4 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-start justify-between mb-2">
+                      <h4 className="font-bold text-sm text-black">{req.needs.join(', ')}</h4>
+                      <button onClick={() => setSelectedRequest(req)} className="transition hover:scale-105 active:scale-95">
+                        <PriorityBadge level={req.priorityLevel} score={req.priorityScore} />
+                      </button>
+                    </div>
+                    <p className="text-xs text-black/60 line-clamp-2 mb-3">{req.description}</p>
+                    <div className="flex items-center gap-1 text-[11px] text-black/50 mb-4">
+                      <MapPin className="w-3.5 h-3.5" />
+                      <span className="truncate">{req.location.address || 'Detected Location'} • {req.distanceKm || '1.2'} km</span>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={async () => {
+                      await acceptRequest(req.id);
+                      navigate(`/requests/${req.id}`);
+                    }}
+                    className="w-full py-2.5 rounded-lg bg-black text-white text-xs font-bold uppercase tracking-wider hover:bg-black/80 transition-colors"
+                  >
+                    Accept & Dispatch
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
       </div>
+      
+      {selectedRequest && (
+        <PriorityBreakdownModal 
+          request={selectedRequest} 
+          onClose={() => setSelectedRequest(null)} 
+        />
+      )}
     </div>
   );
 };

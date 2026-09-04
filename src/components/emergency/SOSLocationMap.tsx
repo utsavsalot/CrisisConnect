@@ -2,14 +2,22 @@ import React, { useEffect } from 'react';
 import { Circle, MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 import { Minus, Plus } from 'lucide-react';
 import L from 'leaflet';
-import { LocationCoordinates } from '../../types';
+import { LocationCoordinates, CrisisPriority } from '../../types';
 
-const centerPin = L.divIcon({
-  className: 'sos-location-pin',
-  iconSize: [28, 28],
-  iconAnchor: [14, 14],
-  html: '<span style="display:block;width:16px;height:16px;margin:4px;border-radius:999px;background:#FF4D4D;border:3px solid white;box-shadow:0 0 0 7px rgba(255,77,77,.25),0 0 18px #FF4D4D"></span>',
-});
+const createPin = (priority?: CrisisPriority) => {
+  let color = '#FF4D4D'; // default red
+  if (priority === 'critical') color = '#ef4444';
+  else if (priority === 'high') color = '#f97316';
+  else if (priority === 'medium') color = '#f59e0b';
+  else if (priority === 'normal') color = '#10b981';
+
+  return L.divIcon({
+    className: 'sos-location-pin',
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    html: `<span style="display:block;width:16px;height:16px;margin:4px;border-radius:999px;background:${color};border:3px solid white;box-shadow:0 0 0 7px ${color}40,0 0 18px ${color}"></span>`,
+  });
+};
 
 const Recenter: React.FC<{ center: [number, number] }> = ({ center }) => {
   const map = useMap();
@@ -44,16 +52,23 @@ const ZoomControls: React.FC = () => {
   );
 };
 
-export const SOSLocationMap: React.FC<{ location: LocationCoordinates }> = ({ location }) => {
+export const SOSLocationMap: React.FC<{ location: LocationCoordinates, priorityLevel?: CrisisPriority }> = ({ location, priorityLevel }) => {
   const center: [number, number] = [location.latitude, location.longitude];
+  
+  let circleColor = '#FF4D4D';
+  if (priorityLevel === 'critical') circleColor = '#ef4444';
+  else if (priorityLevel === 'high') circleColor = '#f97316';
+  else if (priorityLevel === 'medium') circleColor = '#f59e0b';
+  else if (priorityLevel === 'normal') circleColor = '#10b981';
+
   return (
     <div className="h-48 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
       <MapContainer center={center} zoom={15} minZoom={3} maxZoom={19} scrollWheelZoom={false} zoomControl={false} className="h-full w-full">
         <ZoomControls />
         <Recenter center={center} />
         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <Circle center={center} radius={250} pathOptions={{ color: '#FF4D4D', fillColor: '#FF4D4D', fillOpacity: 0.08 }} />
-        <Marker position={center} icon={centerPin} />
+        <Circle center={center} radius={250} pathOptions={{ color: circleColor, fillColor: circleColor, fillOpacity: 0.08 }} />
+        <Marker position={center} icon={createPin(priorityLevel)} />
       </MapContainer>
     </div>
   );

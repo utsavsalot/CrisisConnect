@@ -348,6 +348,8 @@ export const mockRequestService = {
     otherNeed?: string;
     description: string;
     location: LocationCoordinates;
+    medicalSeverity?: 'low' | 'moderate' | 'serious' | 'critical' | null;
+    peopleAffected?: number;
   }): Promise<EmergencyRequest> {
     if (!validLocation(data.location)) throw new Error('A valid emergency location is required');
     const newReq: EmergencyRequest = {
@@ -360,6 +362,8 @@ export const mockRequestService = {
       otherNeed: data.otherNeed,
       description: data.description,
       location: data.location,
+      medicalSeverity: data.medicalSeverity,
+      peopleAffected: data.peopleAffected,
       distanceKm: 0.8,
       status: 'active',
         escalationLevel: 'local',

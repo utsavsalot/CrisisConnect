@@ -173,7 +173,7 @@ export const NGORequestDetailsPage: React.FC = () => {
                   </div>
                   <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-400"><CheckCircle2 className="h-3 w-3" /> Shared</span>
                 </div>
-                <SOSLocationMap location={request.location} />
+                <SOSLocationMap location={request.location} priorityLevel={request.priorityLevel} />
                 <p className="mt-3 text-xs leading-relaxed text-slate-300">{request.location.address || 'Detected location'}</p>
                 <p className="mt-1 font-mono text-[10px] text-slate-500">GPS: {request.location.latitude.toFixed(4)}, {request.location.longitude.toFixed(4)}</p>
               </div>

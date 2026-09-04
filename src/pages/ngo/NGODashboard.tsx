@@ -13,11 +13,16 @@ import {
 import { useEmergency } from '../../context/EmergencyContext';
 import { useAuth } from '../../context/AuthContext';
 import { StatusBadge } from '../../components/ui/StatusBadge';
+import { PriorityBadge } from '../../components/ui/PriorityBadge';
+import { PriorityBreakdownModal } from '../../components/emergency/PriorityBreakdownModal';
+import { EmergencyRequest } from '../../types';
 
 export const NGODashboard: React.FC = () => {
   const { requests, acceptRequest } = useEmergency();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  
+  const [selectedRequest, setSelectedRequest] = React.useState<EmergencyRequest | null>(null);
 
   const orgName = currentUser && 'orgName' in currentUser ? currentUser.orgName : 'Metro Relief & Red Cross';
 
@@ -103,7 +108,10 @@ export const NGODashboard: React.FC = () => {
             </div>
 
             <div className="space-y-3">
-              {activeEmergencies.slice(0, 4).map((req) => (
+              {[...activeEmergencies]
+                .sort((a, b) => (b.priorityScore || 0) - (a.priorityScore || 0))
+                .slice(0, 4)
+                .map((req) => (
                 <div
                   key={req.id}
                   className="p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-theme-mint/20 hover:border-emergency-500/40 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
@@ -113,6 +121,9 @@ export const NGODashboard: React.FC = () => {
                       <span className="font-bold text-xs text-theme-dark">
                         {req.needs.join(', ')}
                       </span>
+                      <button onClick={() => setSelectedRequest(req)} className="transition hover:scale-105 active:scale-95 shrink-0">
+                        <PriorityBadge level={req.priorityLevel} score={req.priorityScore} size="sm" />
+                      </button>
                       <StatusBadge status={req.status} size="sm" />
                       <span className="text-[10px] text-theme-forest/80 font-mono">
                         {req.distanceKm || 1.4} km away
@@ -152,6 +163,13 @@ export const NGODashboard: React.FC = () => {
         </div>
 
       </div>
+      
+      {selectedRequest && (
+        <PriorityBreakdownModal 
+          request={selectedRequest} 
+          onClose={() => setSelectedRequest(null)} 
+        />
+      )}
     </div>
   );
 };
