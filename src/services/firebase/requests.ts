@@ -57,6 +57,7 @@ export const firebaseRequestService = {
   async createRequest(data: {
     requesterId: string;
     requesterName: string;
+    requesterEmail?: string;
     requesterPhone?: string;
     requesterRole: 'user' | 'ngo';
     needs: EmergencyNeedCategory[];
@@ -70,6 +71,7 @@ export const firebaseRequestService = {
     const newReqData: Omit<EmergencyRequest, 'id'> = {
       requesterId: data.requesterId,
       requesterName: data.requesterName,
+      ...(data.requesterEmail ? { requesterEmail: data.requesterEmail } : {}),
       requesterRole: data.requesterRole,
       needs: data.needs,
       description: data.description,

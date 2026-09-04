@@ -342,6 +342,7 @@ export const mockRequestService = {
   async createRequest(data: {
     requesterId: string;
     requesterName: string;
+    requesterEmail?: string;
     requesterPhone?: string;
     requesterRole: 'user' | 'ngo';
     needs: EmergencyNeedCategory[];
@@ -356,6 +357,7 @@ export const mockRequestService = {
       id: 'req-' + Math.floor(1000 + Math.random() * 9000),
       requesterId: data.requesterId,
       requesterName: data.requesterName,
+      requesterEmail: data.requesterEmail,
       requesterPhone: data.requesterPhone || '+1 (555) 000-HELP',
       requesterRole: data.requesterRole,
       needs: data.needs,

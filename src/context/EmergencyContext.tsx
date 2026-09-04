@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { EmergencyRequest, EmergencyNeedCategory, EmergencyStatus, LocationCoordinates, NotificationItem, NGOResource } from '../types';
 import { requestService, notificationService, resourceService, responderService } from '../services/serviceManager';
+import { sendEmergencyEmail } from '../services/emailService';
 import { useAuth } from './AuthContext';
 
 interface EmergencyContextType {
@@ -118,6 +119,7 @@ export const EmergencyProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const created = await requestService.createRequest({
       requesterId: currentUser.uid,
       requesterName: 'name' in currentUser ? currentUser.name : currentUser.orgName,
+      requesterEmail: currentUser.email,
       requesterPhone: currentUser.phone,
       requesterRole: role === 'ngo' ? 'ngo' : 'user',
       needs: data.needs,
@@ -136,6 +138,7 @@ export const EmergencyProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         // ignore
       }
     }
+    await sendEmergencyEmail(created, 'created');
 
     return created;
   };
@@ -151,15 +154,20 @@ export const EmergencyProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       responderName,
       responderType
     );
+    await sendEmergencyEmail(updated, 'accepted');
     return updated;
   };
 
   const updateStatus = async (requestId: string, status: EmergencyStatus): Promise<EmergencyRequest> => {
-    return await requestService.updateStatus(requestId, status);
+    const updated = await requestService.updateStatus(requestId, status);
+    await sendEmergencyEmail(updated, status);
+    return updated;
   };
 
   const resolveRequest = async (requestId: string): Promise<EmergencyRequest> => {
-    return await requestService.updateStatus(requestId, 'resolved');
+    const updated = await requestService.updateStatus(requestId, 'resolved');
+    await sendEmergencyEmail(updated, 'resolved');
+    return updated;
   };
 
   const getRequestById = (id: string): EmergencyRequest | undefined => {

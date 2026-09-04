@@ -76,6 +76,7 @@ export interface EmergencyRequest {
   id: string;
   requesterId: string;
   requesterName: string;
+  requesterEmail?: string;
   requesterPhone?: string;
   requesterRole: 'user' | 'ngo';
   needs: EmergencyNeedCategory[];
