@@ -7,6 +7,7 @@ import { ProtectedRoute } from '../components/navigation/ProtectedRoute';
 import { LandingPage } from '../pages/public/LandingPage';
 import { LoginPage } from '../pages/public/LoginPage';
 import { SignupPage } from '../pages/public/SignupPage';
+import { CrisisGuidePage } from '../pages/public/CrisisGuidePage';
 
 // User Experience Pages
 import { UserDashboard } from '../pages/user/UserDashboard';
@@ -35,6 +36,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/crisis-guide" element={<CrisisGuidePage />} />
 
         {/* User Routes (Protected) */}
         <Route

@@ -92,6 +92,9 @@ export const Navbar: React.FC = () => {
               <a href="/#how-it-works" className={`px-3 py-1.5 text-xs font-medium transition-colors ${isLanding ? 'text-black/70 hover:text-black' : 'text-theme-forest hover:text-theme-dark'}`}>
                 How It Works
               </a>
+              <Link to="/crisis-guide" className={`px-3 py-1.5 text-xs font-medium transition-colors ${location.pathname === '/crisis-guide' ? 'text-theme-dark font-bold' : (isLanding ? 'text-black/70 hover:text-black' : 'text-theme-forest hover:text-theme-dark')}`}>
+                Crisis Guide
+              </Link>
               <a href="/#crisis-ai" className={`px-3 py-1.5 text-xs font-medium transition-colors ${isLanding ? 'text-black/70 hover:text-black' : 'text-theme-forest hover:text-theme-dark'}`}>
                 CrisisAI
               </a>
@@ -230,6 +233,13 @@ export const Navbar: React.FC = () => {
           >
             How It Works
           </a>
+          <Link
+            to="/crisis-guide"
+            onClick={() => setMobileMenuOpen(false)}
+            className="py-2 text-theme-forest hover:text-theme-dark font-medium transition-colors border-b border-theme-mint/20"
+          >
+            Crisis Guide
+          </Link>
           <a
             href="/#crisis-ai"
             onClick={() => setMobileMenuOpen(false)}
