@@ -22,6 +22,9 @@ export const RequestHelpPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createdRequestId, setCreatedRequestId] = useState<string | null>(null);
 
+  const [medicalSeverity, setMedicalSeverity] = useState<'low' | 'moderate' | 'serious' | 'critical' | null>(null);
+  const [peopleAffected, setPeopleAffected] = useState<number>(1);
+
   const stopHold = () => {
     if (holdTimer.current) window.clearInterval(holdTimer.current);
     holdTimer.current = null;
@@ -36,6 +39,8 @@ export const RequestHelpPage: React.FC = () => {
         needs: selectedNeeds.length ? selectedNeeds : ['Medical Assistance'],
         description: description.trim() || 'Urgent SOS sent. Assistance required at the reported location.',
         location,
+        medicalSeverity,
+        peopleAffected,
       });
       setCreatedRequestId(created.id);
     } catch (error) {
@@ -63,6 +68,8 @@ export const RequestHelpPage: React.FC = () => {
     current.includes(category) ? current.filter((item) => item !== category) : [...current, category]
   );
 
+  const hasMedicalNeed = selectedNeeds.some(n => ['Medical Assistance', 'Blood', 'Oxygen', 'Medicine'].includes(n));
+
   return (
     <div className="min-h-screen bg-[#f4f5f7] px-4 py-7 text-black sm:px-6 lg:px-8">
       {isSubmitting && <RequestSubmissionAnimation onComplete={() => navigate(`/requests/${createdRequestId || 'req-101'}`)} />}
@@ -82,8 +89,40 @@ export const RequestHelpPage: React.FC = () => {
         </section>
         <section className="rounded-3xl border border-slate-200 bg-[#fffefa] p-4 shadow-[0_14px_40px_rgba(15,23,42,0.10)] sm:p-6">
           <button type="button" onClick={() => setShowDetails((value) => !value)} className="flex w-full items-center justify-between text-left"><span><span className="font-display text-base font-black text-black">Add details</span><span className="ml-2 text-xs text-slate-600">Optional — SOS works without these</span></span><ChevronDown className={`h-5 w-5 text-red-600 transition-transform ${showDetails ? 'rotate-180' : ''}`} /></button>
-          {showDetails && <div className="mt-5 space-y-4">
+          {showDetails && <div className="mt-5 space-y-6">
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">{(['Medical Assistance', 'Rescue', 'Blood', 'Medicine', 'Food', 'Shelter', 'Transportation', 'Water', 'Other'] as EmergencyNeedCategory[]).map((category) => <EmergencyCategoryCard key={category} category={category} selected={selectedNeeds.includes(category)} onToggle={toggleNeed} />)}</div>
+            
+            {hasMedicalNeed && (
+              <div className="space-y-2 border-t border-slate-200 pt-4">
+                <label className="block text-sm font-bold text-black uppercase tracking-wider">Medical Severity</label>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  {(['low', 'moderate', 'serious', 'critical'] as const).map((level) => (
+                    <button
+                      key={level}
+                      type="button"
+                      onClick={() => setMedicalSeverity(level)}
+                      className={`py-2 px-3 rounded-xl border text-xs font-bold uppercase tracking-wider transition-all
+                        ${medicalSeverity === level 
+                          ? level === 'critical' || level === 'serious' ? 'bg-red-600 text-white border-red-600' : 'bg-orange-500 text-white border-orange-500'
+                          : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-100'}`}
+                    >
+                      {level}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-2 border-t border-slate-200 pt-4">
+              <label className="block text-sm font-bold text-black uppercase tracking-wider">People Affected</label>
+              <div className="flex items-center gap-3">
+                <button type="button" onClick={() => setPeopleAffected(Math.max(1, peopleAffected - 1))} className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center font-bold text-lg text-slate-600 hover:bg-slate-200">-</button>
+                <div className="w-16 text-center font-bold text-xl">{peopleAffected}</div>
+                <button type="button" onClick={() => setPeopleAffected(peopleAffected + 1)} className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center font-bold text-lg text-slate-600 hover:bg-slate-200">+</button>
+                <span className="text-xs text-slate-500 ml-2">individuals</span>
+              </div>
+            </div>
+
             <textarea value={description} onChange={(event) => setDescription(event.target.value)} rows={3} placeholder="What happened? This is optional, but helpful for responders." className="w-full rounded-2xl border border-slate-200 bg-white p-4 text-sm text-black placeholder:text-slate-500 focus:border-red-500 focus:outline-none" />
           </div>}
         </section>

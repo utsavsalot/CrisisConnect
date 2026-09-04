@@ -62,6 +62,16 @@ export interface NGOProfile {
   createdAt: string;
 }
 
+export type CrisisPriority = 'critical' | 'high' | 'medium' | 'normal';
+
+export interface PriorityBreakdown {
+  emergencyType: number;
+  medicalSeverity: number;
+  peopleAffected: number;
+  waitingTime: number;
+  resourceScarcity: number;
+}
+
 export interface EmergencyRequest {
   id: string;
   requesterId: string;
@@ -74,6 +84,14 @@ export interface EmergencyRequest {
   location: LocationCoordinates;
   distanceKm?: number;
   status: EmergencyStatus;
+  
+  // Priority Engine Fields
+  priorityScore?: number;
+  priorityLevel?: CrisisPriority;
+  medicalSeverity?: 'low' | 'moderate' | 'serious' | 'critical' | null;
+  peopleAffected?: number;
+  priorityBreakdown?: PriorityBreakdown;
+  
   escalationLevel?: EscalationLevel;
   escalationRadiusKm?: number;
   escalatedAt?: string;
@@ -89,6 +107,12 @@ export interface EmergencyRequest {
   acceptedByName?: string;
   acceptedByType?: 'responder' | 'ngo';
   acceptedAt?: string;
+  communityHelperId?: string;
+  communityHelperName?: string;
+  communityHelperAcceptedAt?: string;
+  ngoResponderId?: string;
+  ngoResponderName?: string;
+  ngoAcceptedAt?: string;
   resolvedAt?: string;
   createdAt: string;
 }

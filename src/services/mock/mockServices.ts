@@ -65,7 +65,7 @@ function saveToStorage<T>(key: string, data: T): void {
   try {
     if (typeof window === 'undefined' || !window.localStorage) return;
     localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(data));
-    if (['users', 'ngos', 'notifications'].includes(key)) pushDevState(key as SyncKey, data);
+    if (['users', 'ngos', 'notifications', 'requests', 'messages'].includes(key)) pushDevState(key as SyncKey, data);
   } catch (e) {
     console.error('Storage save error:', e);
   }
@@ -134,7 +134,7 @@ const escalationDelayMinutes = (minutes: number): number => {
 
 const getEligibleResponderIds = (request: EmergencyRequest, radiusKm: number): string[] => {
   const responderIds = Object.values(users)
-    .filter((user) => user.responderMode && user.isAvailable && distanceBetween(request.location, user.location) <= radiusKm)
+    .filter((user) => user.uid !== request.requesterId && user.responderMode && user.isAvailable && distanceBetween(request.location, user.location) <= radiusKm)
     .filter((user) => user.capabilities.length === 0 || user.capabilities.some((capability) => request.needs.includes(capability) || capability === 'Other'))
     .map((user) => user.uid);
   const ngoIds = Object.values(ngos)
@@ -238,7 +238,7 @@ export const mockAuthService = {
     address?: string;
   }): Promise<UserProfile | NGOProfile> {
     await syncDevProfiles();
-    const uid = 'user-' + Date.now();
+    const uid = (data.role === 'ngo' ? 'ngo-' : 'user-') + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
     const loc = data.location || { latitude: 40.7128, longitude: -74.0060, address: 'New York, NY' };
     
     if (data.role === 'ngo') {
@@ -314,7 +314,7 @@ export const mockRequestService = {
   },
 
   getMyRequests(userId: string): EmergencyRequest[] {
-    return requests.filter(r => r.requesterId === userId || (r.acceptedBy === userId));
+    return requests.filter(r => r.requesterId === userId || r.acceptedBy === userId || r.communityHelperId === userId || r.ngoResponderId === userId);
   },
 
   getNearbyRequests(userLocation?: LocationCoordinates, capabilities?: EmergencyNeedCategory[]): EmergencyRequest[] {
@@ -348,6 +348,8 @@ export const mockRequestService = {
     otherNeed?: string;
     description: string;
     location: LocationCoordinates;
+    medicalSeverity?: 'low' | 'moderate' | 'serious' | 'critical' | null;
+    peopleAffected?: number;
   }): Promise<EmergencyRequest> {
     if (!validLocation(data.location)) throw new Error('A valid emergency location is required');
     const newReq: EmergencyRequest = {
@@ -360,6 +362,8 @@ export const mockRequestService = {
       otherNeed: data.otherNeed,
       description: data.description,
       location: data.location,
+      medicalSeverity: data.medicalSeverity,
+      peopleAffected: data.peopleAffected,
       distanceKm: 0.8,
       status: 'active',
         escalationLevel: 'local',
@@ -376,7 +380,7 @@ export const mockRequestService = {
     saveToStorage('requests', requests);
     pushDevState('requests', requests);
 
-    mockNotificationService.sendNotification({
+    void mockNotificationService.sendNotification({
       userId: data.requesterId,
       type: 'request_created',
       title: 'SOS request sent',
@@ -384,27 +388,44 @@ export const mockRequestService = {
       requestId: newReq.id
     });
 
+    // If requester is in volunteer mode, automatically disable it
+    if (users[data.requesterId] && (users[data.requesterId].responderMode || users[data.requesterId].isAvailable)) {
+      users[data.requesterId] = {
+        ...users[data.requesterId],
+        responderMode: false,
+        isAvailable: false
+      };
+      saveToStorage('users', users);
+      pushDevState('users', users);
+      eventBus.emit('auth_changed');
+    }
+
+    // Reload fresh profiles from storage
+    users = loadFromStorage('users', users);
+    ngos = loadFromStorage('ngos', ngos);
+
     Object.values(users)
-      .filter((user) => user.responderMode && user.isAvailable && distanceBetween(data.location, user.location) <= LOCAL_BROADCAST_RADIUS_KM)
+      .filter((user) => user.uid !== data.requesterId && user.responderMode && user.isAvailable)
+      .filter((user) => distanceBetween(data.location, user.location) <= LOCAL_BROADCAST_RADIUS_KM || user.location.address === data.location.address)
       .filter((user) => user.capabilities.length === 0 || user.capabilities.some((capability) => data.needs.includes(capability) || capability === 'Other'))
       .forEach((user) => {
-        mockNotificationService.sendNotification({
+        void mockNotificationService.sendNotification({
           userId: user.uid,
           type: 'request_created',
-          title: `🚨 Emergency: ${data.needs.join(', ')}`,
-          message: `${data.requesterName} needs assistance ${distanceBetween(data.location, user.location).toFixed(1)} km away.`,
+          title: `🚨 Emergency Nearby: ${data.needs.join(', ')}`,
+          message: `${data.requesterName} needs help ${distanceBetween(data.location, user.location).toFixed(1)} km away.`,
           requestId: newReq.id
         });
       });
 
     Object.values(ngos)
-      .filter((ngo) => ngo.verified && distanceBetween(data.location, ngo.location) <= LOCAL_BROADCAST_RADIUS_KM)
+      .filter((ngo) => ngo.verified && (distanceBetween(data.location, ngo.location) <= LOCAL_BROADCAST_RADIUS_KM || ngo.location.address === data.location.address))
       .forEach((ngo) => {
-        mockNotificationService.sendNotification({
+        void mockNotificationService.sendNotification({
           userId: ngo.uid,
           type: 'request_created',
           title: `🚨 Triage Alert: ${data.needs.join(', ')}`,
-          message: `New incident reported within ${LOCAL_BROADCAST_RADIUS_KM} km: ${data.description.substring(0, 50)}...`,
+          message: `New incident reported: ${data.description.substring(0, 50)}...`,
           requestId: newReq.id
         });
       });
@@ -420,13 +441,27 @@ export const mockRequestService = {
     const idx = requests.findIndex(r => r.id === requestId);
     if (idx === -1) throw new Error('Request not found');
 
+    const existing = requests[idx];
+    const isCommunityHelper = responderType === 'responder';
+    const isNgo = responderType === 'ngo';
+
     requests[idx] = {
-      ...requests[idx],
+      ...existing,
       status: 'accepted',
-      acceptedBy: acceptedByUid,
-      acceptedByName: responderName,
-      acceptedByType: responderType,
-      acceptedAt: new Date().toISOString()
+      acceptedBy: isNgo ? acceptedByUid : (existing.acceptedBy || acceptedByUid),
+      acceptedByName: isNgo ? responderName : (existing.acceptedByName || responderName),
+      acceptedByType: isNgo ? 'ngo' : (existing.acceptedByType || 'responder'),
+      acceptedAt: existing.acceptedAt || new Date().toISOString(),
+      ...(isCommunityHelper ? {
+        communityHelperId: acceptedByUid,
+        communityHelperName: responderName,
+        communityHelperAcceptedAt: new Date().toISOString()
+      } : {}),
+      ...(isNgo ? {
+        ngoResponderId: acceptedByUid,
+        ngoResponderName: responderName,
+        ngoAcceptedAt: new Date().toISOString()
+      } : {})
     };
 
     saveToStorage('requests', requests);
@@ -434,7 +469,9 @@ export const mockRequestService = {
 
     // Initial coordination greeting in chat
     mockChatService.sendMessage(requestId, acceptedByUid, responderName, responderType, 
-      `Hello! I have accepted your request for assistance. I am preparing and heading to your location.`
+      isCommunityHelper 
+        ? `Hello! I am a nearby community helper (${responderName}). I have accepted your request and am heading your way.`
+        : `Hello! ${responderName} has accepted your request. We are deploying assistance to your location.`
     );
 
     // Notification for requester
@@ -442,7 +479,7 @@ export const mockRequestService = {
       userId: requests[idx].requesterId,
       type: 'request_accepted',
       title: '🟢 Assistance Accepted',
-      message: `${responderName} has accepted your request and is coordinating assistance.`,
+      message: `${responderName} (${isCommunityHelper ? 'Nearby Community Helper' : 'Verified NGO'}) has accepted your request and is coordinating assistance.`,
       requestId
     });
 
@@ -674,36 +711,43 @@ export const mockChatService = {
 
 export const mockNotificationService = {
   getNotifications(userId: string): NotificationItem[] {
+    notifications = loadFromStorage('notifications', notifications);
     return notifications
-      .filter(n => n.userId === userId || n.userId === 'demo-user')
+      .filter(n => n.userId === userId)
       .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   },
 
   async sendNotification(item: Omit<NotificationItem, 'id' | 'timestamp' | 'read'>): Promise<NotificationItem> {
+    notifications = loadFromStorage('notifications', notifications);
     const newNotif: NotificationItem = {
       ...item,
-      id: 'notif-' + Date.now(),
+      id: 'notif-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
       timestamp: new Date().toISOString(),
       read: false
     };
     notifications = [newNotif, ...notifications];
     saveToStorage('notifications', notifications);
+    pushDevState('notifications', notifications);
     eventBus.emit('notifications_changed');
     return newNotif;
   },
 
   async markAsRead(id: string): Promise<void> {
+    notifications = loadFromStorage('notifications', notifications);
     const idx = notifications.findIndex(n => n.id === id);
     if (idx !== -1) {
       notifications[idx].read = true;
       saveToStorage('notifications', notifications);
+      pushDevState('notifications', notifications);
       eventBus.emit('notifications_changed');
     }
   },
 
   async markAllAsRead(userId: string): Promise<void> {
+    notifications = loadFromStorage('notifications', notifications);
     notifications = notifications.map(n => n.userId === userId ? { ...n, read: true } : n);
     saveToStorage('notifications', notifications);
+    pushDevState('notifications', notifications);
     eventBus.emit('notifications_changed');
   },
 
@@ -712,15 +756,35 @@ export const mockNotificationService = {
     const unsubscribeBus = eventBus.subscribe('notifications_changed', () => {
       callback(this.getNotifications(userId));
     });
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== STORAGE_PREFIX + 'notifications' || !event.newValue) return;
+      try {
+        notifications = JSON.parse(event.newValue) as NotificationItem[];
+        callback(this.getNotifications(userId));
+      } catch {
+      }
+    };
+    window.addEventListener('storage', handleStorage);
     const pollId = window.setInterval(() => {
       void pullDevState<NotificationItem[]>('notifications').then((synced) => {
-        if (!synced || JSON.stringify(synced) === JSON.stringify(notifications)) return;
-        notifications = synced;
-        callback(this.getNotifications(userId));
+        if (synced) {
+          const oldStr = JSON.stringify(notifications);
+          const newStr = JSON.stringify(synced);
+          notifications = synced;
+          if (oldStr !== newStr) {
+            callback(this.getNotifications(userId));
+          }
+        }
       });
-    }, 1000);
+      const stored = loadFromStorage<NotificationItem[]>('notifications', []);
+      if (stored && stored.length !== notifications.length) {
+        notifications = stored;
+        callback(this.getNotifications(userId));
+      }
+    }, 800);
     return () => {
       unsubscribeBus();
+      window.removeEventListener('storage', handleStorage);
       window.clearInterval(pollId);
     };
   }

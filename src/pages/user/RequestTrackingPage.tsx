@@ -12,12 +12,16 @@ import {
   AlertTriangle,
   UserCheck,
   Radio,
-  Building2
+  Building2,
+  Navigation,
+  User,
+  ExternalLink
 } from 'lucide-react';
 import { useEmergency } from '../../context/EmergencyContext';
 import { useChat } from '../../context/ChatContext';
 import { useAuth } from '../../context/AuthContext';
 import { RequestTimeline } from '../../components/emergency/RequestTimeline';
+import { SOSLocationMap } from '../../components/emergency/SOSLocationMap';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { ChatMessage } from '../../types';
 import { getEscalationStep, getRequiredEscalation, getSecondsUntilNextEscalation } from '../../services/escalation';
@@ -25,7 +29,7 @@ import { getEscalationStep, getRequiredEscalation, getSecondsUntilNextEscalation
 export const RequestTrackingPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getRequestById, updateStatus, resolveRequest } = useEmergency();
+  const { getRequestById, acceptRequest, updateStatus, resolveRequest } = useEmergency();
   const { getMessages, sendMessage, subscribeToChat } = useChat();
   const { currentUser } = useAuth();
 
@@ -97,7 +101,16 @@ export const RequestTrackingPage: React.FC = () => {
     }
   };
 
+  const handleAcceptRequest = async () => {
+    if (!id) return;
+    await acceptRequest(id);
+  };
+
+  const isRequester = currentUser?.uid === request.requesterId;
+  const canHelperAccept = !isRequester && request.status === 'active';
   const isAccepted = request.status === 'accepted' || request.status === 'in_progress' || request.status === 'resolved';
+  const responderLabel = request.acceptedByType === 'ngo' ? 'NGO Operation' : 'Community Helper';
+  const responderDisplayName = request.acceptedByName || request.communityHelperName || request.ngoResponderName || 'Emergency Responder';
   const displayedEscalation = getRequiredEscalation(request, now);
   const displayedRadius = Math.max(request.escalationRadiusKm || 5, displayedEscalation.radiusKm);
   const displayedRequest = displayedEscalation.level === request.escalationLevel
@@ -110,7 +123,7 @@ export const RequestTrackingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-theme-light py-8 px-4 sm:px-6 lg:px-8 text-theme-dark">
-      <div className="max-w-5xl mx-auto space-y-6">
+      <div className="max-w-6xl mx-auto space-y-6">
         
         {/* Navigation & Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-theme-mint/30 pb-4">
@@ -133,15 +146,27 @@ export const RequestTrackingPage: React.FC = () => {
             </p>
           </div>
 
-          {request.status === 'in_progress' && (
-            <button
-              onClick={handleMarkResolved}
-              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-theme-dark font-bold text-xs uppercase tracking-wider shadow-md flex items-center gap-2 transition-transform active:scale-95"
-            >
-              <CheckCircle2 className="w-4 h-4" />
-              <span>Mark Assistance Complete</span>
-            </button>
-          )}
+          <div className="flex items-center gap-3">
+            {canHelperAccept && (
+              <button
+                onClick={handleAcceptRequest}
+                className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider shadow-lg flex items-center gap-2 transition-transform active:scale-95"
+              >
+                <ShieldCheck className="w-4 h-4" />
+                <span>I Can Help</span>
+              </button>
+            )}
+
+            {request.status === 'in_progress' && (
+              <button
+                onClick={handleMarkResolved}
+                className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-theme-dark font-bold text-xs uppercase tracking-wider shadow-md flex items-center gap-2 transition-transform active:scale-95"
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                <span>Mark Assistance Complete</span>
+              </button>
+            )}
+          </div>
         </div>
 
         {/* 5-Step Visual Timeline Component */}
@@ -153,7 +178,7 @@ export const RequestTrackingPage: React.FC = () => {
         {request.status === 'active' && (
           <div className="p-5 rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-start gap-4">
             <Radio className="w-6 h-6 text-sky-400 shrink-0 mt-0.5 animate-pulse" />
-            <div>
+            <div className="flex-1">
               <h4 className="text-sm font-bold text-theme-dark uppercase tracking-wider font-display">
                 NO RESPONDER HAS ACCEPTED YET
               </h4>
@@ -165,6 +190,15 @@ export const RequestTrackingPage: React.FC = () => {
                 {countdown && <span className="rounded-lg border border-amber-400/30 bg-amber-400/10 px-2.5 py-1 text-amber-300">Next expansion: {countdown}</span>}
               </div>
             </div>
+            {canHelperAccept && (
+              <button
+                onClick={handleAcceptRequest}
+                className="shrink-0 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition-transform active:scale-95"
+              >
+                <ShieldCheck className="w-4 h-4" />
+                <span>I Can Help</span>
+              </button>
+            )}
           </div>
         )}
 
@@ -183,10 +217,10 @@ export const RequestTrackingPage: React.FC = () => {
             <ShieldCheck className="w-6 h-6 text-sky-400 shrink-0 mt-0.5" />
             <div>
               <h4 className="text-sm font-bold text-theme-dark uppercase tracking-wider font-display">
-                ASSISTANCE ACCEPTED
+                ASSISTANCE ACCEPTED ({responderLabel.toUpperCase()})
               </h4>
               <p className="text-xs text-sky-300 mt-1 leading-relaxed">
-                <strong>{request.acceptedByName || 'Emergency Responder'}</strong> has accepted this request. Coordinate details via the chat below.
+                <strong>{responderDisplayName}</strong> ({responderLabel}) has accepted this request. Coordinate details via the chat below.
               </p>
             </div>
           </div>
@@ -228,9 +262,14 @@ export const RequestTrackingPage: React.FC = () => {
             
             {/* Request Summary Card */}
             <div className="space-y-4 rounded-3xl border border-slate-200 bg-[#fffefa] p-6 shadow-[0_14px_40px_rgba(15,23,42,0.10)]">
-              <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-red-700">
-                Incident Dossier
-              </h3>
+              <div className="flex items-center justify-between border-b border-red-100 pb-3">
+                <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-red-700">
+                  Incident Dossier
+                </h3>
+                <span className="text-[10px] font-mono text-slate-500">
+                  {new Date(request.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              </div>
 
               <div className="flex flex-wrap gap-1.5">
                 {request.needs.map(n => (
@@ -247,13 +286,54 @@ export const RequestTrackingPage: React.FC = () => {
                 {request.description}
               </p>
 
-              <div className="space-y-2 border-t border-red-100 pt-4 text-xs">
-                <div className="flex items-center gap-2 text-red-700">
-                  <MapPin className="h-4 w-4 shrink-0 text-red-600" />
-                  <span className="truncate text-black">{request.location.address || 'Detected Location'}</span>
+              {/* Requester / Person in Need Details */}
+              <div className="rounded-2xl border border-slate-200 bg-white p-3.5 space-y-2 text-xs">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <User className="h-4 w-4 text-red-600 shrink-0" />
+                    <div>
+                      <span className="font-bold text-black block">{request.requesterName}</span>
+                      <span className="text-[10px] text-slate-500">Person Requesting Help</span>
+                    </div>
+                  </div>
+                  {request.requesterPhone && (
+                    <a
+                      href={`tel:${request.requesterPhone}`}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-50 border border-red-200 text-red-700 font-bold text-xs hover:bg-red-100 transition-colors"
+                    >
+                      <Phone className="h-3.5 w-3.5" />
+                      <span>Call</span>
+                    </a>
+                  )}
                 </div>
-                <div className="pl-6 font-mono text-[10px] text-slate-600">
-                  {request.location.latitude.toFixed(4)}° N, {request.location.longitude.toFixed(4)}° W
+              </div>
+
+              {/* Live Incident Location & Map */}
+              <div className="space-y-2 border-t border-red-100 pt-3 text-xs">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-start gap-2 text-red-700">
+                    <MapPin className="h-4 w-4 shrink-0 text-red-600 mt-0.5" />
+                    <div>
+                      <span className="font-bold text-black block">{request.location.address || 'Detected GPS Location'}</span>
+                      <span className="font-mono text-[10px] text-slate-500">
+                        {request.location.latitude.toFixed(4)}° N, {request.location.longitude.toFixed(4)}° W
+                      </span>
+                    </div>
+                  </div>
+                  <a
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${request.location.latitude},${request.location.longitude}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] font-bold text-red-600 hover:underline shrink-0"
+                  >
+                    <span>Directions</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+
+                {/* Leaflet Map Preview */}
+                <div className="pt-2">
+                  <SOSLocationMap location={request.location} />
                 </div>
               </div>
             </div>
@@ -266,7 +346,7 @@ export const RequestTrackingPage: React.FC = () => {
                     Assigned Unit
                   </span>
                   <span className="rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-[10px] font-bold uppercase text-red-700">
-                    {request.acceptedByType === 'ngo' ? 'NGO Operation' : 'Community Responder'}
+                    {responderLabel}
                   </span>
                 </div>
 
@@ -276,7 +356,7 @@ export const RequestTrackingPage: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="font-display text-base font-bold text-black">
-                      {request.acceptedByName || 'Emergency Responder'}
+                      {responderDisplayName}
                     </h4>
                     <p className="text-xs text-slate-600">
                       Approx. distance: <span className="font-mono font-semibold text-red-700">{request.distanceKm || 1.4} km away</span>
@@ -288,7 +368,7 @@ export const RequestTrackingPage: React.FC = () => {
                 <div className="flex items-center gap-2 pt-2">
                   <a
                     href="tel:+15559110000"
-                    className="flex-1 rounded-xl border border-red-200 bg-white py-2.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-red-50"
+                    className="flex-1 rounded-xl border border-red-200 bg-white py-2.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-red-50 text-center flex items-center justify-center gap-1.5"
                   >
                     <Phone className="h-4 w-4 text-red-600" />
                     <span>Call Unit</span>
@@ -305,9 +385,18 @@ export const RequestTrackingPage: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="rounded-3xl border border-slate-200 bg-[#fffefa] px-6 py-8 text-center text-xs text-slate-600 shadow-[0_14px_40px_rgba(15,23,42,0.10)]">
+              <div className="rounded-3xl border border-slate-200 bg-[#fffefa] px-6 py-8 text-center text-xs text-slate-600 shadow-[0_14px_40px_rgba(15,23,42,0.10)] space-y-3">
                 <Radio className="mx-auto mb-2 h-8 w-8 animate-pulse text-red-600" />
-                <span>Awaiting responder commitment...</span>
+                <p>Awaiting responder commitment...</p>
+                {canHelperAccept && (
+                  <button
+                    onClick={handleAcceptRequest}
+                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-md transition-transform hover:bg-red-700 active:scale-95"
+                  >
+                    <ShieldCheck className="w-4 h-4" />
+                    <span>I Can Help</span>
+                  </button>
+                )}
               </div>
             )}
 

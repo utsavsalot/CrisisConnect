@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { EmergencyRequest, EmergencyNeedCategory, EmergencyStatus, LocationCoordinates, NotificationItem, NGOResource } from '../types';
-import { requestService, notificationService, resourceService } from '../services/serviceManager';
+import { requestService, notificationService, resourceService, responderService } from '../services/serviceManager';
 import { useAuth } from './AuthContext';
 
 interface EmergencyContextType {
@@ -13,6 +13,8 @@ interface EmergencyContextType {
     otherNeed?: string;
     description: string;
     location: LocationCoordinates;
+    medicalSeverity?: 'low' | 'moderate' | 'serious' | 'critical' | null;
+    peopleAffected?: number;
   }) => Promise<EmergencyRequest>;
   acceptRequest: (requestId: string) => Promise<EmergencyRequest>;
   updateStatus: (requestId: string, status: EmergencyStatus) => Promise<EmergencyRequest>;
@@ -27,22 +29,42 @@ interface EmergencyContextType {
   addResource: (type: string, total: number, unit: string) => Promise<void>;
 }
 
+import { calculatePriority } from '../services/emergency/priorityEngine';
+
 const EmergencyContext = createContext<EmergencyContextType | undefined>(undefined);
 
 export const EmergencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { currentUser, role, isResponder, capabilities } = useAuth();
-  const [requests, setRequests] = useState<EmergencyRequest[]>(() => requestService.getAllRequests());
+  const [rawRequests, setRawRequests] = useState<EmergencyRequest[]>(() => requestService.getAllRequests());
   const [notifications, setNotifications] = useState<NotificationItem[]>(() => 
     currentUser ? notificationService.getNotifications(currentUser.uid) : []
   );
   const [resources, setResources] = useState<NGOResource[]>(() => 
     resourceService.getResources(currentUser?.uid || 'demo-ngo')
   );
+  
+  // We need to re-evaluate time-based priorities occasionally.
+  const [nowMs, setNowMs] = useState(Date.now());
+  useEffect(() => {
+    const timer = window.setInterval(() => setNowMs(Date.now()), 60000); // Update priorities every minute
+    return () => window.clearInterval(timer);
+  }, []);
+
+  // Calculate dynamic priority for all requests
+  const requests = rawRequests.map(req => {
+    const priorityInfo = calculatePriority(req, resources, nowMs);
+    return {
+      ...req,
+      priorityScore: priorityInfo.score,
+      priorityLevel: priorityInfo.level,
+      priorityBreakdown: priorityInfo.breakdown
+    };
+  });
 
   // Subscribe to real-time changes
   useEffect(() => {
     const unsubRequests = requestService.onRequestsChanged((updated) => {
-      setRequests(updated);
+      setRawRequests(updated);
     });
     return () => {
       if (typeof unsubRequests === 'function') unsubRequests();
@@ -64,7 +86,12 @@ export const EmergencyProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, [currentUser]);
 
   const myRequests = requests.filter(r => 
-    currentUser ? (r.requesterId === currentUser.uid || r.acceptedBy === currentUser.uid) : false
+    currentUser ? (
+      r.requesterId === currentUser.uid || 
+      r.acceptedBy === currentUser.uid || 
+      r.communityHelperId === currentUser.uid || 
+      r.ngoResponderId === currentUser.uid
+    ) : false
   );
 
   const nearbyRequests = requests.filter(r => {
@@ -83,6 +110,8 @@ export const EmergencyProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     otherNeed?: string;
     description: string;
     location: LocationCoordinates;
+    medicalSeverity?: 'low' | 'moderate' | 'serious' | 'critical' | null;
+    peopleAffected?: number;
   }): Promise<EmergencyRequest> => {
     if (!currentUser) throw new Error('Must be logged in to create an emergency request');
 
@@ -94,8 +123,19 @@ export const EmergencyProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       needs: data.needs,
       otherNeed: data.otherNeed,
       description: data.description,
-      location: data.location
+      location: data.location,
+      medicalSeverity: data.medicalSeverity,
+      peopleAffected: data.peopleAffected
     });
+
+    if (currentUser && 'responderMode' in currentUser && (currentUser.responderMode || currentUser.isAvailable)) {
+      try {
+        await responderService.setAvailability(currentUser.uid, false);
+        await responderService.toggleResponderMode(currentUser.uid, false);
+      } catch {
+        // ignore
+      }
+    }
 
     return created;
   };

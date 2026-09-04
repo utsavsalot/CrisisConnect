@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { ChatMessage } from '../types';
-import { chatService } from '../services/serviceManager';
+import { chatService, requestService } from '../services/serviceManager';
 import { useAuth } from './AuthContext';
 
 interface ChatContextType {
@@ -30,7 +30,20 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const sendMessage = useCallback(async (requestId: string, text: string): Promise<ChatMessage> => {
     if (!currentUser) throw new Error('Must be logged in to send message');
     const senderName = 'name' in currentUser ? currentUser.name : currentUser.orgName;
-    const senderRole = role === 'ngo' ? 'ngo' : ('responderMode' in currentUser && currentUser.responderMode ? 'responder' : 'user');
+    
+    let senderRole: 'user' | 'responder' | 'ngo' = 'user';
+    if (role === 'ngo') {
+      senderRole = 'ngo';
+    } else {
+      const req = requestService.getRequestById(requestId);
+      if (req && req.requesterId === currentUser.uid) {
+        senderRole = 'user';
+      } else if (req && (req.acceptedBy === currentUser.uid || req.communityHelperId === currentUser.uid || ('responderMode' in currentUser && currentUser.responderMode))) {
+        senderRole = 'responder';
+      } else if ('responderMode' in currentUser && currentUser.responderMode) {
+        senderRole = 'responder';
+      }
+    }
 
     const msg = await chatService.sendMessage(
       requestId,

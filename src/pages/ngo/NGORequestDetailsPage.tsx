@@ -94,13 +94,13 @@ export const NGORequestDetailsPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            {request.status === 'active' && (
+            {(request.status === 'active' || (request.acceptedByType === 'responder' && request.acceptedBy !== currentUser?.uid)) && (
               <button
                 onClick={handleAccept}
                 className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-theme-dark font-bold text-xs uppercase tracking-wider shadow-lg flex items-center gap-2"
               >
                 <ShieldCheck className="w-4 h-4" />
-                <span>Accept & Deploy Unit</span>
+                <span>{request.acceptedByType === 'responder' ? 'Deploy Additional NGO Support' : 'Accept & Deploy Unit'}</span>
               </button>
             )}
 
@@ -115,6 +115,23 @@ export const NGORequestDetailsPage: React.FC = () => {
             )}
           </div>
         </div>
+
+        {/* Community Helper Active Responding Notification for NGOs */}
+        {(request.communityHelperName || request.acceptedByType === 'responder') && (
+          <div className="p-4 rounded-2xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <UserCheck className="w-5 h-5 text-amber-400 shrink-0" />
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-theme-dark font-display">
+                  Community Helper On-Scene / En Route
+                </h4>
+                <p className="text-xs text-amber-300 mt-0.5">
+                  <strong>{request.communityHelperName || request.acceptedByName}</strong> is responding. You can deploy additional resources or coordinate in the dispatch chat below.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* 2-Column Incident Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -173,7 +190,7 @@ export const NGORequestDetailsPage: React.FC = () => {
                   </div>
                   <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-400"><CheckCircle2 className="h-3 w-3" /> Shared</span>
                 </div>
-                <SOSLocationMap location={request.location} />
+                <SOSLocationMap location={request.location} priorityLevel={request.priorityLevel} />
                 <p className="mt-3 text-xs leading-relaxed text-slate-300">{request.location.address || 'Detected location'}</p>
                 <p className="mt-1 font-mono text-[10px] text-slate-500">GPS: {request.location.latitude.toFixed(4)}, {request.location.longitude.toFixed(4)}</p>
               </div>

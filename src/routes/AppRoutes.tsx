@@ -16,6 +16,7 @@ import { RequestTrackingPage } from '../pages/user/RequestTrackingPage';
 import { NotificationsPage } from '../pages/user/NotificationsPage';
 import { ProfilePage } from '../pages/user/ProfilePage';
 import { SettingsPage } from '../pages/user/SettingsPage';
+import { CommunityHelpPage } from '../pages/user/CommunityHelpPage';
 
 // NGO Experience Pages
 import { NGODashboard } from '../pages/ngo/NGODashboard';
@@ -89,6 +90,22 @@ export const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute>
               <SettingsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/community-help"
+          element={
+            <ProtectedRoute allowedRoles={['user']}>
+              <CommunityHelpPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/volunteer"
+          element={
+            <ProtectedRoute allowedRoles={['user']}>
+              <CommunityHelpPage />
             </ProtectedRoute>
           }
         />
