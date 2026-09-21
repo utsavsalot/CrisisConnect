@@ -307,3 +307,242 @@ Navigation & Assistance
       │
       ▼
 Request Resolved
+
+🏢 NGO Module
+
+NGOs have a dedicated dashboard for managing emergency response operations.
+
+NGO Dashboard
+
+NGOs can:
+
+View emergency requests
+Accept/claim requests
+Monitor active assistance
+View emergency locations
+Manage available resources
+Track resource quantities
+Update resource availability
+NGO Resource Management
+
+Resources can be managed according to:
+
+Resource Type
+Total Quantity
+Available Quantity
+Allocated Quantity
+Unit
+Updated Time
+
+This allows NGOs to maintain visibility over resources that can be used during emergencies.
+
+🗺️ Maps & Location Services
+
+Location plays an important role in emergency response.
+
+CrisisConnect provides:
+
+Live location detection
+Emergency location mapping
+NGO emergency maps
+Distance information
+Location-based emergency discovery
+Navigation to emergency locations
+
+The application uses Leaflet / React-Leaflet for map visualization.
+
+Responders can also use navigation to reach the emergency location.
+
+💬 Communication & Notifications
+
+Emergency coordination requires communication between the requester and responder.
+
+CrisisConnect provides an emergency communication workflow including:
+
+Requester ↔ Responder communication
+Requester ↔ NGO communication
+Emergency chat
+System messages
+Request acceptance notifications
+Status notifications
+Message notifications
+System alerts
+
+The notification system keeps users informed about important changes in their emergency requests.
+
+🤖 CrisisAI & Crisis Guide
+CrisisAI
+
+CrisisConnect includes a CrisisAI Safety Assistant that provides emergency-related guidance and safety information.
+
+It is designed to help users understand what they can do during emergency situations while they seek appropriate assistance.
+
+📚 Crisis Guide
+
+The Crisis Guide provides structured emergency information covering:
+
+How to Use CrisisConnect
+What to Do During an Emergency
+First Aid
+Emergency Preparedness
+Fire Safety
+Earthquake Safety
+Flood Safety
+Finding Shelter
+Food & Water Safety
+Personal Safety
+Emergency Contacts
+
+The guide also supports topic navigation and search.
+
+🏗️ System Architecture
+                         ┌──────────────────────┐
+                         │      CrisisConnect   │
+                         │      Web Platform    │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │   React + TypeScript │
+                         │       + Vite         │
+                         └──────────┬───────────┘
+                                    │
+             ┌──────────────────────┼──────────────────────┐
+             │                      │                      │
+             ▼                      ▼                      ▼
+       ┌───────────┐        ┌──────────────┐       ┌─────────────┐
+       │   User    │        │   Responder  │       │     NGO     │
+       │   Module  │        │    Module    │       │   Module    │
+       └─────┬─────┘        └──────┬───────┘       └──────┬──────┘
+             │                     │                      │
+             └─────────────────────┼──────────────────────┘
+                                   │
+                                   ▼
+                         ┌──────────────────────┐
+                         │ Application Services │
+                         │     & Contexts      │
+                         └──────────┬───────────┘
+                                    │
+                  ┌─────────────────┼─────────────────┐
+                  │                 │                 │
+                  ▼                 ▼                 ▼
+           ┌────────────┐    ┌─────────────┐   ┌────────────┐
+           │  Firebase  │    │ Crisis      │   │   Maps &   │
+           │ Auth / DB  │    │ Priority    │   │ Location   │
+           └────────────┘    │ Engine      │   └────────────┘
+                             └─────────────┘
+🔄 Emergency Lifecycle
+CREATE
+  ↓
+VERIFY / PROCESS
+  ↓
+PRIORITIZE
+  ↓
+MATCH
+  ↓
+ACCEPT
+  ↓
+COMMUNICATE
+  ↓
+ASSIST
+  ↓
+TRACK
+  ↓
+RESOLVE
+
+If the request remains unresolved:
+
+WAITING
+   ↓
+LOCAL BROADCAST
+   ↓
+EXPANDED SEARCH
+   ↓
+PRIORITY ESCALATION
+   ↓
+ADMIN ALERT
+🛠️ Tech Stack
+Frontend
+Technology	Purpose
+React.js	UI development
+TypeScript	Type-safe development
+Vite	Development & build tooling
+Tailwind CSS	Styling
+shadcn/ui	UI components
+React Router	Application routing
+React Hook Form	Form management
+Zod	Validation
+GSAP	Advanced animations
+Anime.js	UI animations
+Lucide Icons	Interface icons
+Backend & Services
+Technology	Purpose
+Firebase Authentication	Authentication
+Firebase Firestore	Application data
+Firebase Storage	File/storage support
+Firebase Services	Backend infrastructure
+Maps
+Technology	Purpose
+Leaflet	Interactive maps
+React-Leaflet	React map integration
+Location Services	Emergency location detection
+📁 Project Structure
+CrisisConnect-main/
+│
+├── public/
+│   └── logo.png
+│
+├── src/
+│   │
+│   ├── components/
+│   │   ├── animations/
+│   │   ├── chatbot/
+│   │   ├── emergency/
+│   │   ├── landing/
+│   │   ├── map/
+│   │   ├── navigation/
+│   │   └── ui/
+│   │
+│   ├── context/
+│   │   ├── AuthContext.tsx
+│   │   ├── ChatContext.tsx
+│   │   ├── EmergencyContext.tsx
+│   │   └── ThemeContext.tsx
+│   │
+│   ├── data/
+│   │   └── crisisGuideData.ts
+│   │
+│   ├── layouts/
+│   │   └── RootLayout.tsx
+│   │
+│   ├── ngo-portal/
+│   │   ├── NGOPortalApp.tsx
+│   │   └── main.tsx
+│   │
+│   ├── pages/
+│   │   ├── admin/
+│   │   ├── ngo/
+│   │   ├── public/
+│   │   └── user/
+│   │
+│   ├── routes/
+│   │   └── AppRoutes.tsx
+│   │
+│   ├── services/
+│   │   ├── emergency/
+│   │   ├── firebase/
+│   │   └── mock/
+│   │
+│   ├── types/
+│   │   └── index.ts
+│   │
+│   ├── App.tsx
+│   ├── index.css
+│   └── main.tsx
+│
+├── firestore.rules
+├── package.json
+├── vite.config.ts
+├── tailwind.config.ts
+├── tsconfig.json
+└── README.md
